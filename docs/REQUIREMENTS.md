@@ -84,8 +84,11 @@ controls, screen-time rules, device pairing. Parent-side video/voice calling is 
   property questions arise. **Still open:** exact number of users in the first batch.
 - A8. **Target age range of children: UNCONFIRMED.** Reports assumed roughly 6-13; India's DPDP Act
   treats everyone under 18 as a child.
-- A9. **Emergency calling: UNCONFIRMED.** D19 removes cellular voice, but a phone's radio can still place
-  emergency-only calls (112 in India). Recommended default: keep an emergency-only dial path (no other
-  cellular numbers). Needs founder confirmation and an India regulatory check (report 19).
+- A9. **Emergency calling: engineering default, founder may override.** The founder said (twice) "No cell
+  calling, only WhatsApp-type calling" (D19). Read as: **no cellular dialer, no calling UI, no SMS.** Default
+  until told otherwise: the **platform's built-in emergency-call path stays** (lock-screen Emergency button;
+  emergency numbers only, e.g. 112 in India; no general dialer), because removing it is a safety and
+  legal question (report 19). To override, the founder says "remove emergency calling"; counsel should be
+  consulted first.
 - A10. **Connectivity:** Wi-Fi plus mobile data (D14). Assumed a data-only SIM/eSIM is supported;
   Wi-Fi-only use must also work.

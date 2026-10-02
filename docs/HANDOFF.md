@@ -396,8 +396,8 @@ decision, not something a chat session can do.
 3. Google Mobile Services: confirm none [none].
 4. *(Answered: D15 own phone; D16 we flash and hand over in v1; D17 start on a Pixel 10a/9a; D18 India;
    D19 no cellular voice/SMS; D20 English only; D21 ~200 users on Pixels first, own hardware later.)*
-   **Should the device still place emergency-only calls (112 in India) even though no other cellular
-   calling exists (A9)?** (recommended default: yes). Then: **target age range (A8)**; first city and
+   *(A9, emergency calling: founder said "No cell calling, only WhatsApp-type calling" twice; default keeps only the
+   platform's emergency-call path, no dialer; founder may override.)* Then: **target age range (A8)**; first city and
    staging to 200 users; authorise Indian counsel + Google outreach on firmware redistribution (the
    gating legal item).
 5. Pricing/licence model for the image: one-time licence vs per-child/per-family subscription vs both
