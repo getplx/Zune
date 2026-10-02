@@ -34,6 +34,7 @@ Delivery is staged:
 | D12 | Parental controls are browser-based (parent portal). | 2026-10-02 |
 | D13 | The product is limited to a **small, curated set of supported devices**. High-end **Snapdragon**-class devices are acceptable ("very high grade"); the device list is not limited to Pixels. Supersedes the Pixel-first recommendation in `docs/research/02-hardware-target.md` until topic 15 reports. | 2026-10-02 |
 | D14 | The device has a **Settings app with the minimum settings**: **Wi-Fi and mobile data stay fully standard ("as it is")**, plus only what is fairly required. **Nothing unnecessary.** | 2026-10-02 |
+| D15 | **Business model: sell the OS image (software); customers bring a qualified phone** from a curated supported-device list and install it themselves. We do not sell or inventory hardware. | 2026-10-02 |
 
 ## Child-device feature list (Stage 1 scope)
 
@@ -47,7 +48,9 @@ Delivery is staged:
 8. Weather (with educational explanations)
 9. Camera, Photos, Journal, Notebook, EPUB reader (from the first brief; still in scope)
 10. Other non-browsing utilities (clock/alarm, calculator, voice recorder, etc.)
-11. Settings (minimal: Wi-Fi and mobile data as standard; everything else only if fairly required;
+11. Installer + device-qualification program (a product component under D15: web/desktop flasher,
+    pre-flight checks, parent-portal enrolment, update channel)
+12. Settings (minimal: Wi-Fi and mobile data as standard; everything else only if fairly required;
     parent-gated where a child changing it would defeat a control)
 
 ## Parent portal (browser) — Stage 1 scope
@@ -61,7 +64,8 @@ controls, screen-time rules, device pairing. Parent-side video/voice calling is 
 - A2. Can the child **send** SMS, or only receive (parent-visible)? **Assumed: child does not
   send or read SMS on the device**; the Zune Messenger is the child's text channel.
 - A3. Google Mobile Services: **assumed none** (pure AOSP).
-- A4. Target hardware: **narrowed by D13 to a curated high-end Snapdragon device set**; exact
-  devices undecided (topic 15). Open fork: buy retail phones and flash them, or have a
-  manufacturer build/qualify a device (affects Qualcomm BSP access, bootloader relock, price).
+- A4. Target hardware: **narrowed by D13 to a curated high-end Snapdragon device set** and by **D15
+  to bring-your-own-device** (customer installs our image on a qualified phone; no manufacturer).
+  Exact devices undecided (topics 15, 17). Open sub-question: must every qualified phone be
+  relockable with our own key (tamper resistance), or may some stay unlocked?
 - A5. Product name: "Zune" is a codename only (Microsoft trademark history).

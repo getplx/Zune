@@ -60,6 +60,7 @@ pass)`. **None had completed verification when this file was first written.**
 | 14 | Weather education app | queued |
 | 15 | Snapdragon device selection (D13) | researching (added after the founder's 3rd message) |
 | 16 | Minimal Settings app (D14) | researching (added after the founder's 3rd message) |
+| 17 | Selling the image: BYO distribution, installer, licensing (D15) | queued (added after the founder's 4th message) |
 | 00 | Cross-topic critique | queued (runs after 01-11 + verification) |
 
 Refresh in conversation 2:
@@ -69,7 +70,7 @@ ls docs/research
 grep -L "Verification (second pass)" docs/research/*.md   # reports NOT yet skeptic-checked
 ```
 Topics 01-11 were launched before the founder's second message (D4-D12); 12-14 after it; 15-16 after
-the third (D13-D14). Reports 01-11 were therefore written without those decisions in the brief
+the third (D13-D14); 17 after the fourth (D15). Reports 01-11 were therefore written without those decisions in the brief
 (see section 5).
 
 ## 4. Conclusions so far (reports 01 and 02; secondary sources, verify against AOSP)
@@ -121,6 +122,13 @@ Gabb, Troomi) rebadge commodity phones + subscription.
   vendor support; retail-flash vs manufacturer-built (an unlocked bootloader defeats tamper
   resistance); price of high-end hardware for a kids' product; on-device AI via the Hexagon NPU.
   Topic 15 covers this.
+- **D15 (sell the image; customers bring a qualified phone) vs report 02, which REJECTED a consumer BYO
+  installer** (bricking, carrier-locked phones, unlocked-bootloader tamper risk). The founder has chosen
+  BYO, so: how to ship the image without redistributing OEM blobs, the installer/flasher, relock where
+  supported, update path for modem/vendor firmware, the licence/subscription model, and a device-
+  qualification program. Upside to verify: keeping the phone's stock modem/IMS firmware may make
+  VoLTE/carrier acceptance easier than for a flashed Pixel. Topic 17 covers this; also affects 04
+  (enforcement cannot assume a relocked bootloader), 10 (our keys on customers' devices), 12, 15.
 - **03 (minimal product) / 04 (no-browser) vs D14 (Settings).** Wi-Fi and mobile data must stay
   standard, yet Wi-Fi proxy/static DNS/Private DNS/VPN/tethering and captive-portal sign-in are
   bypass vectors. Topic 16 defines what is kept, read-only, parent-gated, hidden or forced.
@@ -179,7 +187,7 @@ decision, not something a chat session can do.
    `Workflow({scriptPath: "<repo>/docs/handoff/research-workflow.js", args: {mode: "research", topics: [<missing slugs>]}})`
    Slugs: aosp-base hardware-target minimal-product no-browser parental-controls curated-video
    ai-assistant walkie-talkie core-apps ota-security compliance telephony-sms messenger-video
-   weather-education snapdragon-hardware settings-minimal. (Max 2 agents run in parallel on a 4-core container.)
+   weather-education snapdragon-hardware settings-minimal byo-distribution. (Max 2 agents run in parallel on a 4-core container.)
 3. **Re-verify against primary sources:** `mode: "verify"` for at least aosp-base, hardware-target,
    minimal-product, no-browser, parental-controls, telephony-sms, core-apps, ota-security.
 4. **Reconcile** every report written before the decisions: `mode: "reconcile"`.
@@ -207,10 +215,10 @@ decision, not something a chat session can do.
 1. Launch market / first country [US]. *Asked once in conversation 1, unanswered.*
 2. May the child **send** SMS, or only receive (parent-visible)? [child neither sends nor reads SMS]
 3. Google Mobile Services: confirm none [none].
-4. **Retail phones flashed by us vs a manufacturer-built/qualified device** (D13 fork; decides Qualcomm
-   BSP access, relock/tamper resistance, certification and price). Then: which Snapdragon devices.
-5. Revenue model and device price point (high-end Snapdragon phones cost $600-1,200+): bundle,
-   subscription, financing, or refurb.
+4. *(Answered: D15, customers bring their own qualified phone.)* Next: **must every qualified phone be
+   re-lockable with our own key (tamper resistance), or may some stay unlocked?** Then: which devices.
+5. Pricing/licence model for the image: one-time licence vs per-child/per-family subscription vs both
+   (the cloud services are the practical paywall; see report 17).
 6. Authorise legal work + Google outreach (Pixel binary redistribution, partner security access).
 7. Product name (codename "Zune" has Microsoft trademark history).
 8. Create a `main` branch / repo structure (monorepo layout in report 09).
@@ -219,6 +227,6 @@ decision, not something a chat session can do.
 
 - Remote `https://github.com/getplx/Zune` had no branches before this work. Branch
   `research/android-kids-foundation` carries everything. No PR exists.
-- `docs/REQUIREMENTS.md`: canonical decisions (D1-D14). `docs/research/`: reports. `docs/handoff/`:
+- `docs/REQUIREMENTS.md`: canonical decisions (D1-D15). `docs/research/`: reports. `docs/handoff/`:
   `research-workflow.js` (reusable multi-agent script, tested with stubs in all four modes),
   `STARTER_PROMPT.md` (paste into the new chat).
