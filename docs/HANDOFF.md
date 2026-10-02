@@ -129,6 +129,9 @@ Gabb, Troomi) rebadge commodity phones + subscription.
   qualification program. Upside to verify: keeping the phone's stock modem/IMS firmware may make
   VoLTE/carrier acceptance easier than for a flashed Pixel. Topic 17 covers this; also affects 04
   (enforcement cannot assume a relocked bootloader), 10 (our keys on customers' devices), 12, 15.
+- **A7 (unconfirmed): v1 is company-flashed and handed to the user; self-install later.** If confirmed,
+  topic 17's consumer installer becomes a v2 concern and v1 needs a flashing/QA station design
+  (report 02 path A mechanics, report 10 factory flow); every v1 device must be relockable (topic 15).
 - **03 (minimal product) / 04 (no-browser) vs D14 (Settings).** Wi-Fi and mobile data must stay
   standard, yet Wi-Fi proxy/static DNS/Private DNS/VPN/tethering and captive-portal sign-in are
   bypass vectors. Topic 16 defines what is kept, read-only, parent-gated, hidden or forced.
@@ -215,8 +218,9 @@ decision, not something a chat session can do.
 1. Launch market / first country [US]. *Asked once in conversation 1, unanswered.*
 2. May the child **send** SMS, or only receive (parent-visible)? [child neither sends nor reads SMS]
 3. Google Mobile Services: confirm none [none].
-4. *(Answered: D15, customers bring their own qualified phone.)* Next: **must every qualified phone be
-   re-lockable with our own key (tamper resistance), or may some stay unlocked?** Then: which devices.
+4. *(D15 answered: customers bring their own phone. Re-lock question answered by A7, UNCONFIRMED.)*
+   **Confirm A7: in v1 do we flash and hand over the device? And is the phone customer-supplied
+   (flash-as-a-service) or bought by us and sold pre-flashed?** Then: which devices.
 5. Pricing/licence model for the image: one-time licence vs per-child/per-family subscription vs both
    (the cloud services are the practical paywall; see report 17).
 6. Authorise legal work + Google outreach (Pixel binary redistribution, partner security access).

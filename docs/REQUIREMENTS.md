@@ -66,6 +66,14 @@ controls, screen-time rules, device pairing. Parent-side video/voice calling is 
 - A3. Google Mobile Services: **assumed none** (pure AOSP).
 - A4. Target hardware: **narrowed by D13 to a curated high-end Snapdragon device set** and by **D15
   to bring-your-own-device** (customer installs our image on a qualified phone; no manufacturer).
-  Exact devices undecided (topics 15, 17). Open sub-question: must every qualified phone be
-  relockable with our own key (tamper resistance), or may some stay unlocked?
+  Exact devices undecided (topics 15, 17). Re-lockability: see A7.
 - A5. Product name: "Zune" is a codename only (Microsoft trademark history).
+- A7. **UNCONFIRMED interpretation** of the founder's answer "For the first version of this product by
+  us and given to the user": **v1 is company-provisioned. We flash (and re-lock) the qualified phone
+  and hand it to the user.** Customer self-install (the BYO installer of D15) comes in a later
+  version. Consequences if confirmed: (a) every v1 device must be re-lockable with our own AVB key
+  (Device Support Contract MUST), which narrows the Snapdragon list; (b) a factory-style flashing and
+  QA station replaces the customer installer in v1; (c) because we flash and deliver the device,
+  OEM-blob redistribution, warranty and (if we supply the phone) equipment-compliance questions
+  return. **Open:** does the customer send in their own phone (flash-as-a-service) or do we buy
+  phones and sell them pre-flashed?
