@@ -64,12 +64,12 @@ pass)`. **Verification status is per report in the table below.**
 | 16 | Minimal Settings app (D14) | **written, skeptic-verified** |
 | 17 | Selling the image: BYO distribution, installer, licensing (D15) | **written, skeptic-verified** |
 | 18 | v1 flash-and-deliver operations (D16) | **written, skeptic-verified** |
-| 19 | India: regulation and compliance (D18) | not yet written |
-| 20 | India: market, carriers, languages, content, pricing (D18) | not yet written |
-| 21 | Own-hardware roadmap, India (D21) | not yet written |
+| 19 | India: regulation and compliance (D18) | **written**, skeptic pass pending |
+| 20 | India: market, carriers, languages, content, pricing (D18) | **written, skeptic-verified** |
+| 21 | Own-hardware roadmap, India (D21) | **written**, skeptic pass pending |
 | 00 | Cross-topic critique | not yet written |
 
-(Generated 2026-10-02 13:10 UTC by docs/handoff/refresh-status.py)
+(Generated 2026-10-02 13:46 UTC by docs/handoff/refresh-status.py)
 <!-- STATUS-TABLE:END -->
 
 **Run failures on 2026-10-02 (~12:50 UTC):** the skeptic-verification passes for topics 03-11 and the
