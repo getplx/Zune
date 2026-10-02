@@ -42,6 +42,7 @@ Reports live in `docs/research/NN-*.md`. Each was written by an investigator age
 verify stage ran) edited in place by an independent skeptic who appends `## Verification (second
 pass)`. **Verification status is per report in the table below.**
 
+<!-- STATUS-TABLE:START -->
 | # | Topic | State |
 |---|-------|-------|
 | 01 | AOSP base release, cadence, build host | **written**, skeptic pass pending |
@@ -51,22 +52,23 @@ pass)`. **Verification status is per report in the table below.**
 | 05 | Parental-controls platform | **written**, skeptic pass pending |
 | 06 | Curated video (YouTube) | **written**, skeptic pass pending |
 | 07 | AI assistant | **written**, skeptic pass pending |
-| 08 | Walkie-talkie / comms | not yet written (queued or researching) |
-| 09 | Core apps stack | not yet written (queued or researching) |
-| 10 | OTA / signing / security / supply chain | not yet written (queued or researching) |
-| 11 | Compliance & legal | not yet written (queued or researching) |
+| 08 | Walkie-talkie / comms | not yet written |
+| 09 | Core apps stack | not yet written |
+| 10 | OTA / signing / security / supply chain | not yet written |
+| 11 | Compliance & legal | not yet written |
 | 12 | Telephony: calls + SMS + allowlists (D4-D6) | **written, skeptic-verified** |
 | 13 | Kid messenger + video calling (D7-D8) | **written, skeptic-verified** |
 | 14 | Weather education app (D9) | **written, skeptic-verified** |
 | 15 | Snapdragon device selection (D13) | **written, skeptic-verified** |
-| 16 | Minimal Settings app (D14) | **written**, skeptic pass pending |
-| 17 | Selling the image: BYO distribution, installer, licensing (D15) | **written**, skeptic pass pending |
+| 16 | Minimal Settings app (D14) | **written, skeptic-verified** |
+| 17 | Selling the image: BYO distribution, installer, licensing (D15) | **written, skeptic-verified** |
 | 18 | v1 flash-and-deliver operations (D16) | **written**, skeptic pass pending |
-| 00 | Cross-topic critique | not yet written (queued or researching) |
+| 00 | Cross-topic critique | not yet written |
 
-(Snapshot generated 2026-10-02 08:37 UTC; the workflows were still running. Counts above may be behind.)
+(Generated 2026-10-02 08:43 UTC by docs/handoff/refresh-status.py)
+<!-- STATUS-TABLE:END -->
 
-Refresh in conversation 2:
+Refresh in conversation 2 (the table above regenerates with `python3 docs/handoff/refresh-status.py`):
 ```
 git fetch origin research/android-kids-foundation && git log --oneline origin/research/android-kids-foundation
 ls docs/research
@@ -181,6 +183,26 @@ before D13-D16, so reconcile them (HANDOFF section 8, step 4).
   and hide the Settings path from the alert-history screen. Alert policy must key on CAP
   `WEAHandling`, not hand-kept event names. Open-Meteo cost is ~2x the estimate (AQI is a separate
   endpoint); content needs a science reviewer (e.g. dew point, not humidity, explains "sticky").
+
+**Settings (report 16).**
+- Do **not** rewrite or slim-fork Settings. Ship a small new **ZuneSettings** (Compose, platform-signed)
+  as the only Settings UI the child sees (~11 rows: Sound, Display, Accessibility-lite, Language,
+  Battery, Storage, Emergency, About/Legal), deep-linking to **stock AOSP screens only for Wi-Fi,
+  mobile data/SIM and Bluetooth** (the cheap way to honour D14 "as it is"). Stock `com.android.settings`
+  cannot be removed (framework hard-references it), so it stays installed **default-deny**: ~40 of 437
+  activities enabled, the rest disabled by a CI-generated component override, plus `config_*` knobs and
+  Device-Owner restrictions; SystemUI trimmed by overlay (6 QS tiles, 3-item power menu).
+- **Never use `DISALLOW_CONFIG_WIFI` / `DISALLOW_CONFIG_MOBILE_NETWORKS`**: they blank the whole page.
+- Skeptic corrections: "zero Java patches" is wrong: the Wi-Fi preferences row (WEP, Wi-Fi Direct,
+  Install certificates) stays visible and removing CertInstaller then crashes Settings; **captive-portal
+  "Sign in" and venue-website buttons stay on the Wi-Fi details page**, so there is no enforcing
+  mechanism yet (decision: accept that hotel/school captive-portal Wi-Fi is unsupported in v1, parent
+  hotspot workaround). A parent-gated in-device factory reset fails unless the Device Owner is the sole
+  setter of `DISALLOW_FACTORY_RESET`; `ACTION_ENABLE_SUPERVISION` can hand `ROLE_SUPERVISION` to the
+  caller and launch the platform PIN setup, so report 05's PIN plan is incomplete. TalkBack and a TTS
+  engine are not in AOSP (accessibility law, e.g. CVAA, needs counsel). Report 03 lists
+  SettingsIntelligence as a hard keep (it is removable; removing it kills Settings search) and
+  TalkBack as a keep (not in AOSP).
 
 ## 5. Known conflicts: reports written before the founder's decisions
 
@@ -301,4 +323,5 @@ decision, not something a chat session can do.
   `research/android-kids-foundation` carries everything. No PR exists.
 - `docs/REQUIREMENTS.md`: canonical decisions (D1-D16). `docs/research/`: reports. `docs/handoff/`:
   `research-workflow.js` (reusable multi-agent script, tested with stubs in all four modes),
-  `STARTER_PROMPT.md` (paste into the new chat).
+  `STARTER_PROMPT.md` (paste into the new chat), `refresh-status.py` (regenerates the report-status
+  table in this file from `docs/research/`).
