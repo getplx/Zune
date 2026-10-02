@@ -145,7 +145,7 @@ Price gap: competitor devices sell at $100-240 plus $15-20/mo; a $450 Pixel need
 2. A downstream Pixel build = AOSP tag + vendor module generated from Google factory images + Google kernels (GrapheneOS/platform_manifest@17:default.xml; GrapheneOS/adevtool@17) [PRIMARY].
 3. GrapheneOS Android 17 builds Pixel gens 6-10 incl. 10a, excludes gen 11; 9a and 10a share `zumapro` (adevtool@17:config/device/all.yml, common/gen9pixel.yml) [PRIMARY].
 4. Pixel supports relock with a custom AVB key (GrapheneOS/device_common@17:generate-factory-images-common.sh) [PRIMARY].
-5. LineageOS has no official Android 17 builds as of 2026-09-28; official Pixels stop at 9a (LineageOS/hudson@main:lineage-build-targets) [PRIMARY].
+5. LineageOS has no official Android 17 builds as of 2026-09-28; official Pixels stop at 9a (LineageOS/hudson@main:lineage-build-targets) [PRIMARY]. [CORRECTED] Official Pixels stop at the Pixel 9 generation (9, 9 Pro, 9 Pro XL, 9 Pro Fold, 9a); none of the Pixel 10 family or 10a. The "no Android 17" half is confirmed (hudson main = 94ee70b; targets are 205 x lineage-23.2 and 115 x lineage-22.2).
 6. GSIs are app-validation-only, not redistributable, Pixel-validated; community GSI has no Android 17 branch (developer.android.com/topic/generic-system-image/releases; TrebleDroid/device_phh_treble) [PRIMARY].
 7. Pixel 10a is $499 and supported to March 2033; Pixel 11 starts at $899 (blog.google 10a post; androidauthority Pixel 11 series) [SECONDARY].
 8. Pixel 11 lacks MTE and GrapheneOS could not finish the port (androidauthority.com/no-grapheneos-google-pixel-11-3704622) [SECONDARY].
