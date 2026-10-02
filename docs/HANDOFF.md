@@ -60,7 +60,8 @@ pass)`. **None had completed verification when this file was first written.**
 | 14 | Weather education app | queued |
 | 15 | Snapdragon device selection (D13) | researching (added after the founder's 3rd message) |
 | 16 | Minimal Settings app (D14) | researching (added after the founder's 3rd message) |
-| 17 | Selling the image: BYO distribution, installer, licensing (D15) | queued (added after the founder's 4th message) |
+| 17 | Selling the image: BYO distribution, installer, licensing (D15) | researching (added after the 4th message) |
+| 18 | v1 flash-and-deliver operations (D16) | queued (added after the 5th message) |
 | 00 | Cross-topic critique | queued (runs after 01-11 + verification) |
 
 Refresh in conversation 2:
@@ -70,7 +71,7 @@ ls docs/research
 grep -L "Verification (second pass)" docs/research/*.md   # reports NOT yet skeptic-checked
 ```
 Topics 01-11 were launched before the founder's second message (D4-D12); 12-14 after it; 15-16 after
-the third (D13-D14); 17 after the fourth (D15). Reports 01-11 were therefore written without those decisions in the brief
+the third (D13-D14); 17 after the fourth (D15); 18 after the fifth (D16). Reports 01-11 were therefore written without those decisions in the brief
 (see section 5).
 
 ## 4. Conclusions so far (reports 01 and 02; secondary sources, verify against AOSP)
@@ -129,9 +130,10 @@ Gabb, Troomi) rebadge commodity phones + subscription.
   qualification program. Upside to verify: keeping the phone's stock modem/IMS firmware may make
   VoLTE/carrier acceptance easier than for a flashed Pixel. Topic 17 covers this; also affects 04
   (enforcement cannot assume a relocked bootloader), 10 (our keys on customers' devices), 12, 15.
-- **A7 (unconfirmed): v1 is company-flashed and handed to the user; self-install later.** If confirmed,
-  topic 17's consumer installer becomes a v2 concern and v1 needs a flashing/QA station design
-  (report 02 path A mechanics, report 10 factory flow); every v1 device must be relockable (topic 15).
+- **D16 (confirmed): v1 is company-flashed on the customer's phone and handed back; self-install later.**
+  Topic 17's consumer installer becomes a v2 concern; v1 needs the flash-and-deliver service of
+  topic 18 (report 02 path A mechanics, report 10 factory flow); every v1 device must be relockable
+  (topic 15).
 - **03 (minimal product) / 04 (no-browser) vs D14 (Settings).** Wi-Fi and mobile data must stay
   standard, yet Wi-Fi proxy/static DNS/Private DNS/VPN/tethering and captive-portal sign-in are
   bypass vectors. Topic 16 defines what is kept, read-only, parent-gated, hidden or forced.
@@ -190,7 +192,7 @@ decision, not something a chat session can do.
    `Workflow({scriptPath: "<repo>/docs/handoff/research-workflow.js", args: {mode: "research", topics: [<missing slugs>]}})`
    Slugs: aosp-base hardware-target minimal-product no-browser parental-controls curated-video
    ai-assistant walkie-talkie core-apps ota-security compliance telephony-sms messenger-video
-   weather-education snapdragon-hardware settings-minimal byo-distribution. (Max 2 agents run in parallel on a 4-core container.)
+   weather-education snapdragon-hardware settings-minimal byo-distribution v1-provisioning-ops. (Max 2 agents run in parallel on a 4-core container.)
 3. **Re-verify against primary sources:** `mode: "verify"` for at least aosp-base, hardware-target,
    minimal-product, no-browser, parental-controls, telephony-sms, core-apps, ota-security.
 4. **Reconcile** every report written before the decisions: `mode: "reconcile"`.
@@ -218,9 +220,9 @@ decision, not something a chat session can do.
 1. Launch market / first country [US]. *Asked once in conversation 1, unanswered.*
 2. May the child **send** SMS, or only receive (parent-visible)? [child neither sends nor reads SMS]
 3. Google Mobile Services: confirm none [none].
-4. *(D15 answered: customers bring their own phone. Re-lock question answered by A7, UNCONFIRMED.)*
-   **Confirm A7: in v1 do we flash and hand over the device? And is the phone customer-supplied
-   (flash-as-a-service) or bought by us and sold pre-flashed?** Then: which devices.
+4. *(Answered: D15 customers bring their own phone; D16 we flash and hand over in v1, so every v1
+   device must be re-lockable.)* **How many users in the first batch?** (sizes the ops design.)
+   Then: which devices.
 5. Pricing/licence model for the image: one-time licence vs per-child/per-family subscription vs both
    (the cloud services are the practical paywall; see report 17).
 6. Authorise legal work + Google outreach (Pixel binary redistribution, partner security access).
@@ -231,6 +233,6 @@ decision, not something a chat session can do.
 
 - Remote `https://github.com/getplx/Zune` had no branches before this work. Branch
   `research/android-kids-foundation` carries everything. No PR exists.
-- `docs/REQUIREMENTS.md`: canonical decisions (D1-D15). `docs/research/`: reports. `docs/handoff/`:
+- `docs/REQUIREMENTS.md`: canonical decisions (D1-D16). `docs/research/`: reports. `docs/handoff/`:
   `research-workflow.js` (reusable multi-agent script, tested with stubs in all four modes),
   `STARTER_PROMPT.md` (paste into the new chat).

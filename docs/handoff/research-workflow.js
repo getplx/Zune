@@ -1,6 +1,6 @@
 export const meta = {
   name: 'zune-research',
-  description: 'Zune kids-Android research (17 topics): research+verify topics, re-verify reports against primary AOSP sources, reconcile with founder decisions, cross-topic critic',
+  description: 'Zune kids-Android research (18 topics): research+verify topics, re-verify reports against primary AOSP sources, reconcile with founder decisions, cross-topic critic',
   phases: [
     { title: 'Research', detail: 'topic investigators write docs/research/NN-*.md' },
     { title: 'Verify', detail: 'one skeptic per report re-checks claims (prefers primary AOSP sources)' },
@@ -20,14 +20,14 @@ export const meta = {
 //   mode    : "research" (default: write report, then verify it) | "verify" (verify
 //             existing reports only) | "reconcile" (revise existing reports against
 //             docs/REQUIREMENTS.md) | "critic" (cross-topic critique only)
-//   topics  : array of slugs; default = all 17
+//   topics  : array of slugs; default = all 18
 //   repo    : repo root, default /home/user/Zune
 //   scratch : scratch dir for shallow clones, default /tmp/zune-scratch
 //   concurrency note: the harness caps parallel agents at min(16, CPUs-2).
 //
 // Slugs: aosp-base hardware-target minimal-product no-browser parental-controls
 //        curated-video ai-assistant walkie-talkie core-apps ota-security compliance
-//        telephony-sms messenger-video weather-education snapdragon-hardware settings-minimal byo-distribution
+//        telephony-sms messenger-video weather-education snapdragon-hardware settings-minimal byo-distribution v1-provisioning-ops
 // ---------------------------------------------------------------------------
 
 const A = (typeof args === 'object' && args) ? args : {}
@@ -40,9 +40,9 @@ const BRIEF = `
 PROJECT BRIEF (codename "Zune", repo getplx/Zune, working dir ${REPO})
 A custom AOSP-based Android 17 OS image for children, sold as a product: clean minimal build, custom first-party apps only, NO web browser, NO YouTube access by any route, parents manage everything through a browser-based parental-control portal (the child device has no browser). Delivery is staged: Stage 1 = every feature exists end-to-end in its simplest form; Stage 2 = make it better.
 
-READ FIRST, IN THIS ORDER: ${REPO}/docs/REQUIREMENTS.md (the founder's canonical resolved decisions D1-D15 and assumptions A1-A5; AUTHORITATIVE: where anything below or any earlier report conflicts with it, REQUIREMENTS.md wins) and ${REPO}/docs/HANDOFF.md (project state, what is verified, what is not). Existing reports are in ${OUT}/ (01 aosp-base, 02 hardware, 03 minimal product, 04 no-browser lockdown, 05 parental controls, 06 curated video, 07 AI assistant, 08 walkie-talkie/comms, 09 core apps, 10 OTA/signing/security, 11 compliance, 12 telephony+SMS, 13 messenger+video calling, 14 weather, 15 snapdragon-hardware, 16 settings-minimal, 17 byo-distribution); read the ones relevant to your topic if they exist. Several earlier reports were written BEFORE the founder put cellular calls/SMS, the messenger, video calling, weather and topic-driven video search in scope; where they assumed otherwise, say so under "Conflicts with earlier reports" and propose the corrected design.
+READ FIRST, IN THIS ORDER: ${REPO}/docs/REQUIREMENTS.md (the founder's canonical resolved decisions D1-D16 and assumptions A1-A5; AUTHORITATIVE: where anything below or any earlier report conflicts with it, REQUIREMENTS.md wins) and ${REPO}/docs/HANDOFF.md (project state, what is verified, what is not). Existing reports are in ${OUT}/ (01 aosp-base, 02 hardware, 03 minimal product, 04 no-browser lockdown, 05 parental controls, 06 curated video, 07 AI assistant, 08 walkie-talkie/comms, 09 core apps, 10 OTA/signing/security, 11 compliance, 12 telephony+SMS, 13 messenger+video calling, 14 weather, 15 snapdragon-hardware, 16 settings-minimal, 17 byo-distribution, 18 v1-provisioning-ops); read the ones relevant to your topic if they exist. Several earlier reports were written BEFORE the founder put cellular calls/SMS, the messenger, video calling, weather and topic-driven video search in scope; where they assumed otherwise, say so under "Conflicts with earlier reports" and propose the corrected design.
 
-KEY FOUNDER DECISIONS (summary of REQUIREMENTS.md): no browser; no way to reach YouTube (videos only inside the Zune Videos section, curated, gated by the child's age group or a topic the child asked about); cellular voice calls + SMS IN scope with parent-controlled inbound and outbound number allowlists; SMS NOT readable on the device but readable in the parent portal; in-product WhatsApp-like 1:1 messenger (text + emoji only, NO groups) under the same parental contact controls; video calling only with approved participants (other Zune kids; parent-side calling interface deferred); weather app that teaches kids about weather; walkie-talkie; ChatGPT-style AI assistant that accepts images; a MINIMAL Settings app (Wi-Fi and mobile data fully standard, everything else only if fairly required, nothing unnecessary; D14); the product supports only a small curated set of devices and high-end Snapdragon-class phones are acceptable, Pixels are NOT required (D13; supersedes the Pixel-first recommendation in report 02 until report 15 lands); the business model is to SELL THE IMAGE and let customers install it on their own qualified phones, no hardware sales (D15; report 17). Assumed (unless REQUIREMENTS.md says otherwise): US launch market, no GMS.
+KEY FOUNDER DECISIONS (summary of REQUIREMENTS.md): no browser; no way to reach YouTube (videos only inside the Zune Videos section, curated, gated by the child's age group or a topic the child asked about); cellular voice calls + SMS IN scope with parent-controlled inbound and outbound number allowlists; SMS NOT readable on the device but readable in the parent portal; in-product WhatsApp-like 1:1 messenger (text + emoji only, NO groups) under the same parental contact controls; video calling only with approved participants (other Zune kids; parent-side calling interface deferred); weather app that teaches kids about weather; walkie-talkie; ChatGPT-style AI assistant that accepts images; a MINIMAL Settings app (Wi-Fi and mobile data fully standard, everything else only if fairly required, nothing unnecessary; D14); the product supports only a small curated set of devices and high-end Snapdragon-class phones are acceptable, Pixels are NOT required (D13; supersedes the Pixel-first recommendation in report 02 until report 15 lands); the business model is to SELL THE IMAGE and let customers install it on their own qualified phones, no hardware sales (D15; report 17); in VERSION 1 the company flashes and re-locks the customer's qualified phone and hands it back (D16; report 18), self-install comes later. Assumed (unless REQUIREMENTS.md says otherwise): US launch market, no GMS.
 
 FACTS ESTABLISHED SO FAR (verify, do not trust blindly): Android 17 = AOSP tag android-17.0.0_r1, build CP2A.260605.016, branch android17-release; AOSP publishes source only in Q2 and Q4; report 02 recommended Pixel 9a/10a (Tensor, zumapro) as the v1 hardware path but D13 reopens that: devices are now Snapdragon-first (report 15); AOSP 17 contains a native supervision framework (SupervisionManager); stock AOSP products include Browser2 (must not inherit unchanged).
 
@@ -247,7 +247,21 @@ const TOPICS_D = [
   },
 ]
 
-const ALL = [...TOPICS_A, ...TOPICS_B, ...TOPICS_C, ...TOPICS_D]
+const TOPICS_E = [
+  {
+    slug: 'v1-provisioning-ops', file: '18-v1-flash-and-deliver-operations.md', title: 'Version-1 delivery: customers contact us, we flash the image on their qualified phone and hand it back',
+    focus: `Founder decisions D15-D16: we sell the image; in VERSION 1 the first batch of users contact us, WE flash the image onto their qualified phone (and re-lock it with our own key) and give it to them; customer self-install comes later. Phones are assumed customer-supplied. Design this service so a small team can run a safe, repeatable pilot.
+1) Customer journey end to end: first contact (a web form/email; parents use a browser, the child device has none), eligibility check against the qualified-device list (model/codename/region variant, carrier-locked or financed phones, stock firmware version, battery and physical condition, Google-account/FRP lock and OEM account locks such as Samsung Knox/KG, Xiaomi account, Motorola/Verizon locks, OEM-unlock waiting periods that some vendors impose), intake logistics (in-person vs mail-in; shipping, insurance, tracking, chain of custody, loaner/spare phone so the child is not left without one), explicit data-wipe consent and backup advice (unlocking the bootloader ERASES the phone), SIM/eSIM handling (eSIM profiles are lost on wipe; carrier re-issue), hand-over with parent-portal enrolment (QR/claim code), a short onboarding, and after-sales support/returns.
+2) Flashing and provisioning station: bill of materials (PC, powered USB hubs, cables, charging), software (fastboot scripts or tooling, per-device image selection, flashing avb_custom_key, fastboot flashing lock, disabling OEM unlocking, key-attestation verification, per-device identity and logging), where signing keys live (images pre-signed in the release pipeline; the AVB private key must never sit on a station), throughput at 10 / 100 / 1,000 devices, unbrick and recovery procedures, the QA checklist (boot, locked state, VoLTE and SMS on a test SIM per carrier, camera, audio, GPS, charging, Wi-Fi/BT, supervision enrolment, a no-browser audit and a no-YouTube-route audit), secure erase on return, reflash/RMA, and how the same artifacts and pre-flight checks become the later customer installer (report 17).
+3) Legal and policy for a flash-as-a-service: customer agreement (data wipe, warranty effects, brick risk and liability cap, consumer-protection rules by region), custody of customer property and insurance, personal data in our hands (IMEI, photos, PINs: never retain; deletion proof), OEM warranty statements for unlocked/modified phones for the candidate OEMs (verify per OEM), carrier terms on modified devices, handling of OEM firmware/blobs when we write our image to their phone (keep the customer's stock vendor partitions where possible; cross-check report 17), pilot/beta terms, children's data once enrolled (COPPA/GDPR consent flow for parents), and incident response.
+4) Pilot design for "the first bunch of users": recommended cohort sizes (e.g. 10, then 25, then 100), selection criteria (families, ages, qualified phones, carriers), success metrics (install success rate, minutes per device, support tickets, parent satisfaction, child-safety incidents, bypass attempts, battery life, call/SMS reliability), feedback loop, OTA updates from day one, kill-switch and rollback plan, privacy review gates, communication to parents.
+5) Costs and staffing: hands-on time per device, number of people, tooling, shipping and spare-phone float, support cost for 10 / 100 / 1,000 devices; what breaks first when volume grows; the threshold at which to build the self-install flow.
+6) Dependencies and conflicts with other reports: 02 (factory flow and Pixel assumptions), 10 (flashing at scale, key custody), 15 (qualified-device list; relock MUST), 17 (BYO installer now a v2 concern), 12 (telephony QA per carrier), 04 (locked-state guarantee), 05 (enrolment).
+7) Recommendation, Stage-1 MVP of the service (smallest repeatable pilot) and Stage-2 improvements, plus founder decisions in order of impact with defaults (e.g. pilot size, in-person vs mail-in, pricing of the flash service).`,
+  },
+]
+
+const ALL = [...TOPICS_A, ...TOPICS_B, ...TOPICS_C, ...TOPICS_D, ...TOPICS_E]
 const wanted = Array.isArray(A.topics) ? A.topics : null
 const TOPICS = ALL.filter((t) => !wanted || wanted.includes(t.slug))
 if (wanted) {
@@ -355,7 +369,7 @@ Then EDIT the report in place (Edit tool; ONLY ${OUT}/${t.file}): fix wrong stat
 const reconcilePrompt = (t) => `${BRIEF}
 
 You are the RECONCILER for the report at ${OUT}/${t.file} ("${t.title}"). Read ${REPO}/docs/REQUIREMENTS.md, then the whole report, then any other report you need (they are in ${OUT}/).
-For each founder decision D1-D15 and assumption A1-A5 that touches this topic, decide whether the report's recommendation conflicts with it (typical conflicts: "no voice/SMS in v1" vs D4-D6; any design that lets the child reach YouTube or a browser vs D1-D3; assumptions about walkie-talkie/messaging scope vs D7-D8, D10; AI scope vs D11; weather vs D9).
+For each founder decision D1-D16 and assumption A1-A5 that touches this topic, decide whether the report's recommendation conflicts with it (typical conflicts: "no voice/SMS in v1" vs D4-D6; any design that lets the child reach YouTube or a browser vs D1-D3; assumptions about walkie-talkie/messaging scope vs D7-D8, D10; AI scope vs D11; weather vs D9).
 Then EDIT the report in place (ONLY ${OUT}/${t.file}): do not delete the original analysis; mark changed statements [RECONCILED] and append a final section "## Reconciliation with founder decisions" with a table: decision | conflict? | revised design/recommendation | effect on cost/risk. Update the report's Summary so it no longer contradicts REQUIREMENTS.md. Return the structured result.`
 
 const criticPrompt = (done) => `${BRIEF}

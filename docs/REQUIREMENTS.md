@@ -35,6 +35,7 @@ Delivery is staged:
 | D13 | The product is limited to a **small, curated set of supported devices**. High-end **Snapdragon**-class devices are acceptable ("very high grade"); the device list is not limited to Pixels. Supersedes the Pixel-first recommendation in `docs/research/02-hardware-target.md` until topic 15 reports. | 2026-10-02 |
 | D14 | The device has a **Settings app with the minimum settings**: **Wi-Fi and mobile data stay fully standard ("as it is")**, plus only what is fairly required. **Nothing unnecessary.** | 2026-10-02 |
 | D15 | **Business model: sell the OS image (software); customers bring a qualified phone** from a curated supported-device list and install it themselves. We do not sell or inventory hardware. | 2026-10-02 |
+| D16 | **Version 1 delivery is company-provisioned.** The first batch of users contact us; **we flash the image on their qualified phone and give it to them.** Customer self-install (the BYO installer of D15) comes in a later version. (Phones are assumed to be customer-supplied, consistent with D15; correct this if we will supply phones.) | 2026-10-02 |
 
 ## Child-device feature list (Stage 1 scope)
 
@@ -50,7 +51,9 @@ Delivery is staged:
 10. Other non-browsing utilities (clock/alarm, calculator, voice recorder, etc.)
 11. Installer + device-qualification program (a product component under D15: web/desktop flasher,
     pre-flight checks, parent-portal enrolment, update channel)
-12. Settings (minimal: Wi-Fi and mobile data as standard; everything else only if fairly required;
+12. v1 delivery service: customer intake, eligibility check, flash + re-lock + QA station,
+    hand-over with parent-portal enrolment (company-provisioned; D16)
+13. Settings (minimal: Wi-Fi and mobile data as standard; everything else only if fairly required;
     parent-gated where a child changing it would defeat a control)
 
 ## Parent portal (browser) — Stage 1 scope
@@ -68,12 +71,9 @@ controls, screen-time rules, device pairing. Parent-side video/voice calling is 
   to bring-your-own-device** (customer installs our image on a qualified phone; no manufacturer).
   Exact devices undecided (topics 15, 17). Re-lockability: see A7.
 - A5. Product name: "Zune" is a codename only (Microsoft trademark history).
-- A7. **UNCONFIRMED interpretation** of the founder's answer "For the first version of this product by
-  us and given to the user": **v1 is company-provisioned. We flash (and re-lock) the qualified phone
-  and hand it to the user.** Customer self-install (the BYO installer of D15) comes in a later
-  version. Consequences if confirmed: (a) every v1 device must be re-lockable with our own AVB key
-  (Device Support Contract MUST), which narrows the Snapdragon list; (b) a factory-style flashing and
-  QA station replaces the customer installer in v1; (c) because we flash and deliver the device,
-  OEM-blob redistribution, warranty and (if we supply the phone) equipment-compliance questions
-  return. **Open:** does the customer send in their own phone (flash-as-a-service) or do we buy
-  phones and sell them pre-flashed?
+- A7. ~~UNCONFIRMED interpretation: v1 is company-provisioned~~ **Confirmed on 2026-10-02: now D16.**
+  Consequences (apply from now on): (a) every v1 device must be re-lockable with our own AVB key
+  (Device Support Contract MUST), which narrows the Snapdragon list; (b) a flashing + QA station and
+  a customer intake process replace the customer installer in v1 (report 18); (c) because we flash
+  and return the device, OEM-blob handling, warranty, customer-data wipe and handling-of-customer-
+  property questions arise. **Still open:** exact number of users in the first batch.
