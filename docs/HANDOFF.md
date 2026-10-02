@@ -58,6 +58,8 @@ pass)`. **None had completed verification when this file was first written.**
 | 12 | Telephony: calls + SMS + allowlists | researching |
 | 13 | Kid messenger + video calling | researching |
 | 14 | Weather education app | queued |
+| 15 | Snapdragon device selection (D13) | researching (added after the founder's 3rd message) |
+| 16 | Minimal Settings app (D14) | researching (added after the founder's 3rd message) |
 | 00 | Cross-topic critique | queued (runs after 01-11 + verification) |
 
 Refresh in conversation 2:
@@ -66,8 +68,9 @@ git fetch origin research/android-kids-foundation && git log --oneline origin/re
 ls docs/research
 grep -L "Verification (second pass)" docs/research/*.md   # reports NOT yet skeptic-checked
 ```
-Topics 01-11 were launched before the founder's second message; 12-14 after. Reports 03-11 were
-therefore written without D4-D11 in the brief (see section 5).
+Topics 01-11 were launched before the founder's second message (D4-D12); 12-14 after it; 15-16 after
+the third (D13-D14). Reports 01-11 were therefore written without those decisions in the brief
+(see section 5).
 
 ## 4. Conclusions so far (reports 01 and 02; secondary sources, verify against AOSP)
 
@@ -94,6 +97,11 @@ therefore written without D4-D11 in the brief (see section 5).
 - Build: Siso default, Bazel gone from the platform build, no ccache hook, Ubuntu 24.04 host;
   **Cuttlefish** (`aosp_cf_x86_64_only_phone-aosp_current-userdebug`) for hardware-free CI.
 
+**Hardware (02), SUPERSEDED IN PART by D13.** The founder later said the product may be limited to a
+curated set of devices and that *high-end Snapdragon* is acceptable, so the Pixel/Tensor-first
+recommendation below is **reopened**; report 15 re-does device selection. The Pixel material remains
+useful as a reference path (documented relock, adevtool) and as a dev device. Original text:
+
 **Hardware (02).** AOSP does not boot on arbitrary phones; Google stopped publishing Pixel device
 trees/driver blobs with Android 16. Recommendation: **Pixel-first**: v0 = Cuttlefish + Pixel 9a
 (`tegu`) and 10a (`stallion`), both `zumapro`; v1 = pre-flashed, bootloader-**relocked with our own
@@ -107,6 +115,15 @@ Gabb, Troomi) rebadge commodity phones + subscription.
   subscription model.
 
 ## 5. Known conflicts: reports written before the founder's decisions
+
+- **02 (Pixel/Tensor-first) vs D13 (Snapdragon, curated device set).** Key new questions: which
+  Snapdragon phones allow relock with a custom AVB key; how a startup gets Qualcomm BSP / Android 17
+  vendor support; retail-flash vs manufacturer-built (an unlocked bootloader defeats tamper
+  resistance); price of high-end hardware for a kids' product; on-device AI via the Hexagon NPU.
+  Topic 15 covers this.
+- **03 (minimal product) / 04 (no-browser) vs D14 (Settings).** Wi-Fi and mobile data must stay
+  standard, yet Wi-Fi proxy/static DNS/Private DNS/VPN/tethering and captive-portal sign-in are
+  bypass vectors. Topic 16 defines what is kept, read-only, parent-gated, hidden or forced.
 
 Run `mode: "reconcile"` (section 8) after the research completes. Already identified:
 - **02 recommends "no voice/SMS in v1"; founder decision D4-D6 puts cellular calls + SMS IN.**
@@ -142,6 +159,8 @@ Encoded as `EXTRA_VERIFY` in `docs/handoff/research-workflow.js`. Summary:
    CellBroadcastReceiver, euicc) for report 12; Telecom call-screening hooks; STIR/SHAKEN
    verification status API.
 8. Captive-portal login app and Settings help links (browser bypass vectors) for report 04.
+9. Real Settings app structure at the tag (screens, aconfig flags, Settings Panels the SystemUI Internet
+   dialog depends on) for report 16; Qualcomm/CodeLinaro BSP facts need no AOSP access.
 
 ## 7. Build host (the chat container cannot build AOSP)
 
@@ -160,7 +179,7 @@ decision, not something a chat session can do.
    `Workflow({scriptPath: "<repo>/docs/handoff/research-workflow.js", args: {mode: "research", topics: [<missing slugs>]}})`
    Slugs: aosp-base hardware-target minimal-product no-browser parental-controls curated-video
    ai-assistant walkie-talkie core-apps ota-security compliance telephony-sms messenger-video
-   weather-education. (Max 2 agents run in parallel on a 4-core container.)
+   weather-education snapdragon-hardware settings-minimal. (Max 2 agents run in parallel on a 4-core container.)
 3. **Re-verify against primary sources:** `mode: "verify"` for at least aosp-base, hardware-target,
    minimal-product, no-browser, parental-controls, telephony-sms, core-apps, ota-security.
 4. **Reconcile** every report written before the decisions: `mode: "reconcile"`.
@@ -188,8 +207,10 @@ decision, not something a chat session can do.
 1. Launch market / first country [US]. *Asked once in conversation 1, unanswered.*
 2. May the child **send** SMS, or only receive (parent-visible)? [child neither sends nor reads SMS]
 3. Google Mobile Services: confirm none [none].
-4. Hardware: Pixel-first pre-flashed (report 02) vs rebadged commodity phones + managed policy.
-5. Revenue model: device bundle vs subscription; device price point.
+4. **Retail phones flashed by us vs a manufacturer-built/qualified device** (D13 fork; decides Qualcomm
+   BSP access, relock/tamper resistance, certification and price). Then: which Snapdragon devices.
+5. Revenue model and device price point (high-end Snapdragon phones cost $600-1,200+): bundle,
+   subscription, financing, or refurb.
 6. Authorise legal work + Google outreach (Pixel binary redistribution, partner security access).
 7. Product name (codename "Zune" has Microsoft trademark history).
 8. Create a `main` branch / repo structure (monorepo layout in report 09).
@@ -198,6 +219,6 @@ decision, not something a chat session can do.
 
 - Remote `https://github.com/getplx/Zune` had no branches before this work. Branch
   `research/android-kids-foundation` carries everything. No PR exists.
-- `docs/REQUIREMENTS.md`: canonical decisions. `docs/research/`: reports. `docs/handoff/`:
+- `docs/REQUIREMENTS.md`: canonical decisions (D1-D14). `docs/research/`: reports. `docs/handoff/`:
   `research-workflow.js` (reusable multi-agent script, tested with stubs in all four modes),
   `STARTER_PROMPT.md` (paste into the new chat).
