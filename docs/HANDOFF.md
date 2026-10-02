@@ -53,7 +53,7 @@ pass)`. **Verification status is per report in the table below.**
 | 06 | Curated video (YouTube) | **written**, skeptic pass pending |
 | 07 | AI assistant | **written**, skeptic pass pending |
 | 08 | Walkie-talkie / comms | **written**, skeptic pass pending |
-| 09 | Core apps stack | not yet written |
+| 09 | Core apps stack | **written**, skeptic pass pending |
 | 10 | OTA / signing / security / supply chain | not yet written |
 | 11 | Compliance & legal | not yet written |
 | 12 | Telephony: calls + SMS + allowlists (D4-D6) | **written, skeptic-verified** |
@@ -62,10 +62,10 @@ pass)`. **Verification status is per report in the table below.**
 | 15 | Snapdragon device selection (D13) | **written, skeptic-verified** |
 | 16 | Minimal Settings app (D14) | **written, skeptic-verified** |
 | 17 | Selling the image: BYO distribution, installer, licensing (D15) | **written, skeptic-verified** |
-| 18 | v1 flash-and-deliver operations (D16) | **written**, skeptic pass pending |
+| 18 | v1 flash-and-deliver operations (D16) | **written, skeptic-verified** |
 | 00 | Cross-topic critique | not yet written |
 
-(Generated 2026-10-02 08:46 UTC by docs/handoff/refresh-status.py)
+(Generated 2026-10-02 08:51 UTC by docs/handoff/refresh-status.py)
 <!-- STATUS-TABLE:END -->
 
 Refresh in conversation 2 (the table above regenerates with `python3 docs/handoff/refresh-status.py`):
@@ -231,6 +231,35 @@ before D13-D16, so reconcile them (HANDOFF section 8, step 4).
   2026-04-22; AI image disclosure to a vendor is a third-party-disclosure case), California AB 1043
   (OS-provider age signal, 2027-01-01), GPL source duty for shipped kernels, FCC rule on third-party
   RF-parameter changes, custody/wipe/bricking liability while we hold customers' phones.
+
+**Version-1 flash-and-deliver service (report 18, skeptic-verified).**
+- Run v1 as an **in-person-first, scripted service behind a hard eligibility gate**, not a mini-factory.
+  Flashing is ~10 unattended minutes plus two physical button presses; the real risk is intake and
+  eligibility (carrier locks, FRP/account locks, stock firmware newer than our bundle, SIM/eSIM),
+  enrolment support and the legal terms for holding a customer's phone. Cleanest intake: a
+  **new-in-box qualified phone** the parent drops off or ships to us.
+- Pilot in cohorts of **10 (staff families), 25, then up to 100**, each gated by exit metrics and
+  privacy gates; no external cohort before the legal gate (counsel: customer agreement, COPPA consent,
+  bailee insurance, Google licence, carrier terms). Founder's batch-size answer is still open.
+- **Stations never hold secrets**: public key blob + signed bundles only; per-model AVB keys signed in
+  the release pipeline with dual-control offline signing before cohort 2. **Rotating an AVB key forces a
+  factory reset of every phone.**
+- **No USB recovery after lock** (OEM unlocking is off), so OTA and signed recovery sideload are the only
+  repair path: OTA must work from the first external device and a **parent-authorised service-unlock**
+  (return-to-stock and reflash) must exist before cohort 2. Conflict to resolve: cohort 1 is promised
+  free return-to-stock but the station disables OEM unlocking, and `DISALLOW_FACTORY_RESET` clears the
+  OEM-unlock bit (report 04).
+- Fully loaded cost **$85-125 per device** (report 17's $25-40 is labour only): suggested $59 in person,
+  $99 mail-in, small pilot subsidy. Build the customer self-install flow only at 250+ devices/month
+  for two months or >3 technician FTE; remote-guided install is the bridge.
+- Skeptic corrections: GrapheneOS `flash-all.sh` has no `fastboot -s`/`ANDROID_SERIAL` and never runs
+  unlock/lock, so a 4-phone station needs a serial-pinned wrapper with human confirmations. Pixel 10a
+  attestation depends on a reachable remote key provisioning service (ship `rkpd`, set
+  `remote_provisioning.hostname`, trust the P-384 root since 2026-02-01); attestation is relayable and
+  does not cover the OEM-unlock toggle. **On relocked Snapdragon phones "OEM unlock off" is not a tamper
+  control** (Qualcomm GBL exploit, EDL programmers). Loaner phones conflict with D15 (no inventory).
+  Mail-in has lithium-battery shipping rules; AB 1043 and FCC third-party-change questions need counsel.
+- Station dev: Pixel 9a/10a first; Fairphone Gen 6+ only after report 15's bring-up and OEM terms.
 
 ## 5. Known conflicts: reports written before the founder's decisions
 
