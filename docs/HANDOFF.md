@@ -63,9 +63,11 @@ pass)`. **Verification status is per report in the table below.**
 | 16 | Minimal Settings app (D14) | **written, skeptic-verified** |
 | 17 | Selling the image: BYO distribution, installer, licensing (D15) | **written, skeptic-verified** |
 | 18 | v1 flash-and-deliver operations (D16) | **written, skeptic-verified** |
+| 19 | India: regulation and compliance (D18) | not yet written |
+| 20 | India: market, carriers, languages, content, pricing (D18) | not yet written |
 | 00 | Cross-topic critique | not yet written |
 
-(Generated 2026-10-02 09:09 UTC by docs/handoff/refresh-status.py)
+(Generated 2026-10-02 09:14 UTC by docs/handoff/refresh-status.py)
 <!-- STATUS-TABLE:END -->
 
 Refresh in conversation 2 (the table above regenerates with `python3 docs/handoff/refresh-status.py`):
@@ -263,6 +265,15 @@ before D13-D16, so reconcile them (HANDOFF section 8, step 4).
 
 ## 5. Known conflicts: reports written before the founder's decisions
 
+- **D18 (India first) vs the US assumptions in reports 11, 12, 13, 14, 15, 17, 18 (and parts of 06, 07).**
+  COPPA -> DPDP Act/Rules (child = under 18; verifiable parental consent; ban on tracking/behavioural
+  monitoring of children unless exempt: does a parental-monitoring product fit?); T-Mobile/AT&T ->
+  Jio/Airtel/Vi/BSNL (VoLTE-only networks, device certification, KYC); WEA/NWS -> India cell broadcast
+  (SACHET) and IMD; FCC/CPSIA -> BIS CRS / WPC ETA; USD pricing -> INR with RBI recurring-payment rules
+  and GST; 911 -> 112 ERSS plus 1098 Childline; English-only -> Hindi and regional languages (Indic
+  IME, fonts, speech, LLM quality); NCERT/CBSE curricula. Topics 19 (regulation) and 20 (market and
+  localization) cover this; then reconcile 06, 07, 11-18 against D18.
+
 - **02 (Pixel/Tensor-first) vs D13 (Snapdragon, curated device set).** Key new questions: which
   Snapdragon phones allow relock with a custom AVB key; how a startup gets Qualcomm BSP / Android 17
   vendor support; retail-flash vs manufacturer-built (an unlocked bootloader defeats tamper
@@ -366,9 +377,10 @@ decision, not something a chat session can do.
 2. May the child **send** SMS, or only receive (parent-visible)? [child neither sends nor reads SMS]
 3. Google Mobile Services: confirm none [none].
 4. *(Answered: D15 customers bring their own phone; D16 we flash and hand over in v1; D17 start on a
-   Pixel 10a/9a.)* **Confirm the US is the first market (A1).** Then: how many users in the first batch
-   (cohorts of 10/25/100 proposed in report 18); authorise counsel + Google outreach on firmware
-   redistribution (the gating legal item).
+   Pixel 10a/9a; D18 India is the first market.)* **What age range of children is the product for?**
+   (reports assumed ~6-13; India's DPDP Act treats everyone under 18 as a child.) Then: launch languages
+   (English + Hindi minimum?); first city and cohort size (reports 18/20); authorise Indian counsel +
+   Google outreach on firmware redistribution (the gating legal item).
 5. Pricing/licence model for the image: one-time licence vs per-child/per-family subscription vs both
    (the cloud services are the practical paywall; see report 17).
 6. Authorise legal work + Google outreach (Pixel binary redistribution, partner security access).

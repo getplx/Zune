@@ -27,6 +27,8 @@ TOPICS = [
     ("16", "Minimal Settings app (D14)", "16-minimal-settings-app.md"),
     ("17", "Selling the image: BYO distribution, installer, licensing (D15)", "17-byo-image-distribution-installer.md"),
     ("18", "v1 flash-and-deliver operations (D16)", "18-v1-flash-and-deliver-operations.md"),
+    ("19", "India: regulation and compliance (D18)", "19-india-regulatory-compliance.md"),
+    ("20", "India: market, carriers, languages, content, pricing (D18)", "20-india-market-and-localization.md"),
     ("00", "Cross-topic critique", "00-cross-topic-critique.md"),
 ]
 START, END = "<!-- STATUS-TABLE:START -->", "<!-- STATUS-TABLE:END -->"

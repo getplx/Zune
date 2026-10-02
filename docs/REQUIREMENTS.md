@@ -37,6 +37,7 @@ Delivery is staged:
 | D15 | **Business model: sell the OS image (software); customers bring a qualified phone** from a curated supported-device list and install it themselves. We do not sell or inventory hardware. | 2026-10-02 |
 | D16 | **Version 1 delivery is company-provisioned.** The first batch of users contact us; **we flash the image on their qualified phone and give it to them.** Customer self-install (the BYO installer of D15) comes in a later version. (Phones are assumed to be customer-supplied, consistent with D15; correct this if we will supply phones.) | 2026-10-02 |
 | D17 | **Start on a Pixel.** The founder accepted beginning with a Pixel (Pixel 10a / 9a class, "a good performing phone") as the first supported device. A Snapdragon phone is **not required for v1**; Snapdragon candidates (Fairphone Gen 6+, Nothing Phone (3)) become a later second-source / premium tier, subject to relock bring-up and written OEM terms (report 15). Supersedes D13's Snapdragon preference for v1. | 2026-10-02 |
+| D18 | **India is the first launch market.** Supersedes assumption A1 (US). Implications to research: India's child-privacy law (DPDP Act and Rules; a "child" is under 18), telecom/messaging rules (DoT, TRAI), Indian carriers and VoLTE, emergency numbers and cell-broadcast alerts, Indic languages, rupee pricing and recurring-payment rules, Pixel supply and warranty in India. | 2026-10-02 |
 
 ## Child-device feature list (Stage 1 scope)
 
@@ -64,7 +65,7 @@ controls, screen-time rules, device pairing. Parent-side video/voice calling is 
 
 ## Open assumptions (to confirm one at a time with the founder)
 
-- A1. Launch market / first country: **assumed US** until told otherwise.
+- A1. ~~Launch market assumed US~~ **Superseded by D18: India.** Reports 11-15, 17, 18 (and parts of 06, 07) were written assuming the US (COPPA, T-Mobile/AT&T, WEA/NWS, USD pricing); they must be reconciled to India (reports 19, 20).
 - A2. Can the child **send** SMS, or only receive (parent-visible)? **Assumed: child does not
   send or read SMS on the device**; the Zune Messenger is the child's text channel.
 - A3. Google Mobile Services: **assumed none** (pure AOSP).
