@@ -54,8 +54,8 @@ pass)`. **Verification status is per report in the table below.**
 | 07 | AI assistant | **written**, skeptic pass pending |
 | 08 | Walkie-talkie / comms | **written**, skeptic pass pending |
 | 09 | Core apps stack | **written**, skeptic pass pending |
-| 10 | OTA / signing / security / supply chain | not yet written |
-| 11 | Compliance & legal | not yet written |
+| 10 | OTA / signing / security / supply chain | **written**, skeptic pass pending |
+| 11 | Compliance & legal | **written**, skeptic pass pending |
 | 12 | Telephony: calls + SMS + allowlists (D4-D6) | **written, skeptic-verified** |
 | 13 | Kid messenger + video calling (D7-D8) | **written, skeptic-verified** |
 | 14 | Weather education app (D9) | **written, skeptic-verified** |
@@ -65,7 +65,7 @@ pass)`. **Verification status is per report in the table below.**
 | 18 | v1 flash-and-deliver operations (D16) | **written, skeptic-verified** |
 | 00 | Cross-topic critique | not yet written |
 
-(Generated 2026-10-02 08:51 UTC by docs/handoff/refresh-status.py)
+(Generated 2026-10-02 09:09 UTC by docs/handoff/refresh-status.py)
 <!-- STATUS-TABLE:END -->
 
 Refresh in conversation 2 (the table above regenerates with `python3 docs/handoff/refresh-status.py`):
@@ -103,7 +103,7 @@ the third (D13-D14); 17 after the fourth (D15); 18 after the fifth (D16). Report
 - Build: Siso default, Bazel gone from the platform build, no ccache hook, Ubuntu 24.04 host;
   **Cuttlefish** (`aosp_cf_x86_64_only_phone-aosp_current-userdebug`) for hardware-free CI.
 
-**Hardware (02), SUPERSEDED IN PART by D13.** The founder later said the product may be limited to a
+**Hardware (02), RESTORED FOR V1 by D17** (reopened by D13 in between; the founder later chose to start on a Pixel). The founder later said the product may be limited to a
 curated set of devices and that *high-end Snapdragon* is acceptable, so the Pixel/Tensor-first
 recommendation below is **reopened**; report 15 re-does device selection. The Pixel material remains
 useful as a reference path (documented relock, adevtool) and as a dev device. Original text:
@@ -365,9 +365,10 @@ decision, not something a chat session can do.
 1. Launch market / first country [US]. *Asked once in conversation 1, unanswered.*
 2. May the child **send** SMS, or only receive (parent-visible)? [child neither sends nor reads SMS]
 3. Google Mobile Services: confirm none [none].
-4. *(Answered: D15 customers bring their own phone; D16 we flash and hand over in v1, so every v1
-   device must be re-lockable.)* **How many users in the first batch?** (sizes the ops design.)
-   Then: which devices.
+4. *(Answered: D15 customers bring their own phone; D16 we flash and hand over in v1; D17 start on a
+   Pixel 10a/9a.)* **Confirm the US is the first market (A1).** Then: how many users in the first batch
+   (cohorts of 10/25/100 proposed in report 18); authorise counsel + Google outreach on firmware
+   redistribution (the gating legal item).
 5. Pricing/licence model for the image: one-time licence vs per-child/per-family subscription vs both
    (the cloud services are the practical paywall; see report 17).
 6. Authorise legal work + Google outreach (Pixel binary redistribution, partner security access).

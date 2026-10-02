@@ -36,6 +36,7 @@ Delivery is staged:
 | D14 | The device has a **Settings app with the minimum settings**: **Wi-Fi and mobile data stay fully standard ("as it is")**, plus only what is fairly required. **Nothing unnecessary.** | 2026-10-02 |
 | D15 | **Business model: sell the OS image (software); customers bring a qualified phone** from a curated supported-device list and install it themselves. We do not sell or inventory hardware. | 2026-10-02 |
 | D16 | **Version 1 delivery is company-provisioned.** The first batch of users contact us; **we flash the image on their qualified phone and give it to them.** Customer self-install (the BYO installer of D15) comes in a later version. (Phones are assumed to be customer-supplied, consistent with D15; correct this if we will supply phones.) | 2026-10-02 |
+| D17 | **Start on a Pixel.** The founder accepted beginning with a Pixel (Pixel 10a / 9a class, "a good performing phone") as the first supported device. A Snapdragon phone is **not required for v1**; Snapdragon candidates (Fairphone Gen 6+, Nothing Phone (3)) become a later second-source / premium tier, subject to relock bring-up and written OEM terms (report 15). Supersedes D13's Snapdragon preference for v1. | 2026-10-02 |
 
 ## Child-device feature list (Stage 1 scope)
 
@@ -67,7 +68,8 @@ controls, screen-time rules, device pairing. Parent-side video/voice calling is 
 - A2. Can the child **send** SMS, or only receive (parent-visible)? **Assumed: child does not
   send or read SMS on the device**; the Zune Messenger is the child's text channel.
 - A3. Google Mobile Services: **assumed none** (pure AOSP).
-- A4. Target hardware: **narrowed by D13 to a curated high-end Snapdragon device set** and by **D15
+- A4. Target hardware: **D17: start on Pixel 10a/9a** (Snapdragon later, report 15). Earlier narrowing:
+  D13 curated device set, and **D15
   to bring-your-own-device** (customer installs our image on a qualified phone; no manufacturer).
   Exact devices undecided (topics 15, 17). Re-lockability: see A7.
 - A5. Product name: "Zune" is a codename only (Microsoft trademark history).
