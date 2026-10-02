@@ -7,9 +7,10 @@ Written 2026-10-02 by the research session. **Read this first**, then `docs/REQU
 
 A custom **kids-only Android 17 (AOSP) OS image**, sold as a product: clean minimal build, custom
 first-party apps only, **no browser, no way to reach YouTube**, parents manage everything from a
-**browser-based portal**. Features: cellular calls + SMS (parent-controlled number allowlists, SMS
-readable only by parents), 1:1 kid messenger (text + emoji, no groups), 1:1 video calling with
-approved people, walkie-talkie, AI assistant (chat UI, image input), curated educational videos
+**browser-based portal**. **No cellular calls and no SMS (D19)**; communication is internet-only and
+WhatsApp-style: 1:1 kid messenger (text + emoji, no groups), 1:1 voice and video calls with approved
+people, walkie-talkie. **English only (D20).** First market India (D18); first phase ~200 users on
+Pixel phones, own hardware later (D21). Also: AI assistant (chat UI, image input), curated educational videos
 (from YouTube, shown only inside our app), weather with lessons, camera, photos, journal, notebook,
 EPUB reader. Stage 1 = everything exists in simplest form; Stage 2 = make it better.
 
@@ -45,8 +46,8 @@ pass)`. **Verification status is per report in the table below.**
 <!-- STATUS-TABLE:START -->
 | # | Topic | State |
 |---|-------|-------|
-| 01 | AOSP base release, cadence, build host | **written**, skeptic pass pending |
-| 02 | Hardware target (Pixel-first; reopened by D13) | **written**, skeptic pass pending |
+| 01 | AOSP base release, cadence, build host | **written, skeptic-verified** |
+| 02 | Hardware target (Pixel-first; reopened by D13) | **written, skeptic-verified** |
 | 03 | Minimal product config | **written**, skeptic pass pending |
 | 04 | No-browser lockdown | **written**, skeptic pass pending |
 | 05 | Parental-controls platform | **written**, skeptic pass pending |
@@ -56,7 +57,7 @@ pass)`. **Verification status is per report in the table below.**
 | 09 | Core apps stack | **written**, skeptic pass pending |
 | 10 | OTA / signing / security / supply chain | **written**, skeptic pass pending |
 | 11 | Compliance & legal | **written**, skeptic pass pending |
-| 12 | Telephony: calls + SMS + allowlists (D4-D6) | **written, skeptic-verified** |
+| 12 | Telephony: calls + SMS + allowlists (D4-D6; SUPERSEDED by D19) | **written, skeptic-verified** |
 | 13 | Kid messenger + video calling (D7-D8) | **written, skeptic-verified** |
 | 14 | Weather education app (D9) | **written, skeptic-verified** |
 | 15 | Snapdragon device selection (D13) | **written, skeptic-verified** |
@@ -65,10 +66,16 @@ pass)`. **Verification status is per report in the table below.**
 | 18 | v1 flash-and-deliver operations (D16) | **written, skeptic-verified** |
 | 19 | India: regulation and compliance (D18) | not yet written |
 | 20 | India: market, carriers, languages, content, pricing (D18) | not yet written |
+| 21 | Own-hardware roadmap, India (D21) | not yet written |
 | 00 | Cross-topic critique | not yet written |
 
-(Generated 2026-10-02 09:14 UTC by docs/handoff/refresh-status.py)
+(Generated 2026-10-02 13:10 UTC by docs/handoff/refresh-status.py)
 <!-- STATUS-TABLE:END -->
+
+**Run failures on 2026-10-02 (~12:50 UTC):** the skeptic-verification passes for topics 03-11 and the
+cross-topic critic, and the first attempt at the India topics (19, 20), failed with an account usage limit
+("session limit, resets 12:50pm UTC"), not a script error. They must be re-run: research for 19-21, then
+`reconcile` for every report (D18-D21), then `verify` for 03-11, then `critic`.
 
 Refresh in conversation 2 (the table above regenerates with `python3 docs/handoff/refresh-status.py`):
 ```
@@ -150,7 +157,9 @@ before D13-D16, so reconcile them (HANDOFF section 8, step 4).
 - Open: OEM written permission to redistribute firmware; some OEMs (FP6) can brick if relocked
   while `get_unlock_ability` is 0, which collides with "disable OEM unlock after relock".
 
-**Telephony (report 12).**
+**Telephony (report 12): LARGELY SUPERSEDED by D19 (no cellular voice/SMS); kept for reference.** What may
+survive: the framework-enforced signed-policy idea (reuse it for the VoIP/messenger allowlist) and
+emergency-call handling. The findings below describe the abandoned cellular design.
 - Enforce the allowlist **in the framework**, deny-by-default, signed policy; role-based call screening
   is not tamper-proof (cannot block outgoing, fails open after 5 s). Best fork point is the phone
   layer (SIM FDN checks already exist in SmsController, GsmCdmaPhone.dial, USSD paths).
@@ -265,6 +274,14 @@ before D13-D16, so reconcile them (HANDOFF section 8, step 4).
 
 ## 5. Known conflicts: reports written before the founder's decisions
 
+- **D19 (no cellular voice/SMS) voids most of report 12** (call allowlists, SMS vault, VoLTE/E911 gating,
+  carrier-of-record and SMS-interception legal issues) and changes reports 02, 05 (no SMS reader in the
+  portal), 11 (no SMS/telecom law), 13 (messenger now also needs **1:1 voice calls**, not just video),
+  15/17/18 (no carrier/VoLTE qualification tests; SIM only needed for data; Pixel 10a SIM-tray/eSIM
+  questions matter less), 14 (WEA only if emergency alerts survive). **D20 (English only)** drops the
+  Hindi/Indic work. **D21** replaces report 18's 10/25/100 cohorts with a staged ~200-user phase and makes
+  the ODM/own-hardware gates in reports 02/15 a roadmap item (topic 21).
+
 - **D18 (India first) vs the US assumptions in reports 11, 12, 13, 14, 15, 17, 18 (and parts of 06, 07).**
   COPPA -> DPDP Act/Rules (child = under 18; verifiable parental consent; ban on tracking/behavioural
   monitoring of children unless exempt: does a parental-monitoring product fit?); T-Mobile/AT&T ->
@@ -348,7 +365,8 @@ decision, not something a chat session can do.
    `Workflow({scriptPath: "<repo>/docs/handoff/research-workflow.js", args: {mode: "research", topics: [<missing slugs>]}})`
    Slugs: aosp-base hardware-target minimal-product no-browser parental-controls curated-video
    ai-assistant walkie-talkie core-apps ota-security compliance telephony-sms messenger-video
-   weather-education snapdragon-hardware settings-minimal byo-distribution v1-provisioning-ops. (Max 2 agents run in parallel on a 4-core container.)
+   weather-education snapdragon-hardware settings-minimal byo-distribution v1-provisioning-ops
+   india-regulatory india-market-localization own-hardware-roadmap. (Max 2 agents run in parallel on a 4-core container.)
 3. **Re-verify against primary sources:** `mode: "verify"` for at least aosp-base, hardware-target,
    minimal-product, no-browser, parental-controls, telephony-sms, core-apps, ota-security.
 4. **Reconcile** every report written before the decisions: `mode: "reconcile"`.
@@ -376,11 +394,12 @@ decision, not something a chat session can do.
 1. Launch market / first country [US]. *Asked once in conversation 1, unanswered.*
 2. May the child **send** SMS, or only receive (parent-visible)? [child neither sends nor reads SMS]
 3. Google Mobile Services: confirm none [none].
-4. *(Answered: D15 customers bring their own phone; D16 we flash and hand over in v1; D17 start on a
-   Pixel 10a/9a; D18 India is the first market.)* **What age range of children is the product for?**
-   (reports assumed ~6-13; India's DPDP Act treats everyone under 18 as a child.) Then: launch languages
-   (English + Hindi minimum?); first city and cohort size (reports 18/20); authorise Indian counsel +
-   Google outreach on firmware redistribution (the gating legal item).
+4. *(Answered: D15 own phone; D16 we flash and hand over in v1; D17 start on a Pixel 10a/9a; D18 India;
+   D19 no cellular voice/SMS; D20 English only; D21 ~200 users on Pixels first, own hardware later.)*
+   **Should the device still place emergency-only calls (112 in India) even though no other cellular
+   calling exists (A9)?** (recommended default: yes). Then: **target age range (A8)**; first city and
+   staging to 200 users; authorise Indian counsel + Google outreach on firmware redistribution (the
+   gating legal item).
 5. Pricing/licence model for the image: one-time licence vs per-child/per-family subscription vs both
    (the cloud services are the practical paywall; see report 17).
 6. Authorise legal work + Google outreach (Pixel binary redistribution, partner security access).

@@ -23,10 +23,10 @@ Delivery is staged:
 | D1 | No web browser on the device. | 2026-10-02 |
 | D2 | No way for the end user to reach YouTube (no app, site, link-out, or deep link). Videos appear only inside the Zune **Videos** section. | 2026-10-02 |
 | D3 | Videos are curated YouTube content, shown only if relevant to the child's **age group** or to a **topic the child asked about** (research). Fully controlled experience. | 2026-10-02 |
-| D4 | **Cellular voice calls and SMS are IN scope.** | 2026-10-02 |
-| D5 | Parent controls an **allowlist of numbers that can call the device** (inbound) and **which numbers the child can call/communicate with** (outbound). | 2026-10-02 |
-| D6 | **SMS is not readable on the device**; it is readable in the parental-control interface. | 2026-10-02 |
-| D7 | WhatsApp-like **in-product messenger** between kids using Zune devices. 1:1 only (**no groups**). Text + emoji only. Under the same parental contact controls as calls/SMS. | 2026-10-02 |
+| D4 | **SUPERSEDED by D19 (2026-10-02).** (was: **Cellular voice calls and SMS are IN scope.**) | 2026-10-02 |
+| D5 | **SUPERSEDED by D19 (2026-10-02).** (was: Parent controls an **allowlist of numbers that can call the device** (inbound) and **which numbers the child can call/communicate with** (outbound).) | 2026-10-02 |
+| D6 | **SUPERSEDED by D19 (2026-10-02).** (was: **SMS is not readable on the device**; it is readable in the parental-control interface.) | 2026-10-02 |
+| D7 | WhatsApp-like **in-product messenger** between kids using Zune devices. 1:1 only (**no groups**). Text + emoji only. Under the parental contact controls (approved contacts only). (Was "same as calls/SMS"; see D19.) | 2026-10-02 |
 | D8 | **Video calling** only with approved participants: other Zune kids, or parents via the parental-control interface. The parent-side calling interface is deferred ("later"). | 2026-10-02 |
 | D9 | **Weather app** that also teaches children about weather. | 2026-10-02 |
 | D10 | **Walkie-talkie** (push-to-talk). | 2026-10-02 |
@@ -38,11 +38,14 @@ Delivery is staged:
 | D16 | **Version 1 delivery is company-provisioned.** The first batch of users contact us; **we flash the image on their qualified phone and give it to them.** Customer self-install (the BYO installer of D15) comes in a later version. (Phones are assumed to be customer-supplied, consistent with D15; correct this if we will supply phones.) | 2026-10-02 |
 | D17 | **Start on a Pixel.** The founder accepted beginning with a Pixel (Pixel 10a / 9a class, "a good performing phone") as the first supported device. A Snapdragon phone is **not required for v1**; Snapdragon candidates (Fairphone Gen 6+, Nothing Phone (3)) become a later second-source / premium tier, subject to relock bring-up and written OEM terms (report 15). Supersedes D13's Snapdragon preference for v1. | 2026-10-02 |
 | D18 | **India is the first launch market.** Supersedes assumption A1 (US). Implications to research: India's child-privacy law (DPDP Act and Rules; a "child" is under 18), telecom/messaging rules (DoT, TRAI), Indian carriers and VoLTE, emergency numbers and cell-broadcast alerts, Indic languages, rupee pricing and recurring-payment rules, Pixel supply and warranty in India. | 2026-10-02 |
+| D19 | **No cellular voice calls and no SMS.** All communication is internet-based and WhatsApp-style: in-product **text messages, voice calls and video calls**, 1:1 only (no groups), approved contacts only, parent-controlled. **Supersedes D4, D5 and D6.** The device needs only data connectivity (Wi-Fi and mobile data, D14). | 2026-10-02 |
+| D20 | **English only** for version 1: no Hindi or other Indian languages (Stage 2 at the earliest). | 2026-10-02 |
+| D21 | **First phase: about 200 users on Pixel phones; eventually the company builds its own hardware.** Own hardware is a later roadmap phase, not v1. The 10/25/100 cohort sizes in report 18 are replaced by a staged ~200-user first phase. | 2026-10-02 |
 
 ## Child-device feature list (Stage 1 scope)
 
-1. Phone calls (allowlisted inbound and outbound; emergency calls always work)
-2. SMS (captured and forwarded to parent portal; not displayed on device)
+1. ~~Cellular phone calls~~ (superseded by D19) -> **in-app voice calls** (WhatsApp-style, internet, 1:1, approved contacts)
+2. ~~SMS~~ (superseded by D19): no SMS on the device
 3. Zune Messenger (1:1 text + emoji, no groups, parent-visible, contact-approved)
 4. Video calling (1:1, approved participants only)
 5. Walkie-talkie (push-to-talk, approved contacts)
@@ -60,14 +63,13 @@ Delivery is staged:
 
 ## Parent portal (browser) — Stage 1 scope
 
-Allowlists (calls/SMS/messenger/video/walkie-talkie), SMS reader, message review, AI and video
+Contact approvals/allowlists (messenger, voice, video, walkie-talkie), message review, AI and video
 controls, screen-time rules, device pairing. Parent-side video/voice calling is deferred.
 
 ## Open assumptions (to confirm one at a time with the founder)
 
 - A1. ~~Launch market assumed US~~ **Superseded by D18: India.** Reports 11-15, 17, 18 (and parts of 06, 07) were written assuming the US (COPPA, T-Mobile/AT&T, WEA/NWS, USD pricing); they must be reconciled to India (reports 19, 20).
-- A2. Can the child **send** SMS, or only receive (parent-visible)? **Assumed: child does not
-  send or read SMS on the device**; the Zune Messenger is the child's text channel.
+- A2. ~~Can the child send SMS?~~ **Moot: no SMS (D19).** The Zune Messenger is the child's text channel.
 - A3. Google Mobile Services: **assumed none** (pure AOSP).
 - A4. Target hardware: **D17: start on Pixel 10a/9a** (Snapdragon later, report 15). Earlier narrowing:
   D13 curated device set, and **D15
@@ -80,3 +82,10 @@ controls, screen-time rules, device pairing. Parent-side video/voice calling is 
   a customer intake process replace the customer installer in v1 (report 18); (c) because we flash
   and return the device, OEM-blob handling, warranty, customer-data wipe and handling-of-customer-
   property questions arise. **Still open:** exact number of users in the first batch.
+- A8. **Target age range of children: UNCONFIRMED.** Reports assumed roughly 6-13; India's DPDP Act
+  treats everyone under 18 as a child.
+- A9. **Emergency calling: UNCONFIRMED.** D19 removes cellular voice, but a phone's radio can still place
+  emergency-only calls (112 in India). Recommended default: keep an emergency-only dial path (no other
+  cellular numbers). Needs founder confirmation and an India regulatory check (report 19).
+- A10. **Connectivity:** Wi-Fi plus mobile data (D14). Assumed a data-only SIM/eSIM is supported;
+  Wi-Fi-only use must also work.

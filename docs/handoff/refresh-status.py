@@ -20,7 +20,7 @@ TOPICS = [
     ("09", "Core apps stack", "09-core-apps-stack.md"),
     ("10", "OTA / signing / security / supply chain", "10-ota-signing-security-supply-chain.md"),
     ("11", "Compliance & legal", "11-compliance-legal-regulatory.md"),
-    ("12", "Telephony: calls + SMS + allowlists (D4-D6)", "12-telephony-calls-sms-allowlists.md"),
+    ("12", "Telephony: calls + SMS + allowlists (D4-D6; SUPERSEDED by D19)", "12-telephony-calls-sms-allowlists.md"),
     ("13", "Kid messenger + video calling (D7-D8)", "13-kid-messenger-and-video-calling.md"),
     ("14", "Weather education app (D9)", "14-weather-education-app.md"),
     ("15", "Snapdragon device selection (D13)", "15-snapdragon-device-selection.md"),
@@ -29,6 +29,7 @@ TOPICS = [
     ("18", "v1 flash-and-deliver operations (D16)", "18-v1-flash-and-deliver-operations.md"),
     ("19", "India: regulation and compliance (D18)", "19-india-regulatory-compliance.md"),
     ("20", "India: market, carriers, languages, content, pricing (D18)", "20-india-market-and-localization.md"),
+    ("21", "Own-hardware roadmap, India (D21)", "21-own-hardware-roadmap-india.md"),
     ("00", "Cross-topic critique", "00-cross-topic-critique.md"),
 ]
 START, END = "<!-- STATUS-TABLE:START -->", "<!-- STATUS-TABLE:END -->"
