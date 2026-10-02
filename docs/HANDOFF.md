@@ -52,7 +52,7 @@ pass)`. **Verification status is per report in the table below.**
 | 05 | Parental-controls platform | **written**, skeptic pass pending |
 | 06 | Curated video (YouTube) | **written**, skeptic pass pending |
 | 07 | AI assistant | **written**, skeptic pass pending |
-| 08 | Walkie-talkie / comms | not yet written |
+| 08 | Walkie-talkie / comms | **written**, skeptic pass pending |
 | 09 | Core apps stack | not yet written |
 | 10 | OTA / signing / security / supply chain | not yet written |
 | 11 | Compliance & legal | not yet written |
@@ -65,7 +65,7 @@ pass)`. **Verification status is per report in the table below.**
 | 18 | v1 flash-and-deliver operations (D16) | **written**, skeptic pass pending |
 | 00 | Cross-topic critique | not yet written |
 
-(Generated 2026-10-02 08:43 UTC by docs/handoff/refresh-status.py)
+(Generated 2026-10-02 08:46 UTC by docs/handoff/refresh-status.py)
 <!-- STATUS-TABLE:END -->
 
 Refresh in conversation 2 (the table above regenerates with `python3 docs/handoff/refresh-status.py`):
@@ -203,6 +203,34 @@ before D13-D16, so reconcile them (HANDOFF section 8, step 4).
   engine are not in AOSP (accessibility law, e.g. CVAA, needs counsel). Report 03 lists
   SettingsIntelligence as a hard keep (it is removable; removing it kills Settings search) and
   TalkBack as a keep (not in AOSP).
+
+**Selling the image (report 17).**
+- Selling the image with company-flashed v1 delivery is workable, **but the OEM blob problem moves
+  rather than disappears**: a phone relocked with our AVB key accepts only payloads we sign, so
+  firmware/modem/vendor patches must ship in **our** OTA, which needs an OEM **redistribution** right,
+  not just a resale right. Google's Pixel licence text was never read (blocked): **the central legal
+  question is unresolved**. Do not charge customers or ship OEM firmware in an OTA before a written
+  answer from Google/Fairphone or a counsel opinion; a private beta of up to 100 devices is the
+  tolerated-practice footing.
+- One **WebUSB installer** (fastboot.js, MIT): first as our own provisioning **station** in v1, released
+  to customers in v2. Strict pre-flight. **Relock with our AVB key mandatory for every "Zune Ready"
+  device**; no unlocked tier. The AVB key is effectively unrotatable: keep it in an offline HSM and use a
+  separate, rotatable OTA key; compromise is a recall-class event.
+- Engineering and private beta on **Pixel 9a/10a** (documented relock, adevtool); Fairphone Gen 6+
+  commercial launch only if it signs written firmware terms and passes a relock test.
+- **Pixel path trap:** Android 17 QPR1 (Pixel-only vendor/firmware drop ~2026-09-15, source not in
+  AOSP until ~December) means customers' auto-updated Pixels carry a newer bootloader/radio than an
+  r1-based image: the anti-rollback pre-flight blocks them unless the pinned build is Google's latest
+  and our r1-based system runs on the QPR1 vendor (monthly backport work).
+- Attestation is **not a hard gate**: it can be relayed or bypassed with a leaked attestation key, so
+  bind each seat to station-recorded serial/ID attestation plus server-side checks.
+- Pricing default proposed by the report (unvalidated): $59 one-time provisioning + $12.99/mo or
+  $119/yr per child, 30-day refund, no one-time-only image fee (recurring costs and EU update duties
+  outlast it); the cloud services are the paywall; lapse policy = safe mode with guardian and 911
+  calls always working. Legal items to take to counsel: amended COPPA Rule (binding since
+  2026-04-22; AI image disclosure to a vendor is a third-party-disclosure case), California AB 1043
+  (OS-provider age signal, 2027-01-01), GPL source duty for shipped kernels, FCC rule on third-party
+  RF-parameter changes, custody/wipe/bricking liability while we hold customers' phones.
 
 ## 5. Known conflicts: reports written before the founder's decisions
 
