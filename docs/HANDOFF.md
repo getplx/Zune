@@ -64,12 +64,12 @@ pass)`. **Verification status is per report in the table below.**
 | 16 | Minimal Settings app (D14) | **written, skeptic-verified** |
 | 17 | Selling the image: BYO distribution, installer, licensing (D15) | **written, skeptic-verified** |
 | 18 | v1 flash-and-deliver operations (D16) | **written, skeptic-verified** |
-| 19 | India: regulation and compliance (D18) | **written**, skeptic pass pending |
+| 19 | India: regulation and compliance (D18) | **written, skeptic-verified** |
 | 20 | India: market, carriers, languages, content, pricing (D18) | **written, skeptic-verified** |
-| 21 | Own-hardware roadmap, India (D21) | **written**, skeptic pass pending |
+| 21 | Own-hardware roadmap, India (D21) | **written, skeptic-verified** |
 | 00 | Cross-topic critique | not yet written |
 
-(Generated 2026-10-02 13:46 UTC by docs/handoff/refresh-status.py)
+(Generated 2026-10-02 13:53 UTC by docs/handoff/refresh-status.py)
 <!-- STATUS-TABLE:END -->
 
 **Run failures on 2026-10-02 (~12:50 UTC):** the skeptic-verification passes for topics 03-11 and the
@@ -271,6 +271,40 @@ emergency-call handling. The findings below describe the abandoned cellular desi
   control** (Qualcomm GBL exploit, EDL programmers). Loaner phones conflict with D15 (no inventory).
   Mail-in has lithium-battery shipping rules; AB 1043 and FCC third-party-change questions need counsel.
 - Station dev: Pixel 9a/10a first; Fairphone Gen 6+ only after report 15's bring-up and OEM terms.
+
+**India launch (reports 19, 20; skeptic-verified; primary Indian legal texts were unreachable, so counsel must re-read the originals).**
+- **Regulation (19).** DPDP children's regime (s.9, Rule 10) is enforceable from **13 May 2027** (MeitY has floated 13 Nov 2026, not gazetted
+  as far as found); design to it now. Telecom licensing is no longer the main exposure (D19 removes PSTN/SMS/carrier-of-record). **Central
+  exposure: DPDP s.9(3)**: a parental-control vendor is in no class exemption, so parent visibility of messages, call metadata and AI chats rests
+  on "the parent is part of the child's Data Principal" plus consent; penalties up to Rs 200 crore. Design to the strict reading: Rule-10 parent
+  verification (DigiLocker token or staff-inspected ID at the flash visit), both-family consent per contact pair, purpose-limited monitoring, no
+  analytics/ad SDKs, location only on SOS, a 12-month restricted retention vault (Rule 8(3)). The Centre told the Supreme Court on 2026-09-28 it
+  will amend the IT Rules to bar under-18 social-media accounts: position the messenger as a closed, family-managed contact tool (no discovery,
+  usernames, feeds, groups). Keep a 112-only emergency path and rebuild the triple-power-press SOS (2016 panic-button rules bind handsets);
+  never touch IMEI/modem partitions. Invite-only, parent-contracted pilot via an **Indian private limited**, **India-region hosting** (AWS Mumbai,
+  DR Hyderabad). **No external family and no charging before counsel's written view** (s.9(3), messenger classification, parent access vs
+  interception law) and a ten-item gate (G1-G10).
+- **Market and localisation (20).** Bengaluru in-person pilot to ~**200 families** in four cohorts (12/30/70/90), Pixel 9a/10a (+ Pixel 9 family);
+  the binding constraint is the **INR 35-48k phone** (plan a ~1,200-parent waitlist). **Connectivity:** Wi-Fi first plus optional physical nano-SIM
+  for data (no consumer data-only SIM exists in India; eSIM Stage 2); keep stock telephony/IMS but **deny-all except 112** (Jio is VoLTE-only and
+  112 needs IMS). Keep CellBroadcastReceiver (AOSP carries MCC 404/405 India config) and Indic fonts. **English UI**; assistant understands
+  Hinglish, replies in simple English. Content: NCERT-aligned tags only (never NCERT text) over StoryWeaver, ISRO, PhET, NASA, Wikipedia,
+  public-domain epics. Weather: Open-Meteo plus the NDMA SACHET CAP feed and CPCB AQI; IMD pending an agreement. Unvalidated price: INR 2,499
+  activation + INR 399/month or INR 3,999/year (GST-incl.) vs ~INR 1,850 in-person unit cost.
+- **Conflicts to resolve:** report 20's public funnel and pricing vs report 19 gates (invite-only, free first phase); crisis design (child cannot
+  dial 1098/1930/14416; 1930 is a financial-fraud line); "always-on India cell-broadcast channels" and "112 always an emergency number in AOSP"
+  are unproven in upstream AOSP (field-test per carrier, enforce in the Zune Emergency screen); the cell-broadcast alert dialog linkifies text by
+  default (overlay it off to honour D1/D2); INR 68k "net" figure is GST-net only (about INR 26-30k after cloud cost); INR 199 founding price is below
+  per-child cloud cost.
+- **Own hardware (21).** Gated, not scheduled (gates H1-H4; no ODM PO before H3). First own device: rebadged 4G LTE data phone on Snapdragon 4 Gen 2 /
+  6-series (precedents HMD Fusion X1, Light Phone III), fused secure-boot keys, no unlock command, voice-capable modem kept but voice off except 112;
+  never Unisoc (public BootROM unlock bug); MediaTek only with verified BROM fuse-off; Wi-Fi-only Genio device is Stage 2. The case is **price
+  (INR 15-18k vs INR 40-48k Pixel) and tamper-proofing, not margin**: modelled breakeven ~8.5k units for a rebadge (~39k custom; ~30k if support/cloud cost
+  is higher), fixed cost ~USD 0.25M / 1.5M. Promise only 3 years of patches (kernel lifetimes end before a 7-year promise); hardware root key in an HSM with
+  two-person custody, never at the ODM. No Indian incentive fits a small brand (PLI ended 2026-03-31). Most regulatory/market claims UNVERIFIED.
+- **Decisions proposed:** Indian counsel now; Indian private limited; Hindi translation of consent/privacy notices only; 112-only emergency path field-tested on
+  data-only SIMs; 12-month restricted retention pending counsel; free invite-only first phase until Indian payments are ready; paper RFQs to Indian/Shenzhen
+  ODMs under NDA; 4-6 replacement phones as a narrow exception to D15.
 
 ## 5. Known conflicts: reports written before the founder's decisions
 
