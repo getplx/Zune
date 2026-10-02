@@ -40,29 +40,31 @@ that can reach AOSP, and re-check everything that matters against primary source
 
 Reports live in `docs/research/NN-*.md`. Each was written by an investigator agent, then (if the
 verify stage ran) edited in place by an independent skeptic who appends `## Verification (second
-pass)`. **None had completed verification when this file was first written.**
+pass)`. **Verification status is per report in the table below.**
 
-| # | Topic | State at handoff |
-|---|-------|------------------|
-| 01 | AOSP base release, cadence, build host | **Written**, unverified |
-| 02 | Hardware target | **Written**, unverified |
-| 03 | Minimal product config | researching |
-| 04 | No-browser lockdown | researching |
-| 05 | Parental-controls platform | queued |
-| 06 | Curated video (YouTube) | queued |
-| 07 | AI assistant | queued |
-| 08 | Walkie-talkie / comms | queued |
-| 09 | Core apps stack | queued |
-| 10 | OTA / signing / security | queued |
-| 11 | Compliance & legal | queued |
-| 12 | Telephony: calls + SMS + allowlists | researching |
-| 13 | Kid messenger + video calling | researching |
-| 14 | Weather education app | queued |
-| 15 | Snapdragon device selection (D13) | researching (added after the founder's 3rd message) |
-| 16 | Minimal Settings app (D14) | researching (added after the founder's 3rd message) |
-| 17 | Selling the image: BYO distribution, installer, licensing (D15) | researching (added after the 4th message) |
-| 18 | v1 flash-and-deliver operations (D16) | queued (added after the 5th message) |
-| 00 | Cross-topic critique | queued (runs after 01-11 + verification) |
+| # | Topic | State |
+|---|-------|-------|
+| 01 | AOSP base release, cadence, build host | **written**, skeptic pass pending |
+| 02 | Hardware target (Pixel-first; reopened by D13) | **written**, skeptic pass pending |
+| 03 | Minimal product config | **written**, skeptic pass pending |
+| 04 | No-browser lockdown | **written**, skeptic pass pending |
+| 05 | Parental-controls platform | **written**, skeptic pass pending |
+| 06 | Curated video (YouTube) | **written**, skeptic pass pending |
+| 07 | AI assistant | **written**, skeptic pass pending |
+| 08 | Walkie-talkie / comms | not yet written (queued or researching) |
+| 09 | Core apps stack | not yet written (queued or researching) |
+| 10 | OTA / signing / security / supply chain | not yet written (queued or researching) |
+| 11 | Compliance & legal | not yet written (queued or researching) |
+| 12 | Telephony: calls + SMS + allowlists (D4-D6) | **written, skeptic-verified** |
+| 13 | Kid messenger + video calling (D7-D8) | **written, skeptic-verified** |
+| 14 | Weather education app (D9) | **written, skeptic-verified** |
+| 15 | Snapdragon device selection (D13) | **written, skeptic-verified** |
+| 16 | Minimal Settings app (D14) | **written**, skeptic pass pending |
+| 17 | Selling the image: BYO distribution, installer, licensing (D15) | **written**, skeptic pass pending |
+| 18 | v1 flash-and-deliver operations (D16) | **written**, skeptic pass pending |
+| 00 | Cross-topic critique | not yet written (queued or researching) |
+
+(Snapshot generated 2026-10-02 08:37 UTC; the workflows were still running. Counts above may be behind.)
 
 Refresh in conversation 2:
 ```
@@ -115,6 +117,70 @@ Gabb, Troomi) rebadge commodity phones + subscription.
 - **Biggest hazards:** (a) legal right to redistribute Google's Pixel firmware/blobs commercially
   is **unresolved**; (b) ~$450 landed hardware vs $100-240 competitor phones forces a bundle or
   subscription model.
+
+## 4b. Verified findings to carry forward (reports 12-15; read the reports for detail)
+
+These came out of the skeptic passes and change earlier assumptions. Reports 12-14 were written
+before D13-D16, so reconcile them (HANDOFF section 8, step 4).
+
+**Hardware and device choice (report 15, skeptic-verified): THE KEY FINDING.**
+- The founder's two wishes collide: *high-end Snapdragon* (D13) and *every v1 phone must be
+  re-lockable with our own AVB key* (D16). Applying the Device Support Contract to the 2026 US market
+  removes most flagship Snapdragon phones: OnePlus 13/15 (newer bootloaders reject custom keys;
+  OnePlus exiting US/EU), Galaxy S25/S26 (OEM unlock reportedly removed), ASUS ROG (no new models),
+  Xiaomi/Honor/Oppo/Vivo (no US carrier certification), Xperia 1 VII (US variant reportedly not
+  unlockable, $1.3k+).
+- **No Snapdragon device has actually met the MUST list yet.** Relock evidence is user reports
+  (avbroot issue 299) for older models; only the **Pixel 10a (Tensor, not Snapdragon)** has
+  vendor-documented custom-key relock. Candidates "pending bring-up": **Fairphone Gen 6+ (7s Gen 4,
+  $649, Android 16, US launch 2026-08-18)** as the proposed stage-1 launch device; **Nothing Phone (3)
+  (8s Gen 4, $799)**; Motorola Signature 27 (8 Elite, unshipped, qualify 2027); Pixel 10a/9a as
+  reference + fallback.
+- BSP route for Snapdragon = OEM-partnered retail-flash with LineageOS device trees as the starting
+  point; **adevtool is Pixel-only**. Full Qualcomm BSPs need a licence (Create Point; Thundercomm; an
+  ODM). Fairphone FP6 tree is not a Gen 6+ tree (different SoC): buy Gen 6+ units for v0.
+- Android 17's framework accepts vendors from Android 13+ (FCM 7, 8, 202404, 202504, 202604), so a
+  frozen older vendor is workable; an Android-15 vendor must already expose all standard HALs as AIDL.
+- Tamper risk: Qualcomm ABL "GBL" exploit unlocked locked 8 Elite Gen 5 phones (Xiaomi, Redmi, POCO
+  on Android 16); fixes depend on each OEM. Lock strength is decided by firmware we cannot patch.
+- Open: OEM written permission to redistribute firmware; some OEMs (FP6) can brick if relocked
+  while `get_unlock_ability` is 0, which collides with "disable OEM unlock after relock".
+
+**Telephony (report 12).**
+- Enforce the allowlist **in the framework**, deny-by-default, signed policy; role-based call screening
+  is not tamper-proof (cannot block outgoing, fails open after 5 s). Best fork point is the phone
+  layer (SIM FDN checks already exist in SmsController, GsmCdmaPhone.dial, USSD paths).
+- **Android 17 (cp2a) builds Telecom and Telephony into the `com.android.telephonycore` APEX**: the fork
+  means a re-signed APEX, bigger than "two source trees". Verify against android-17.0.0_r1.
+- Written for Pixel/GrapheneOS: IMS, eSIM, carrier data do not exist for a customer-supplied
+  Snapdragon phone, so **VoLTE/E911/WEA per device and carrier must be a hard device-qualification
+  gate**. The 30-minute "allow everything" emergency-callback window is a child-exploitable bypass: do
+  not ship it. `DISALLOW_CONFIG_MOBILE_NETWORKS` conflicts with D14 (mobile data as standard).
+- A Telecom filter only rejects when `shouldAllowCall=false` AND `shouldReject=true`.
+- android-17.0.0_r1 may predate telephony fixes (e.g. CVE-2026-28615, a May 2026 MMI bypass): the
+  patch source and latency for the telephony stack is an unaddressed risk.
+- Legal: who is "carrier of record" if Zune sells a line (CPNI, CALEA, E911 fees, robocall mitigation);
+  SMS-vault forwarding is the bigger wiretap/Stored Communications Act exposure than call
+  recording; COPPA written security program (312.8) omitted. Needs counsel before beta.
+
+**Messenger + video (report 13).**
+- **Android 17 foreground-service gap:** a boot-started comms service cannot capture camera/mic or
+  auto-play incoming PTT audio. Media must live in the visible call/Walkie app; the persistent
+  guardian service owns the socket.
+- It duplicates the always-on socket and signed-policy channel of reports 05 and 12: **unify into one
+  device channel.** Self-managed VoIP calls bypass the Telecom allowlist (12), so reuse the policy
+  service.
+- COPPA/legal gaps: no verifiable-parental-consent method named; cross-family guardian reading is a
+  disclosure; need TAKE IT DOWN Act (enforceable since 2026-05-19) and California AB 1043 (OS-provider
+  age signal, 2027-01-01) handling. LiveKit grants default to all rights: set `canPublishData=false`
+  and restrict sources; enforce schedules by removing participants at the boundary.
+
+**Weather (report 14).**
+- WEA (emergency alerts) is not guaranteed on by the overlay: Android 17's CellBroadcastReceiver
+  exposes toggles; use `UserManager.DISALLOW_CONFIG_CELL_BROADCASTS` on the child user plus RRO flags,
+  and hide the Settings path from the alert-history screen. Alert policy must key on CAP
+  `WEAHandling`, not hand-kept event names. Open-Meteo cost is ~2x the estimate (AQI is a separate
+  endpoint); content needs a science reviewer (e.g. dew point, not humidity, explains "sticky").
 
 ## 5. Known conflicts: reports written before the founder's decisions
 

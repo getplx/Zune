@@ -354,6 +354,7 @@ const researchPrompt = (t) => `${BRIEF}
 YOUR TOPIC: ${t.title}
 ${t.focus}
 ${EXTRA_VERIFY[t.slug] ? `\nCARRY-OVER ITEMS that an earlier run could not check against Google's own sources (settle them now if AOSP is reachable):${EXTRA_VERIFY[t.slug]}\n` : ''}
+In the returned JSON set slug to exactly "${t.slug}".
 If a report for this topic already exists at ${OUT}/${t.file}, read it first and IMPROVE it in place (keep what is right, fix what is wrong, mark changes [REVISED]); otherwise write it fresh.
 ${REPORT_SPEC(t)}`
 
@@ -401,14 +402,14 @@ if (MODE === 'research') {
     (r, t) => {
       if (!r) { log(`research:${t.slug} returned nothing - skipping verification`); return null }
       return agent(verifyPrompt(t, r.loadBearingClaims), { label: `verify:${t.slug}`, phase: 'Verify', schema: VERIFY_SCHEMA })
-        .then((v) => ({ research: r, verification: v }))
+        .then((v) => ({ topic: t.slug, research: r, verification: v }))
     },
   )
   const done = results.filter(Boolean)
-  const missing = TOPICS.filter((t) => !done.find((d) => d.research.slug === t.slug)).map((t) => t.slug)
+  const missing = TOPICS.filter((t) => !done.find((d) => d.topic === t.slug)).map((t) => t.slug)
   if (missing.length) log(`NOT COMPLETED: ${missing.join(', ')}`)
   out.completed = done.map((d) => ({
-    slug: d.research.slug, path: d.research.reportPath, recommendation: d.research.recommendation,
+    slug: d.topic, path: d.research.reportPath, recommendation: d.research.recommendation,
     stage1Mvp: d.research.stage1Mvp, conflictsWithEarlierReports: d.research.conflictsWithEarlierReports,
     decisionsForFounder: d.research.decisionsForFounder, risks: d.research.risks,
     verification: d.verification ? { counts: countVerdicts(d.verification), severeIssues: d.verification.severeIssues } : null,
