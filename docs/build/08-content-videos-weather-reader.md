@@ -4,7 +4,7 @@
 
 Specifies what the child sees in Videos, Weather and Reader and the pipelines behind them: catalog, licence register, signed content packs, Tier 1 offline video, Tier 2 YouTube made-for-kids (MFK) embeds behind a kill switch (D25), India weather with authored lessons, and the parent-approved EPUB library. Code: `zune/apps/{videos,weather,reader}`, `zune/backend/{content,weather}`.
 
-**Stage 1** = every MUST works end to end by M5 exit (`01-prerequisites-and-phases.md`); Tier 2 ships dark until the YouTube gate. **Stage 2** = PhET simulations, Wikipedia, multi-place weather, GNSS, live IMD data, reading statistics, Hindi (D20), publisher books.
+**Stage 1** = every MUST works end to end by Z5 exit (`01-prerequisites-and-phases.md`); Tier 2 ships dark until the YouTube gate. **Stage 2** = PhET simulations, Wikipedia, multi-place weather, GNSS, live IMD data, reading statistics, Hindi (D20), publisher books.
 
 Not covered: Guardian, policy engine (`03-lockdown-and-guardian.md`); WebView provider, cell-broadcast overlays (`02-os-image-and-product.md`); keys, ZuneUpdater internals (`04-device-signing-ota-release.md`); channel, portal pages, vault, `kill_state` (`05-backend-and-parent-portal.md`); Assistant (`07-ai-assistant.md`); app shells, TTS (`09-core-apps-and-design-system.md`); legal analysis (`11-compliance-and-privacy-engineering.md`); test execution (`12-testing-qa-and-acceptance.md`).
 
@@ -69,7 +69,7 @@ Evidence is mostly search summaries and GrapheneOS/LineageOS mirrors, not Google
 
 **Reader**
 - **CNT-32 MUST** `app.zune.reader` declares no `INTERNET`, no cleartext, no `ACTION_VIEW` of http(s); CI checks the built APK.
-- **CNT-33 MUST** Readium Kotlin `EpubNavigatorFragment` pinned to the version recorded at M5 start (R09: 3.4.0); external links inert; the system TTS voice-install flow never called.
+- **CNT-33 MUST** Readium Kotlin `EpubNavigatorFragment` pinned to the version recorded at Z5 start (R09: 3.4.0); external links inert; the system TTS voice-install flow never called.
 - **CNT-34 MUST** Ingest and open reject EPUBs with `<script>`, `<iframe>`, `<object>`, remote URLs, external entities or oversize files; blocked requests are counted.
 - **CNT-35 MUST** A title appears only if its band matches and the parent approved it (`content.allow` holds `book:` or `shelf:<band>`; the portal's "Approve starter shelf" is one explicit action); deny wins.
 - **CNT-36 SHOULD** Weather exposes a read-only `content://app.zune.weather.tile/summary` (temperature, condition id, icon id, updated-at, place label) to `app.zune.launcher` only, caller-checked by package and `zune-apps` digest, for 09 APP-11; it returns the last cached value and nothing when suspended or absent.
@@ -187,14 +187,14 @@ Compose hosts the legacy `EpubNavigatorFragment` (the Compose navigators are exp
 |---|---|---|---|---|
 | VN-1 | YouTube rules in §4.5, `status.madeForKids` and `embeddable` fields, `videos.list` 1 unit, `search.list` own bucket, 30-day cache, child-directed designation [R06, summaries] | Official pages unread | Read the developer policies, required minimum functionality, policy answer 9664901, API docs; file YQ1-YQ6; call `videos.list` on test ids | Adjust CNT-10 to CNT-21; if links must work, drop Tier 2 (CNT-19) |
 | VN-2 | Our origin keeps Referer (no Error 153) in Vanadium WebView; playback works with third-party cookies off; `addWebMessageListener` works; `getVideoUrl()` exposes related-video switches; host list is stable; YouTube may refuse stale Chromium [R06 F4, §2.3, I] | Untested; hosts drift | Dev Pixel, MFK test video, monthly host measurement | `loadDataWithBaseURL` origin; other state polling; domain-level allowlist; else drop Tier 2 |
-| VN-3 | ZuneUpdater can verify and serve packs; the caller-certificate check works; Guardian mints REST tokens [I] | Design assumption | M5 spike on Pixels | Provider moves to a Tier A component; tell 04, 05 |
+| VN-3 | ZuneUpdater can verify and serve packs; the caller-certificate check works; Guardian mints REST tokens [I] | Design assumption | Z5 spike on Pixels | Provider moves to a Tier A component; tell 04, 05 |
 | VN-4 | Oak OGL covers a paid product; NASA, ISRO, StoryWeaver (bulk, in-app), Blender, Wikimedia terms allow this use [R06 §2.5, R20 §2.4, S] | Pages blocked | Archive each page; written confirmations from Oak, Pratham, ISRO; counsel | Remove the source |
 | VN-5 | A plain-text licence URI satisfies CC BY attribution without a browser; IT Rules 2021 Part III ratings apply [R20 S]; public-domain basis in India (life plus 60 years [MEMORY]); Gutenberg trademark terms | Counsel questions | Counsel; Gutenberg terms | Summary text on screen, links in portal; `in_rating` internal; pre-cleared authors only |
 | VN-6 | Readium 3.4.0 (BSD-3, interception, `content://` open, external-link hook, script handling), Media3 1.11.1 current, 480p H.264 plays on both Pixels [R09 F6, S] | Mirrors and docs | Read source at the pinned version; hostile EPUB; play test | Copy to private file; patch or native renderer; pin newest |
 | VN-7 | SACHET feed URL, ETag, area format, events, languages, licence; CPCB data on `data.gov.in` (registration, licence, coverage, bands); IMD terms, charges, fixed-IP rule [R20 S, MEMORY] | Unread | Sample the feed 30 days; register; read terms; write to IMD | District-name matching; hide AQI; SACHET only |
 | VN-8 | Open-Meteo Standard price, call weighting, commercial host, attribution rule; MET Norway terms [R14, R20 S] | Pages blocked | Read terms; subscribe; test | Professional plan or self-host [R14] |
 | VN-9 | Cell broadcast in Google's tree: `always_on`, `link_method`, `enable_text_copy`, toggle flags, `DISALLOW_CONFIG_CELL_BROADCASTS`, MCC 404/405, carrier acceptance of non-tappable text [R14, R20] | Mirrors only | Read `packages/modules/CellBroadcast` at the tag; SACHET test alert | Patch the APEX; tell 02 |
-| VN-10 | NCERT class-to-age (about class 2 to 9 for ages 7-14), theme titles, UV 3 and 6, CPCB bands [MEMORY]; a 40 h pack is about 16 GB over hand-over Wi-Fi; every other [INFERRED] value | Memory, estimates | Education lead and meteorologist; measure at M5 | Tag by theme; reviewer sets values; smaller essentials subset |
+| VN-10 | NCERT class-to-age (about class 2 to 9 for ages 7-14), theme titles, UV 3 and 6, CPCB bands [MEMORY]; a 40 h pack is about 16 GB over hand-over Wi-Fi; every other [INFERRED] value | Memory, estimates | Education lead and meteorologist; measure at Z5 | Tag by theme; reviewer sets values; smaller essentials subset |
 
 ## Risks, open gates and out of scope
 
@@ -206,7 +206,7 @@ Compose hosts the legacy `EpubNavigatorFragment` (the Compose navigators are exp
 6. **Heavy first download** on Indian mobile data (CNT-05, VN-10).
 
 Gates:
-- **[GATE: before build]** Pin Readium, Media3, `androidx.webkit` at M5 start; VN-2 and VN-6 spikes recorded.
+- **[GATE: before build]** Pin Readium, Media3, `androidx.webkit` at Z5 start; VN-2 and VN-6 spikes recorded.
 - **[GATE: before staff pilot]** YouTube request filed by W2; licence register `cleared` for the pilot pack; weather pack signed by both reviewers; VN-9 passed.
 - **[GATE: before external family]** Counsel on Tier 2 third-party consent (DPDP), IT Rules ratings, public-domain method; written confirmations (Pratham, ISRO, Oak if used); Tier 2 approved in writing or dropped (CNT-19).
 - **[GATE: before charging]** Paid partner licences signed; Tier 2 in no price (CNT-21); IMD agreement only if IMD data is promised.

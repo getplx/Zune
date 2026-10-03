@@ -70,10 +70,10 @@ Exact module names are in `01-prerequisites-and-phases.md` and `09-core-apps-and
 2. Provision/confirm the build host, the two Pixel dev phones (unlocked), cloud accounts (see section 01 prerequisites), and the secrets manager.
 3. Burn down the **top Verify-first items** in `99-consistency-log.md` (AOSP tag, release config, supervision framework in AOSP itself,
    `android17-security-release` branches, WebView provider, Browser2/Camera2 in `handheld_product.mk`, Pixel firmware licence text).
-4. Milestone M1: fork the manifest, pin `android-17.0.0_r1`, baseline-build `aosp_cf_x86_64_only_phone-aosp_current-userdebug` on Cuttlefish.
-5. Milestone M2 in parallel: Pixel 10a/9a vendor module, relock with a **test** AVB key on dev phones only, OTA from the first device.
+4. Milestone Z1: fork the manifest, pin `android-17.0.0_r1`, baseline-build `aosp_cf_x86_64_only_phone-aosp_current-userdebug` on Cuttlefish.
+5. Milestone Z2 in parallel: Pixel 10a/9a vendor module, relock with a **test** AVB key on dev phones only, OTA from the first device.
 6. Start the backend skeleton (`backend/`), the portal skeleton and the device channel; they do not depend on the OS image.
-Then follow the milestones M3-M8 in `01-prerequisites-and-phases.md`.
+Then follow the milestones Z3-Z8 in `01-prerequisites-and-phases.md`.
 
 ## 6. Spec sections (read the one you are building)
 

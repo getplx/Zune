@@ -86,10 +86,10 @@ Exact module names are in `01-prerequisites-and-phases.md` and `09-core-apps-and
 2. Provision/confirm the build host, the two Pixel dev phones (unlocked), cloud accounts (see section 01 prerequisites), and the secrets manager.
 3. Burn down the **top Verify-first items** in `99-consistency-log.md` (AOSP tag, release config, supervision framework in AOSP itself,
    `android17-security-release` branches, WebView provider, Browser2/Camera2 in `handheld_product.mk`, Pixel firmware licence text).
-4. Milestone M1: fork the manifest, pin `android-17.0.0_r1`, baseline-build `aosp_cf_x86_64_only_phone-aosp_current-userdebug` on Cuttlefish.
-5. Milestone M2 in parallel: Pixel 10a/9a vendor module, relock with a **test** AVB key on dev phones only, OTA from the first device.
+4. Milestone Z1: fork the manifest, pin `android-17.0.0_r1`, baseline-build `aosp_cf_x86_64_only_phone-aosp_current-userdebug` on Cuttlefish.
+5. Milestone Z2 in parallel: Pixel 10a/9a vendor module, relock with a **test** AVB key on dev phones only, OTA from the first device.
 6. Start the backend skeleton (`backend/`), the portal skeleton and the device channel; they do not depend on the OS image.
-Then follow the milestones M3-M8 in `01-prerequisites-and-phases.md`.
+Then follow the milestones Z3-Z8 in `01-prerequisites-and-phases.md`.
 
 ## 6. Spec sections (read the one you are building)
 
@@ -128,11 +128,11 @@ processed the staff cohort. **Stage 2 ("make it better") starts only after the f
 
 ## Purpose and scope
 
-This section tells the building session what must exist before it starts, how the repository is laid out, which humans it depends on, and the order of work (M0 to M8). Stage 1 means every Stage-1 feature in REQUIREMENTS.md works end to end in its simplest form (M5) and is validated with about 200 families (M7). Stage 2 follows M8.
+This section tells the building session what must exist before it starts, how the repository is laid out, which humans it depends on, and the order of work (Z0 to Z8). Stage 1 means every Stage-1 feature in REQUIREMENTS.md works end to end in its simplest form (Z5) and is validated with about 200 families (Z7). Stage 2 follows Z8.
 
 Conventions for all sections:
 - `zune/` is the root of the getplx/Zune checkout, so `zune/docs` is today's `docs/`. Never create a nested `zune/zune/`.
-- `W<n>` is weeks from start (W0 = week of 2026-10-05). Durations are estimates [INFERRED], re-baselined at M1 exit (PRE-16). §4.x means the Design subsections.
+- `W<n>` is weeks from start (W0 = week of 2026-10-05). Durations are estimates [INFERRED], re-baselined at Z1 exit (PRE-16). §4.x means the Design subsections.
 
 Not covered here, by file in `docs/build/`: `02-os-image-and-product.md`, `03-lockdown-and-guardian.md`, `04-device-signing-ota-release.md`, `05-backend-and-parent-portal.md`, `06-communication.md`, `07-ai-assistant.md`, `08-content-videos-weather-reader.md`, `09-core-apps-and-design-system.md`, `10-delivery-operations-and-pilot.md`, `11-compliance-and-privacy-engineering.md`, `12-testing-qa-and-acceptance.md`.
 
@@ -144,14 +144,14 @@ Reconciliations applied:
 |---|---|
 | D15, D16, D17, D21 | Pixel 10a (`stallion`) and 9a (`tegu`) only, company-flashed; Fairphone Gen 6+ launch plan [R15, R17] is out; no customer-handset inventory. |
 | D22 | `zune/os` is a full image; no Device-Owner-on-stock track. R09 Tier A becomes five in-tree components: ZuneGuardian, ZuneLauncher, ZuneSettings, ZuneSetup, ZuneUpdater. R09 "ZuneHome" is ZuneLauncher; ZuneComms and ZunePolicyService fold into ZuneGuardian. |
-| D24, D31 | M3 exit requires Device Owner plus supervision role and gesture navigation with no on-screen buttons; R09's three-button navigation is dropped. |
-| D26, D29 | No Chromium build on the host in v1 (supersedes R10 "self-build monthly"). OpenAI and Anthropic accounts both open at M0; R19 G7 (Anthropic confirmation for child use) covers both. |
+| D24, D31 | Z3 exit requires Device Owner plus supervision role and gesture navigation with no on-screen buttons; R09's three-button navigation is dropped. |
+| D26, D29 | No Chromium build on the host in v1 (supersedes R10 "self-build monthly"). OpenAI and Anthropic accounts both open at Z0; R19 G7 (Anthropic confirmation for child use) covers both. |
 | D18, D19, D28 | US items removed (COPPA, carrier VoLTE, SMS vault, E911, US-SKU rules in R10 G5, R17, R18); replaced by DPDP gates [R19 §4.4], a 112 field test and India-SKU intake [R20 §4.1]. |
 | D21, R20 vs R18 | R18's 10/25/100 cohorts become C0 12, C1 30, C2 70, C3 88 (cumulative 12/42/112/200); R20's 12/30/70/90 sums to 202. |
 | R20 vs R19 | R19 wins on legal posture: C0 is staff households only (R20's "friends" join C1); C1-C3 are free and invite-only until charging gates close. |
-| R21 | R21's `M<n>` means months from Oct 2026; here M0-M8 are milestones, and H1-H4 are evaluated in M8. R21's months 3-6 first cohort is optimistic. |
+| R21 | R21's `M<n>` means months from Oct 2026; here Z0-Z8 are milestones, and H1-H4 are evaluated in Z8. R21's months 3-6 first cohort is optimistic. |
 | Gate names | R19 G1-G10 = LEG-1..10; R17 G5 = FW-1; R18 G0-G2 = SP-n, EXT-n; R10 G1-G6 stay "release gates G1-G6"; R21 H1-H4 = HW-1..4. Do not use bare "G5". |
-| R01 vs R09, R10 | R01's separate `zune/manifest` repo becomes R09's monorepo (`zune/os/manifest`); split repos are a fallback. R01's 1 TB vs R10's 2 TB: one host now (2 TB recommended), a second by M5. |
+| R01 vs R09, R10 | R01's separate `zune/manifest` repo becomes R09's monorepo (`zune/os/manifest`); split repos are a fallback. R01's 1 TB vs R10's 2 TB: one host now (2 TB recommended), a second by Z5. |
 | D23, HANDOFF §9 | Panels and red-team sets use bands 7-9, 10-12, 13-14 (not R09's 4-6). No `main` branch exists; do not create one without founder approval. |
 
 ## Requirements
@@ -160,24 +160,24 @@ Reconciliations applied:
 - PRE-01 MUST: Before any other work run `git ls-remote https://android.googlesource.com/platform/manifest | head -3` and `curl -sSfI` against source.android.com, dl.google.com and developers.google.com. If any fails, stop and send the founder one message naming the denied host [HANDOFF §8].
 - PRE-02 MUST: Build host is Ubuntu 24.04, at least 32 vCPU, 128 GB RAM, 1 TB NVMe (2 TB recommended), `/dev/kvm` readable and writable. Builds run in one pinned container image (digest in `zune/os/tools/build-container.lock`). The agent container (about 30 GB disk) MUST NOT run full builds [HANDOFF §2].
 - PRE-03 MUST: Build host and CI hold no production keys (list in 04). Dev builds use a throwaway key set we generate (never AOSP's public test keys), flagged `dev`; ZuneUpdater and zune-station reject dev-signed artifacts on the prod channel.
-- PRE-04 MUST: Procure Pixel dev units: 1 per model at M2 start, 2 per model before OEM unlocking is turned off on any dev phone, 5 per model before M6 (3 release-candidate, 1 dev, 1 sacrificial; 12 QA-15; 04 G5 needs 3 of them) [R10 G5]; new, India SKU, unlocked, not carrier-financed, no Google account. Record `version-bootloader`, `version-baseband` and the anti-rollback variable before the first flash; never flash an older image than installed [R18 F9].
+- PRE-04 MUST: Procure Pixel dev units: 1 per model at Z2 start, 2 per model before OEM unlocking is turned off on any dev phone, 5 per model before Z6 (3 release-candidate, 1 dev, 1 sacrificial; 12 QA-15; 04 G5 needs 3 of them) [R10 G5]; new, India SKU, unlocked, not carrier-financed, no Google account. Record `version-bootloader`, `version-baseband` and the anti-rollback variable before the first flash; never flash an older image than installed [R18 F9].
 - PRE-05 MUST: Phones attach to a bare-metal lab workstation (direct USB, no hub, no VM) with platform-tools pinned by SHA-256. A named lab operator confirms every `flashing unlock` and `flashing lock` prompt. Keep OEM unlocking ON until a phone's signed boot is proven [R18 §4.2].
 - PRE-06 MUST: Accounts in §4.2 have at least 2 human owners, MFA and offline recovery codes. AWS has separate dev, staging and prod accounts; an SCP denies all regions except ap-south-1 and ap-south-2 (global services excepted).
 - PRE-07 MUST: Dev and staging hold synthetic data only. No real child data, prompt or image reaches OpenAI, Anthropic, LiveKit Cloud or any vendor until its terms are verified per 07 and, for non-staff families, LEG-7 is closed.
 - PRE-08 MUST: Runtime secrets live in AWS Secrets Manager/KMS (ap-south-1); CI reaches AWS by GitHub OIDC, no long-lived keys; a secret scanner runs on every push and fails on private keys and API-key patterns. The repo is private; self-hosted runners attach only to private repos.
 
 **Repository and process**
-- PRE-09 MUST: Use exactly `zune/os`, `zune/apps/*`, `zune/libs/*`, `zune/backend/*`, `zune/portal`, `zune/station`, `zune/docs` (plus `zune/eval`, 12). The AOSP workspace checks out getplx/Zune at `<aosp>/zune` using manifests from `zune/os/manifest`, with directory `<linkfile>`s exposing `device/zune` and `vendor/zune` (02 §1); M1 MUST prove Soong and product discovery there or adopt a §4.3 fallback.
+- PRE-09 MUST: Use exactly `zune/os`, `zune/apps/*`, `zune/libs/*`, `zune/backend/*`, `zune/portal`, `zune/station`, `zune/docs` (plus `zune/eval`, 12). The AOSP workspace checks out getplx/Zune at `<aosp>/zune` using manifests from `zune/os/manifest`, with directory `<linkfile>`s exposing `device/zune` and `vendor/zune` (02 §1); Z1 MUST prove Soong and product discovery there or adopt a §4.3 fallback.
 - PRE-10 MUST: Pin AOSP to `refs/tags/android-17.0.0_r1` with commit SHAs recorded, never a floating branch. Fork an AOSP repo only as a patch stack in `zune/os/patches/<repo>/` with an ADR [R01].
-- PRE-11 MUST: Maintain `zune/docs/gates.md` (ID, type, owner, request date, status, evidence), `verified-facts.md` (Verify-first row, command, output, date, outcome), `decisions/NNN-*.md` (ADRs) and `milestones/Mn.md` (exit evidence).
+- PRE-11 MUST: Maintain `zune/docs/gates.md` (ID, type, owner, request date, status, evidence), `verified-facts.md` (Verify-first row, command, output, date, outcome), `decisions/NNN-*.md` (ADRs) and `milestones/Zn.md` (exit evidence).
 - PRE-12 MUST: Follow the founder's working agreements [HANDOFF §9]: push to branches, no pull requests unless asked; trailer `Co-Authored-By: Claude <noreply@anthropic.com>`, no model names in commit messages, trailers or authorship lines (vendor model IDs in `config/models.yaml` and in 07 are product configuration, not attribution); clean tree at session end; ask the founder only at a gate, one question at a time.
-- PRE-13 MUST: User-visible product-name strings come from one resource key so the name can change (A5). SHOULD: choose the Android package-name root in an M0 ADR without the codename; package names are effectively permanent once devices ship.
+- PRE-13 MUST: User-visible product-name strings come from one resource key so the name can change (A5). SHOULD: choose the Android package-name root in an Z0 ADR without the codename; package names are effectively permanent once devices ship.
 - PRE-14 MUST: Company-owned phones are dev/QA units, "not for sale" (D15); customer replacement phones need a written founder exception [R20 §4.7].
 
 **Plan and gates**
-- PRE-15 MUST: Follow §4.5 order and dependencies; M4 and the Gradle app track MAY start at M1. Close a milestone only when every exit criterion has evidence in `zune/docs/milestones/Mn.md`; the founder acknowledges M0, M2, M5, M6, M7, M8.
-- PRE-16 MUST: Re-baseline at M1 exit from measured build times, disk use and velocity in an ADR; escalate any milestone slipping more than 4 weeks [INFERRED threshold].
-- PRE-17 MUST: Rebase once onto the Q4-2026 AOSP drop (REBASE-1) after it appears on googlesource and between M2 exit and M5 feature freeze, never during M6-M7 [R01]. If absent at M5 exit, stay on r1 plus backports.
+- PRE-15 MUST: Follow §4.5 order and dependencies; Z4 and the Gradle app track MAY start at Z1. Close a milestone only when every exit criterion has evidence in `zune/docs/milestones/Zn.md`; the founder acknowledges Z0, Z2, Z5, Z6, Z7, Z8.
+- PRE-16 MUST: Re-baseline at Z1 exit from measured build times, disk use and velocity in an ADR; escalate any milestone slipping more than 4 weeks [INFERRED threshold].
+- PRE-17 MUST: Rebase once onto the Q4-2026 AOSP drop (REBASE-1) after it appears on googlesource and between Z2 exit and Z5 feature freeze, never during Z6-Z7 [R01]. If absent at Z5 exit, stay on r1 plus backports.
 - PRE-18 MUST: Send the request for every gate in the Gate register by W2; a gate with no request at W2 goes to the founder.
 - PRE-19 MUST: No non-staff household is invited or flashed and no public waitlist or marketing runs until LEG-1..10 and EXT-1..7 are closed.
 - PRE-20 MUST: At most 100 devices are flashed before FW-1 closes; zune-station refuses job 101 without the FW-1 flag [R17 §8]. Until the Google licence has been read (Verify 3) and counsel has given a written view that flashing a customer-owned phone inside the 100-device footing is permitted, only staff-owned phones are flashed. No payment is collected before PAY-1 and FW-1 close.
@@ -191,7 +191,7 @@ Reconciliations applied:
 | Agent container | Read, edit, plan, `git` | Needs the PRE-01 hosts; if gerrit.googlesource.com is blocked use `repo init --repo-url https://github.com/GerritCodeReview/git-repo` [HANDOFF §2] |
 | Build host | AOSP build, Cuttlefish CI, release artifacts, ephemeral self-hosted runners | PRE-02; outside the prod AWS account; `/dev/kvm` needs bare metal or nested virtualisation (GCE): run the kvm check on a trial instance before buying [R01 F7] |
 | Lab workstation | Pixels, `zune-station` | PRE-05; 16 GB RAM, 500 GB SSD, Chromium for WebUSB [R18 §4.2, R17 F5] |
-| Offline signing host | Key generation and signing | Air-gapped, 2-of-3 custodians [R10]; needed before M6; design in 04 |
+| Offline signing host | Key generation and signing | Air-gapped, 2-of-3 custodians [R10]; needed before Z6; design in 04 |
 | AWS India | Backend, portal, OTA artifacts, logs | ap-south-1 primary, ap-south-2 DR (A11, unconfirmed); design in 05 |
 
 Baseline commands (build host):
@@ -206,11 +206,11 @@ adb shell getprop ro.build.id   # on Cuttlefish; expect CP2A.260605.016 [verify]
 
 | Account | Open by | Rules |
 |---|---|---|
-| GitHub org getplx, private repo, self-hosted runner | M0 | 2 owners; branch protection; no `main` yet |
-| AWS Organization (management, dev, staging, prod) | M0 | Founder-owned until the Indian private limited exists (A11), then transferred; no real child data before LEG-2; billing alerts |
-| Domain, DNS, TLS, role mailboxes (security, grievance, privacy), email | M0 | Registrar lock, MFA; neutral domain until name clearance |
-| OpenAI API (default), Anthropic API (fallback) | M0 open, M5 use | Project per environment, spend limits; terms per 07 |
-| LiveKit (only if 06 selects it); payment aggregator and DLT SMS sender (PAY-1, or if 05 picks SMS OTP) | M5; not before M6 | Prefer self-hosted LiveKit in ap-south-1; Cloud needs a DPA and verified India region |
+| GitHub org getplx, private repo, self-hosted runner | Z0 | 2 owners; branch protection; no `main` yet |
+| AWS Organization (management, dev, staging, prod) | Z0 | Founder-owned until the Indian private limited exists (A11), then transferred; no real child data before LEG-2; billing alerts |
+| Domain, DNS, TLS, role mailboxes (security, grievance, privacy), email | Z0 | Registrar lock, MFA; neutral domain until name clearance |
+| OpenAI API (default), Anthropic API (fallback) | Z0 open, Z5 use | Project per environment, spend limits; terms per 07 |
+| LiveKit (only if 06 selects it); payment aggregator and DLT SMS sender (PAY-1, or if 05 picks SMS OTP) | Z5; not before Z6 | Prefer self-hosted LiveKit in ap-south-1; Cloud needs a DPA and verified India region |
 
 ### 4.3 Repository layout
 
@@ -233,44 +233,44 @@ zune/                       # root of getplx/Zune
   eval/                     # assistant and comms evaluation sets (07, 12)
 ```
 
-Placement (one design for 01 and 02): `zune/os/manifest/zune.xml` adds `<project name="Zune" remote="zune" path="zune" revision="..."/>` (remote fetch `https://github.com/getplx/`) with `<linkfile>` entries exposing `os/device/zune` as `device/zune` and `os/vendor/zune` as `vendor/zune`; dev uses the branch, release builds a SHA from `repo manifest -r`. A `.find-ignore` at the `zune/` root hides the checkout so Soong sees the two linked directories only (otherwise every module appears twice); Gradle `build/` dirs carry their own. Tier A and B APKs are Gradle-built and enter the image as prebuilts under `vendor/zune/apps/prebuilt/` (09 Mode G), so no `packages/apps/Zune*` links exist. Fallbacks if the M1 spike fails, in order: (a) check the monorepo out directly at `vendor/zune` (product code then sits under `vendor/zune/os/...`; keep one `ZUNE_ROOT` variable in the makefiles; `.find-ignore` in `portal`, `backend`, `station`, `docs`, `libs`, `eval`); (b) subtree-split repos `getplx/zune-device` and `getplx/zune-vendor` with the monorepo as source of truth. Never commit private keys; `zune/os/tools/gen-dev-keys.sh` writes dev keys outside the repo.
+Placement (one design for 01 and 02): `zune/os/manifest/zune.xml` adds `<project name="Zune" remote="zune" path="zune" revision="..."/>` (remote fetch `https://github.com/getplx/`) with `<linkfile>` entries exposing `os/device/zune` as `device/zune` and `os/vendor/zune` as `vendor/zune`; dev uses the branch, release builds a SHA from `repo manifest -r`. A `.find-ignore` at the `zune/` root hides the checkout so Soong sees the two linked directories only (otherwise every module appears twice); Gradle `build/` dirs carry their own. Tier A and B APKs are Gradle-built and enter the image as prebuilts under `vendor/zune/apps/prebuilt/` (09 Mode G), so no `packages/apps/Zune*` links exist. Fallbacks if the Z1 spike fails, in order: (a) check the monorepo out directly at `vendor/zune` (product code then sits under `vendor/zune/os/...`; keep one `ZUNE_ROOT` variable in the makefiles; `.find-ignore` in `portal`, `backend`, `station`, `docs`, `libs`, `eval`); (b) subtree-split repos `getplx/zune-device` and `getplx/zune-vendor` with the monorepo as source of truth. Never commit private keys; `zune/os/tools/gen-dev-keys.sh` writes dev keys outside the repo.
 
 ### 4.4 Roles the plan assumes [INFERRED unless cited]
 
 | Role (basis) | Needed from |
 |---|---|
-| Platform engineers x2 (R01); security and release owner 0.5-1 FTE and a named WebView owner (R10, D26) | M1; M2 |
-| System-app engineers x2 (Tier A, R09); Android app engineers x5 for 16-20 weeks (R09) | M3; M1 |
-| Backend engineers x3, frontend x1 | M4 |
-| Kid-UX designer, content editor, science reviewer on contract (R09, R20); QA engineer; 6-8 consenting children per band 7-9, 10-12, 13-14 (R09 §4.4) | M1, M5; M3 |
+| Platform engineers x2 (R01); security and release owner 0.5-1 FTE and a named WebView owner (R10, D26) | Z1; Z2 |
+| System-app engineers x2 (Tier A, R09); Android app engineers x5 for 16-20 weeks (R09) | Z3; Z1 |
+| Backend engineers x3, frontend x1 | Z4 |
+| Kid-UX designer, content editor, science reviewer on contract (R09, R20); QA engineer; 6-8 consenting children per band 7-9, 10-12, 13-14 (R09 §4.4) | Z1, Z5; Z3 |
 | Trust and safety lead, 24x7 on-call, resident grievance officer (R19) | Before first cross-family link |
-| Lab operator and station technician: 1 technician, 0.5 support, 0.25 release engineer (R18) | M2, M6 |
-| Engineering on-call rota (at least 2 named people; pages for Sev-1 and Sev-2 per 11 §4.3) and a named secrets and domain owner (05 BE-47, BE-48) | M4 (staging), M6 (24x7) |
-| Indian counsel (M0), 3 key custodians (M6), insurance broker (M6) | As stated |
+| Lab operator and station technician: 1 technician, 0.5 support, 0.25 release engineer (R18) | Z2, Z6 |
+| Engineering on-call rota (at least 2 named people; pages for Sev-1 and Sev-2 per 11 §4.3) and a named secrets and domain owner (05 BE-47, BE-48) | Z4 (staging), Z6 (24x7) |
+| Indian counsel (Z0), 3 key custodians (Z6), insurance broker (Z6) | As stated |
 
 If agents replace some engineers, scope is unchanged; only the calendar moves.
 
 ### 4.5 Milestones
 
-Critical path: M0 > M1 > M2 > M3 > M5 > M6 > M7 > M8. M4 and the Gradle app track run in parallel from M1 and finish before M5 integration.
+Critical path: Z0 > Z1 > Z2 > Z3 > Z5 > Z6 > Z7 > Z8. Z4 and the Gradle app track run in parallel from Z1 and finish before Z5 integration.
 
 | Milestone (weeks) | Deliverables | Depends on | Exit criteria (all MUST) |
 |---|---|---|---|
-| **M0** Foundation, legal gates opened (W0-W2; gates run to M7) | PRE-01..03 and PRE-06..14 met; Pixels ordered (PRE-04); repo skeleton; `pre-check.sh`; `gates.md` with every register gate; briefs sent: counsel (R19 questions), Google (licence read, request drafted for founder), name clearance | Founder spend approval | `pre-check.sh` PASS; each gate has owner and request date; Verify-first 1-3 recorded; counsel brief covers Verify-first 3 and 15 |
-| **M1** Cuttlefish baseline, manifest pin (W1-W5) | Pinned manifest; build container; vanilla `aosp_cf_x86_64_only_phone` boots; `zune_base` (from `base_*`, no Browser2, HTMLViewer, CaptivePortalLogin) boots; CI per merge request; weekly security-branch watcher; Gradle skeleton | M0 | Vanilla boots, `ro.build.id` and SPL recorded; placement spike passed or fallback adopted; package-allowlist diff gate green; no http(s) VIEW resolver; build times recorded; plan re-baselined; Verify-first 4-7 resolved |
-| **M2** Pixel bring-up, relock, OTA (W4-W12) | `stallion` and `tegu` layers (adevtool, pinned Google stock build); QPR1 skew decision record; zune-station v0 (serial-pinned); custom AVB key and lock; ZuneUpdater fork; full OTA N to N+1 from a static bucket | M1; Pixels; lab operator | Both models boot `zune_base` locked, yellow state; OTA applies, A/B fallback shown, downgrade rejected; attestation result recorded; OEM-unlock-off tested only on a sacrificial unit; Verify-first 8-11 and 14 resolved |
-| **M3** Core OS (W8-W20) | ZuneSettings; ZuneLauncher (gesture navigation); ZuneGuardian (Device Owner, supervision role, signed-policy engine with local dev signer, PIN, time engine); ZuneSetup with mock pairing; D31 defaults; bypass suite v0 in CI | M1; M2 for device proof | On Cuttlefish and both Pixels: ZuneSetup provisions Guardian as Device Owner with supervision role; no http(s) handler or YouTube route; gesture navigation with zero nav buttons (not shown by W16: founder decision); unsigned, stale or rolled-back policy rejected; zero P0 bypass failures |
-| **M4** Backend, portal (W6-W20) | IaC for ap-south-1 and ap-south-2; Zune Gateway, Policy Service, device channel; pairing with Rule-10 verification record; consent ledger; audit log; 12-month vault; envelope keys; Stage-1 portal pages (message and AI review complete in M5); observability and on-call paging; backups; secrets rotation, domain and TLS inventory, database and API migration pipeline (05 BE-47..50) | M0 accounts | Synthetic parent claims a Pixel by QR, edits a rule, device enforces the signed policy within 05's latency target; remote lock works; DR restore drill with RTO and RPO recorded; no data outside India regions; Verify-first 12 resolved |
-| **M5** Comms, AI, content, apps (W14-W30) | Messenger, Calls, Walkie; Assistant (OpenAI default, Anthropic fallback); Videos (Tier 1; Tier 2 behind kill switch); Weather; Camera, Photos, Journal, Notebook, Reader, utilities; moderation and T&S tooling; starter content | M3, M4; vendor terms | REQUIREMENTS child-device items 1 and 3-10 work end to end on two Pixels; red-team and moderation sets pass (07, 12); Tier 2 off shows Tier 1 only; 72-hour soak and battery measured; 16 KB-clean; feature freeze; REBASE-1 done or deferred by ADR |
-| **M6** Staff pilot C0, 12 staff households (W28-W36) | Production zune-station (CLI, WebUSB); per-model pilot keys; signed bundles; QR hand-over; support tooling; drills | M5; SP-1..7 | 112 field test passed; zero open child-safety P1; onboarding median under 25 min [R20]; first OTA reaches all devices; kill switches L1-L4 drilled; no successful bypass |
-| **M7** External cohorts, Bengaluru (W36 to about W56) | C1 30, C2 70, C3 88 (cumulative 42, 112, 200); production keys; service-unlock; courier to Hyderabad and Pune only from C2 [R20] | M6; LEG-1..10; EXT-1..7; FW-1 before device 101 | C1: first-pass flash 95%+, no unrecovered brick, 4-week use 85%+, under 2 support contacts per family per week, NPS 40+. C2: OTA success 98% in 72 h. C3: 8-week retention 75%+, no open Sev-1 [R20 thresholds, unvalidated] |
-| **M8** Review, hardware-readiness data (about 8 weeks after C3) | Review report; HW-1..4 evidence [R21 §4.3]; patch-lag and OTA statistics; bypass and tamper results; cost per device vs INR 1,850 [R20]; Stage-2 backlog | M7 | Founder gets pass, fail or unknown per HW gate; no ODM purchase order (needs HW-3); Stage-2 plan decided |
+| **Z0** Foundation, legal gates opened (W0-W2; gates run to Z7) | PRE-01..03 and PRE-06..14 met; Pixels ordered (PRE-04); repo skeleton; `pre-check.sh`; `gates.md` with every register gate; briefs sent: counsel (R19 questions), Google (licence read, request drafted for founder), name clearance | Founder spend approval | `pre-check.sh` PASS; each gate has owner and request date; Verify-first 1-3 recorded; counsel brief covers Verify-first 3 and 15 |
+| **Z1** Cuttlefish baseline, manifest pin (W1-W5) | Pinned manifest; build container; vanilla `aosp_cf_x86_64_only_phone` boots; `zune_base` (from `base_*`, no Browser2, HTMLViewer, CaptivePortalLogin) boots; CI per merge request; weekly security-branch watcher; Gradle skeleton | Z0 | Vanilla boots, `ro.build.id` and SPL recorded; placement spike passed or fallback adopted; package-allowlist diff gate green; no http(s) VIEW resolver; build times recorded; plan re-baselined; Verify-first 4-7 resolved |
+| **Z2** Pixel bring-up, relock, OTA (W4-W12) | `stallion` and `tegu` layers (adevtool, pinned Google stock build); QPR1 skew decision record; zune-station v0 (serial-pinned); custom AVB key and lock; ZuneUpdater fork; full OTA N to N+1 from a static bucket | Z1; Pixels; lab operator | Both models boot `zune_base` locked, yellow state; OTA applies, A/B fallback shown, downgrade rejected; attestation result recorded; OEM-unlock-off tested only on a sacrificial unit; Verify-first 8-11 and 14 resolved |
+| **Z3** Core OS (W8-W20) | ZuneSettings; ZuneLauncher (gesture navigation); ZuneGuardian (Device Owner, supervision role, signed-policy engine with local dev signer, PIN, time engine); ZuneSetup with mock pairing; D31 defaults; bypass suite v0 in CI | Z1; Z2 for device proof | On Cuttlefish and both Pixels: ZuneSetup provisions Guardian as Device Owner with supervision role; no http(s) handler or YouTube route; gesture navigation with zero nav buttons (not shown by W16: founder decision); unsigned, stale or rolled-back policy rejected; zero P0 bypass failures |
+| **Z4** Backend, portal (W6-W20) | IaC for ap-south-1 and ap-south-2; Zune Gateway, Policy Service, device channel; pairing with Rule-10 verification record; consent ledger; audit log; 12-month vault; envelope keys; Stage-1 portal pages (message and AI review complete in Z5); observability and on-call paging; backups; secrets rotation, domain and TLS inventory, database and API migration pipeline (05 BE-47..50) | Z0 accounts | Synthetic parent claims a Pixel by QR, edits a rule, device enforces the signed policy within 05's latency target; remote lock works; DR restore drill with RTO and RPO recorded; no data outside India regions; Verify-first 12 resolved |
+| **Z5** Comms, AI, content, apps (W14-W30) | Messenger, Calls, Walkie; Assistant (OpenAI default, Anthropic fallback); Videos (Tier 1; Tier 2 behind kill switch); Weather; Camera, Photos, Journal, Notebook, Reader, utilities; moderation and T&S tooling; starter content | Z3, Z4; vendor terms | REQUIREMENTS child-device items 1 and 3-10 work end to end on two Pixels; red-team and moderation sets pass (07, 12); Tier 2 off shows Tier 1 only; 72-hour soak and battery measured; 16 KB-clean; feature freeze; REBASE-1 done or deferred by ADR |
+| **Z6** Staff pilot C0, 12 staff households (W28-W36) | Production zune-station (CLI, WebUSB); per-model pilot keys; signed bundles; QR hand-over; support tooling; drills | Z5; SP-1..7 | 112 field test passed; zero open child-safety P1; onboarding median under 25 min [R20]; first OTA reaches all devices; kill switches L1-L4 drilled; no successful bypass |
+| **Z7** External cohorts, Bengaluru (W36 to about W56) | C1 30, C2 70, C3 88 (cumulative 42, 112, 200); production keys; service-unlock; courier to Hyderabad and Pune only from C2 [R20] | Z6; LEG-1..10; EXT-1..7; FW-1 before device 101 | C1: first-pass flash 95%+, no unrecovered brick, 4-week use 85%+, under 2 support contacts per family per week, NPS 40+. C2: OTA success 98% in 72 h. C3: 8-week retention 75%+, no open Sev-1 [R20 thresholds, unvalidated] |
+| **Z8** Review, hardware-readiness data (about 8 weeks after C3) | Review report; HW-1..4 evidence [R21 §4.3]; patch-lag and OTA statistics; bypass and tamper results; cost per device vs INR 1,850 [R20]; Stage-2 backlog | Z7 | Founder gets pass, fail or unknown per HW gate; no ODM purchase order (needs HW-3); Stage-2 plan decided |
 
-Indicative calendar [INFERRED]: M6 about Apr-Jun 2027, M7 about Jun-Oct 2027. DPDP children's duties bind from 13 May 2027 [R19]; act as if in force now.
+Indicative calendar [INFERRED]: Z6 about Apr-Jun 2027, Z7 about Jun-Oct 2027. DPDP children's duties bind from 13 May 2027 [R19]; act as if in force now.
 
 ### 4.6 What blocks what
 
-- Blocks building: PRE-01, PRE-02, repo write access, spend approval, Pixels (M2), API keys (M5).
+- Blocks building: PRE-01, PRE-02, repo write access, spend approval, Pixels (Z2), API keys (Z5).
 - Blocks only the first external family: counsel opinion, Indian entity, Google firmware answer (FW-1, or counsel's footing view), name clearance, T&S and security staffing, key custodians, first city, spare-phone exception, support promise [A11, R19].
 - Blocks charging: PAY-1, FW-1.
 
@@ -292,7 +292,7 @@ Indicative calendar [INFERRED]: M6 about Apr-Jun 2027, M7 about Jun-Oct 2027. DP
 | PRE-06, 07 | From the prod account an us-east-1 API call is explicitly denied; dev and staging databases hold only generated tenants |
 | PRE-09 | `ls zune` shows exactly the required paths; the placement spike builds `zune_base` |
 | PRE-11, 18 | Every `[GATE: ...]` in specs 01-12 appears in `gates.md` with owner and request date |
-| Milestones, week 1 | Each `Mn.md` ticks every exit criterion with evidence; the Day 5 message exists |
+| Milestones, week 1 | Each `Zn.md` ticks every exit criterion with evidence; the Day 5 message exists |
 
 ## Verify first
 
@@ -303,23 +303,23 @@ Indicative calendar [INFERRED]: M6 about Apr-Jun 2027, M7 about Jun-Oct 2027. DP
 | 3. Google's Pixel image and driver licence allows company flashing and OTA redistribution [R17 F1] | Licence text never read | Read the licence pages; give to counsel | At most 100 staff-owned devices; FW-1 open; founder picks written permission or another device |
 | 4. Supervision framework and empty `config_systemSupervision` hooks are in AOSP itself and an overlay fills them; stock product makefiles list Browser2, CaptivePortalLogin, HTMLViewer [R01 F5, F6] | Seen only in GrapheneOS; 16.0.0_r3 for makefiles; overlayability [INFERRED] | grep `frameworks/base` and `build/make/target/product/*.mk`; set the overlay on Cuttlefish; `cmd role` | D24 falls back to Device Owner plus profile-owner APIs; escalate to 03; product stays default-deny |
 | 5. Ubuntu 24.04 builds Android 17 (clean 1.5-3 h, incremental 3-15 min); `aosp_cf_x86_64_only_phone-aosp_current-userdebug` is valid; `/dev/kvm` works [R01 F4, F7] | Proven only via GrapheneOS and secondary sources; times [INFERRED] | Baseline build and Cuttlefish boot in the container | 22.04 image; a listed `aosp_cf_*` target; bare metal; resize host |
-| 6. Monorepo at `<aosp>/zune` with directory `<linkfile>`s to `device/zune` and `vendor/zune` and a root `.find-ignore` is discovered by Soong without duplicate modules; `AndroidProducts.mk` discovery works through a symlinked directory; `repo init -m` accepts a subdirectory manifest | My design [INFERRED]; `.find-ignore` and symlink behaviour from memory | M1 spike (02 V11) | §4.3 fallbacks (a) then (b) |
-| 7. Vanadium prebuilt is obtainable, redistributable and accepted as WebView provider (D26) [R10 F10] | Not read from AOSP | Per 02 | Self-build Chromium; host at least 2 TB, 128 GB RAM; re-plan M3 |
+| 6. Monorepo at `<aosp>/zune` with directory `<linkfile>`s to `device/zune` and `vendor/zune` and a root `.find-ignore` is discovered by Soong without duplicate modules; `AndroidProducts.mk` discovery works through a symlinked directory; `repo init -m` accepts a subdirectory manifest | My design [INFERRED]; `.find-ignore` and symlink behaviour from memory | Z1 spike (02 V11) | §4.3 fallbacks (a) then (b) |
+| 7. Vanadium prebuilt is obtainable, redistributable and accepted as WebView provider (D26) [R10 F10] | Not read from AOSP | Per 02 | Self-build Chromium; host at least 2 TB, 128 GB RAM; re-plan Z3 |
 | 8. Pixel QPR1 vendor and firmware skew (about 2026-09-15) blocks an r1-based image on updated phones [R17 §4.1, R18 F9] | Search summaries | Compare Google factory build IDs and bootloaders for `stallion` and `tegu`; `fastboot getvar` the anti-rollback variable (`anti` or `ap-ar-s`, unverified) | 04 backports or rebases early |
-| 9. Pixel 10a and 9a relock with a custom AVB key on Android 17 [R17 F3, R18 F3] | AVB README read via a LineageOS mirror | Sacrificial-unit test in M2 | Stop; founder picks another device or accepts tamper risk |
-| 10. rkpd attestation works for a non-GMS OS; `remote_provisioning.hostname` is settable [R10 F12] | Google service terms unknown | M2 attestation test | Station-recorded identity plus server checks; run a proxy |
+| 9. Pixel 10a and 9a relock with a custom AVB key on Android 17 [R17 F3, R18 F3] | AVB README read via a LineageOS mirror | Sacrificial-unit test in Z2 | Stop; founder picks another device or accepts tamper risk |
+| 10. rkpd attestation works for a non-GMS OS; `remote_provisioning.hostname` is settable [R10 F12] | Google service terms unknown | Z2 attestation test | Station-recorded identity plus server checks; run a proxy |
 | 11. adevtool covers Indian SKUs of `stallion` and `tegu` (configs list US SKUs) [R17] | Not checked | Run adevtool on an Indian-SKU unit | Add the SKU |
 | 12. ap-south-2 offers the services 05 selects; infra about USD 0.7-1.4k a month with DR (05 §4.8; R10's USD 0.5-0.9k a month plus 10-18k once is superseded) [R10, memory] | Unchecked; the figures differ by source and have no quote | AWS service list; quotes | DR with fewer services; founder re-approves spend |
-| 13. Effort (R09 about 80 person-weeks of apps), cohort thresholds [R20], calendar | [INFERRED] | Velocity at M1 exit | Re-plan |
+| 13. Effort (R09 about 80 person-weeks of apps), cohort thresholds [R20], calendar | [INFERRED] | Velocity at Z1 exit | Re-plan |
 | 14. Pixel 10a is codenamed `stallion` and 9a `tegu`, both on platform `zumapro` with Google's 6.1 per-model kernel prebuilts (stated as fact in 02, 04, 10); both are sold in India as bootloader-unlockable SKUs [R02, R17, R20] | Codenames and platform from mirrors and search summaries; 10a is recent; India SKU never inspected | `fastboot getvar product` on the first units; Google factory-image and kernel pages; buy one India unit of each | Rename `device/zune/<codename>`; if a model is not sold or unlockable in India, drop it (D17 needs one working model only) |
 | 15. DPDP children's duties commence 13 May 2027 (calendar below) and the rules cited in 11 are as summarised [R19, 11 VL-1] | Mirrors; Gazette and corrigendum unread | Counsel (LEG-1); 11 VL-1 | The build already acts as if in force (CMP-02); only the calendar note changes |
-| 16. The 12/30/70/88 cohort split, INR 199 vs INR 399 monthly price and INR 1,850 floor are founder-unvalidated [R20]; 07 §4.6 uses INR 399 and 05 §4.8 shows fixed cloud cost of about INR 340-670 per child-month at 200 children | Estimates; prices conflict across sources | PAY-1 finance sign-off; M8 cost data | Re-price or re-scope before any charging |
+| 16. The 12/30/70/88 cohort split, INR 199 vs INR 399 monthly price and INR 1,850 floor are founder-unvalidated [R20]; 07 §4.6 uses INR 399 and 05 §4.8 shows fixed cloud cost of about INR 340-670 per child-month at 200 children | Estimates; prices conflict across sources | PAY-1 finance sign-off; Z8 cost data | Re-price or re-scope before any charging |
 
 ## Risks, open gates and out of scope
 
 Risks:
-1. Human-held gates (counsel, Google, entity) are slow and set the date of M7; open them at M0.
-2. Pixel QPR1 skew can leave r1-based images unbootable on current vendor firmware (M2).
+1. Human-held gates (counsel, Google, entity) are slow and set the date of Z7; open them at Z0.
+2. Pixel QPR1 skew can leave r1-based images unbootable on current vendor firmware (Z2).
 3. Gesture navigation needs a Quickstep-compatible launcher (D31; R03).
 4. Non-partner patch lag about 125 days [R01 F2]; T&S and security staffing is open (A11).
 5. Karnataka's under-16 social-media announcement or an IT Rules under-18 amendment could capture the messenger; confirm the first city [R19, R20].
@@ -334,7 +334,7 @@ Gate register (IDs are canonical for all sections):
 | EXT-1..7 [GATE: before external family] | (1) first city; (2) name clearance; (3) T&S and security staffing; (4) production key ceremony; (5) spare-phone exception; (6) support promise (3 years contractual [R10]); (7) Hindi parent-notice exception to D20 if counsel finds English-only notices fail DPDP ss.5(3), 6(3) | Founder decision logged |
 | FW-1 [GATE: before charging] | Written Google firmware answer; also before device 101 and before OEM firmware in an OTA; for the first external family either FW-1 or counsel's written view on the 100-device footing (PRE-20) | Written answer or counsel opinion |
 | PAY-1 [GATE: before charging] | Indian aggregator, e-mandate pre-debit notice, GST invoices, DLT, validated INR price (founding price INR 199 is below per-child cloud cost [R20]) | Finance and counsel sign-off |
-| HW-1..4 (not a v1 gate) | R21 H1-H4, evaluated in M8 | M8 report |
+| HW-1..4 (not a v1 gate) | R21 H1-H4, evaluated in Z8 | Z8 report |
 
 Out of scope: own-hardware design and ODM orders; customer self-install; parent-side calling (D8); Hindi or Indic UI (D20); Snapdragon second device (D17); US and EU launches; Stage 2.
 
@@ -417,7 +417,7 @@ Package namespace (provisional, name clearance): `app.zune.<module>` for every a
 **Navigation**
 - **OS-23 MUST** Gesture navigation is default, not child-changeable, with no button bar (the thin gesture handle is allowed); ZuneSetup shows a first-boot gesture tutorial (`09`).
 - **OS-24 MUST** HOME resolves to `app.zune.launcher`: Guardian sets persistent preferred activity and HOME role.
-- **OS-25 MUST** Build Path A (§7); it passes NAV-1..8 (AT-06) by M3 exit or Path B replaces it. Path C forbidden in Stage 1. Three-button only by founder decision.
+- **OS-25 MUST** Build Path A (§7); it passes NAV-1..8 (AT-06) by Z3 exit or Path B replaces it. Path C forbidden in Stage 1. Three-button only by founder decision.
 
 **WebView**
 - **OS-26 MUST** Vanadium is the only entry in `config_webview_packages.xml`; the Vanadium browser APK never ships.
@@ -539,11 +539,11 @@ SystemUI gesture mode relies on a launcher-proxy service in the package named by
 | Path | Architecture | Verdict |
 |---|---|---|
 | **A (build first)** | Stock `Launcher3QuickStep` stays as recents provider with RRO trim; `ZuneLauncher` is a plain Compose HOME app. Launcher3's `OverviewComponentObserver` falls back to `RecentsActivity` when another package is default home, as third-party launchers rely on [M]. | Zero fork if RRO suffices; else P-LAU-1. |
-| **B (fallback)** | Fork `packages/apps/Launcher3`, strip workspace, all-apps, widgets; ZuneLauncher is the single Launcher3QuickStep-derived package. | Larger fork, churn each drop; estimate in M3 spike. |
+| **B (fallback)** | Fork `packages/apps/Launcher3`, strip workspace, all-apps, widgets; ZuneLauncher is the single Launcher3QuickStep-derived package. | Larger fork, churn each drop; estimate in Z3 spike. |
 | **C** | Own launcher proxy, recents animation, input consumers. | Forbidden in Stage 1: hidden AIDL renamed between releases, no CTS coverage. |
 | **D** | Three-button, ZuneLauncher only [R03 F5]. | Violates D31; founder decision only. |
 
-Sequence: Guardian (Device Owner) calls `addPersistentPreferredActivity` for HOME and sets the HOME role to ZuneLauncher; SystemUI binds the Launcher3 proxy and swipe-up-and-hold opens `RecentsActivity`. Risks: overview chrome is Launcher3's (little theming); overview actions and search must be off; Launcher3's HOME activity must stay enabled or `OverviewComponentObserver` fails [M]; each rebase touches Quickstep. If A fails and B is not passing at M3 exit, stop and escalate [GATE: before staff pilot].
+Sequence: Guardian (Device Owner) calls `addPersistentPreferredActivity` for HOME and sets the HOME role to ZuneLauncher; SystemUI binds the Launcher3 proxy and swipe-up-and-hold opens `RecentsActivity`. Risks: overview chrome is Launcher3's (little theming); overview actions and search must be off; Launcher3's HOME activity must stay enabled or `OverviewComponentObserver` fails [M]; each rebase touches Quickstep. If A fails and B is not passing at Z3 exit, stop and escalate [GATE: before staff pilot].
 
 ### 8. WebView (D26)
 
@@ -577,13 +577,13 @@ repo init -u https://github.com/getplx/Zune -b research/android-kids-foundation 
   -m zune/os/manifest/zune.xml --partial-clone --clone-filter=blob:limit=10M --no-clone-bundle
 repo sync -c -j8 --no-tags
 source build/envsetup.sh && lunch zune_kids_cf-aosp_current-userdebug && m -j"$(nproc)"
-# M1 vanilla: repo init -u https://android.googlesource.com/platform/manifest -b refs/tags/android-17.0.0_r1
+# Z1 vanilla: repo init -u https://android.googlesource.com/platform/manifest -b refs/tags/android-17.0.0_r1
 ```
 Release config is `aosp_current` (alias of `cp2a`, V2); flag overrides live in `vendor/zune/release/`; SPL bumps only via 04's pipeline. Use the working branch until `main` exists [HANDOFF §2]. Host: 32 vCPU, 128 GB RAM, 1 TB NVMe minimum (2 TB recommended, 01 PRE-02), Ubuntu 24.04 container, `/dev/kvm` [R01 F4].
 
 | Lunch target | Use |
 |---|---|
-| `aosp_cf_x86_64_only_phone-aosp_current-userdebug` | M1 vanilla baseline; record sync size, build time. |
+| `aosp_cf_x86_64_only_phone-aosp_current-userdebug` | Z1 vanilla baseline; record sync size, build time. |
 | `zune_kids_cf-aosp_current-userdebug` | Every merge request: boot, `image_diff`, Settings crawl, NAV suite, WebView test. |
 | `zune_kids_cf-aosp_current-user` | Nightly static gates; user-vs-userdebug file diff equals the debug allowlist. |
 | `sdk_phone16k_x86_64-aosp_current-userdebug` (name per goldfish tree) | Nightly 16 KB boot, install Zune APKs, smoke. |
@@ -614,24 +614,24 @@ Do V1 to V3 before anything else.
 | V2 | `aosp_current` = `cp2a`; lunch is `product-release-variant`; vendor release-config map overrides `RELEASE_WEBAPP_MODULE`, SPL, supervision flags | GrapheneOS tree; override inferred [R03 F3] | Read `build/release/`; build with a map | Use real names; P-REL-1. |
 | V3 | `base_product.mk` exists; contents of `handheld_*`, `telephony_*`, `media_*`; every REMOVE row removable; RRO overrides supervision keys and the WebView xml | Stock 17 not read [R01 F6, R03 F1] | Read files; build `zune_kids_cf`; boot; `image_diff` | `overrides:` stubs [R03 F2]; `PRODUCT_PACKAGE_OVERLAYS`; one `build/make` fork at most. |
 | V4 | OsuLogin neutralisable by override or P-WIFI-1 | APEX-contained [R04 F1] | Inspect `com.android.wifi` | Rely on P-FWK-1 and 03's network deny. |
-| V5 | Stock Quickstep with another default home gives working gestures; names `config_recentsComponentName`, `QUICKSTEP_SERVICE`, `LauncherProxyService`; Launcher3 HOME must stay enabled | From memory [R03 F5, M] | Read `OverviewComponentObserver`, `TouchInteractionService`, SystemUI; NAV suite with a stub ZuneLauncher in M1 | Path B; then §7 gate. |
+| V5 | Stock Quickstep with another default home gives working gestures; names `config_recentsComponentName`, `QUICKSTEP_SERVICE`, `LauncherProxyService`; Launcher3 HOME must stay enabled | From memory [R03 F5, M] | Read `OverviewComponentObserver`, `TouchInteractionService`, SystemUI; NAV suite with a stub ZuneLauncher in Z1 | Path B; then §7 gate. |
 | V6 | `config_navBarInteractionMode=2` selects gestures; navigation-mode page unreachable | Inferred | `settings get secure navigation_mode` | Guardian sets it. |
 | V7 | An in-call UI exists at the tag; `DISALLOW_OUTGOING_CALLS` permits emergency calls; `cmd phone emergency-number-test-mode` works; CB config covers MCC 404/405 | Dialer in 17 unverified [R03 §3, I] | Inspect manifest; Cuttlefish modem simulator; Pixel | Guardian ships an `InCallService` (03). |
 | V8 | `waitForAndGetProvider()` is the choke point; zygote preload does not bypass it; Vanadium needs a Trichrome library | GrapheneOS source [R04 F3, I] | Read `WebViewFactory`, `WebViewUpdateServiceImpl`; AT-07 | Gate in `WebViewFactory.getProvider()` plus CI scan that only Reader and Videos reference `android.webkit.WebView`. |
 | V9 | Vanadium binaries obtainable, redistributable (GPL-2.0-only patches), arm64, 16 KB-aligned, Android 17-compatible | Licence and distribution unread [R04 F2] | Read repo, licence, releases; ask GrapheneOS; alignment scan | Build Vanadium (or LineageOS WebView patches) on a dedicated host [GATE: before build]. |
 | V10 | Settings counts, `config_show_*` effects, Catalyst behaviour, disabled-host behaviour; SystemUI ids | GrapheneOS/LineageOS only [R16] | Read the tag; tap-every-row crawl | Widen allowlist or patches. |
-| V11 | `repo init -m <subdir>` and directory `<linkfile>` work with Soong, Kati, `AndroidProducts.mk` discovery | Unverified | M1: link stub `device/zune`, run `lunch` | Separate repos split by CI. |
-| V12 | Mode G works: Gradle-built Tier A APKs imported as `android_app_import` with the platform key are re-signed at release and run as privileged system apps (09 VP-1); in-tree Compose under Soong is only the fallback | Unverified | M1 stub APK (09 Wave 0) | In-tree Soong build by ADR, Compose under Soong unproven (`09`). |
+| V11 | `repo init -m <subdir>` and directory `<linkfile>` work with Soong, Kati, `AndroidProducts.mk` discovery | Unverified | Z1: link stub `device/zune`, run `lunch` | Separate repos split by CI. |
+| V12 | Mode G works: Gradle-built Tier A APKs imported as `android_app_import` with the platform key are re-signed at release and run as privileged system apps (09 VP-1); in-tree Compose under Soong is only the fallback | Unverified | Z1 stub APK (09 Wave 0) | In-tree Soong build by ADR, Compose under Soong unproven (`09`). |
 | V13 | NFC mask, restriction constants, Bluetooth profile properties, provider default keys, USB default work on the Pixel vendor image | Inferred [R03 F7, R16 row 13] | AT-08 on both Pixels | Guardian assertions. |
 | V14 | `android.net.conn.CAPTIVE_PORTAL` is the sign-in action; no crash loop without CaptivePortalLogin | Memory | Fake captive network on Cuttlefish | Set `captive_portal_mode`; keep explainer. |
-| V15 | Host sizing, Ubuntu 24.04, 1.5-3 h clean build, Cuttlefish product names | Estimates [R01 F4] | M1 baseline build | Resize; keep a 22.04 image. |
+| V15 | Host sizing, Ubuntu 24.04, 1.5-3 h clean build, Cuttlefish product names | Estimates [R01 F4] | Z1 baseline build | Resize; keep a 22.04 image. |
 
 ## Risks, open gates and out of scope
 
 - **Gesture navigation** may fail with a non-Quickstep home (V5). [GATE: before staff pilot] Path A or B passes AT-06, or the founder accepts three-button (a D31 deviation).
 - **WebView** is a permanent Chromium update burden. [GATE: before build] V9 decides consume vs build. [GATE: before staff pilot] named owner and a demonstrated off-OTA update. [GATE: before charging] SLA met for two consecutive Chromium releases.
 - **Security patching** of the tag and Mainline is the central risk (04). [GATE: before external family] pipeline running.
-- **Patch drift**: Catalyst screens grew 27 to 237 in 18 months [R16]; Quickstep churns each drop; re-estimate after M3.
+- **Patch drift**: Catalyst screens grew 27 to 237 in 18 months [R16]; Quickstep churns each drop; re-estimate after Z3.
 - **112 without a stock dialer** (V7). [GATE: before staff pilot] 112 test passes on both Pixels (`12`).
 - **Name clearance**: renaming `app.zune.*` costs a reflash. [GATE: before staff pilot] settle it.
 - **Counsel** [GATE: before external family]: GPL-2.0 source duties (Vanadium, kernels); regulatory-label rules for India (unknown; R16's FCC and CVAA material is US, secondary); accessibility duties without TalkBack and TTS.
@@ -649,7 +649,7 @@ Out of scope: device layer, AVB, OTA (04); Guardian, policy, restrictions, bypas
 
 Specifies the layer that makes "no browser app, no way to type a URL, no route to youtube.com" true and gives the parent full control of allowing or disabling anything (D24): ZuneGuardian (`app.zune.guardian`) as Device Owner and supervision-role holder, with signed policy, parent PIN, reset and recovery, the bypass-vector suite and the 112-only path (D28).
 
-**Stage 1** = every MUST, proven on Cuttlefish and both Pixels by M3 exit and complete before the staff pilot. **Stage 2** = lockdown VPN (R04 "Zune Guard"), Chromium allowlist patch, per-UID firewall chains, attempted-link sink, Advanced Protection hooks, platform Supervision PIN, hard attestation gating.
+**Stage 1** = every MUST, proven on Cuttlefish and both Pixels by Z3 exit and complete before the staff pilot. **Stage 2** = lockdown VPN (R04 "Zune Guard"), Chromium allowlist patch, per-UID firewall chains, attempted-link sink, Advanced Protection hooks, platform Supervision PIN, hard attestation gating.
 
 Not covered: image, overlays, ZuneSettings, navigation, WebView, P-FWK-1, P-SET-* (`02-os-image-and-product.md`); AVB, keys, OTA (`04-device-signing-ota-release.md`); policy service, channel protocol, pairing API, portal (`05-backend-and-parent-portal.md`); contacts, calls (`06-communication.md`); assistant moderation (`07-ai-assistant.md`); Videos, Reader (`08-content-videos-weather-reader.md`); ZuneSetup, launcher screens (`09-core-apps-and-design-system.md`); station, hand-over (`10-delivery-operations-and-pilot.md`); DPDP duties (`11-compliance-and-privacy-engineering.md`); suite execution, gates (`12-testing-qa-and-acceptance.md`).
 
@@ -705,7 +705,7 @@ Evidence came from GrapheneOS and LineageOS trees, not Google's `android-17.0.0_
 - **LOCK-21 MUST** No `VIEW` + `http`/`https`/`ftp` handler, `WEB_SEARCH` handler, `CustomTabsService` or `CATEGORY_APP_BROWSER` handler exists in any partition (extends 02 OS-07).
 - **LOCK-22 MUST** P-FWK-2: IntentFirewall also reads `/system_ext/etc/ifw` and blocks activity starts with scheme http, https, ftp or action `WEB_SEARCH` from any sender, logging each; `/data/system/ifw` cannot loosen it.
 - **LOCK-23 MUST** Only Reader and Videos create a WebView (02 OS-27); Reader has no `INTERNET`; `INTERNET` holders equal `vendor/zune/allowlist/internet-holders.txt` (02 OS-05); a no-`INTERNET` app cannot reach the network by socket, `DownloadManager`, `MediaPlayer` or intent (kernel eBPF check [R04 F6]).
-- **LOCK-24 MUST** Strict Private DNS to the Zune resolver (05) through `setGlobalPrivateDnsModeSpecifiedHost` plus `DISALLOW_CONFIG_PRIVATE_DNS` (placeholder resolver allowed until M4); captive-portal detection stays on against the Zune probe (05 BE-42) so a sign-in network is recognised, the only sign-in UI is the ZuneSettings explainer, and Guardian re-asserts `captive_portal_mode` at its default (D30; 02 OS-20).
+- **LOCK-24 MUST** Strict Private DNS to the Zune resolver (05) through `setGlobalPrivateDnsModeSpecifiedHost` plus `DISALLOW_CONFIG_PRIVATE_DNS` (placeholder resolver allowed until Z4); captive-portal detection stays on against the Zune probe (05 BE-42) so a sign-in network is recognised, the only sign-in UI is the ZuneSettings explainer, and Guardian re-asserts `captive_portal_mode` at its default (D30; 02 OS-20).
 - **LOCK-25 MUST** `user` build, `ro.adb.secure=1`, `adb_enabled=0`, `development_settings_enabled=0`, `DISALLOW_DEBUGGING_FEATURES`, `persist.adb.tradeinmode` unset, no RadioInfo or `*#*#` handler; `DISALLOW_SAFE_BOOT`, and a safe-mode boot still runs Guardian with every restriction.
 - **LOCK-26 MUST** USB file transfer, physical media, Bluetooth sharing and NFC are off; no USB gadget function except charging (no MTP, PTP, ACM, DIAG, ADB); USB host stays for USB-C audio (02).
 - **LOCK-27 MUST** Tethering, VPN, credentials, accounts, user and profile creation, install, unknown sources, uninstall and app control are restricted; `fw.max_users=1`; no `VpnService` package ships.
@@ -859,9 +859,9 @@ Tests are `LT-nn` (02 owns `AT-nn`). On `user` builds adb is off: read the LOCK-
 
 | ID | Claim | Why uncertain | How to verify | If false |
 |---|---|---|---|---|
-| VG-1 | A privileged platform-signed app can set Device Owner before setup completes [R05 F5] | GrapheneOS tree; route inferred | Read `DevicePolicyManagerService`; Cuttlefish spike, M3 week 1 | ManagedProvisioning trusted-source route (02 keeps it); else a registered DPMS patch |
+| VG-1 | A privileged platform-signed app can set Device Owner before setup completes [R05 F5] | GrapheneOS tree; route inferred | Read `DevicePolicyManagerService`; Cuttlefish spike, Z3 week 1 | ManagedProvisioning trusted-source route (02 keeps it); else a registered DPMS patch |
 | VG-2 | Supervision framework, role names, empty `config_*` hooks, flags, overlayability, role wins `AUTO_TIME`; every §4.3 constant exists; supervision need not be enabled, so no platform PIN user [R05 F1-F4, R16 F9] | GrapheneOS and `build_release` only | Read `frameworks/base`, `roles.xml`, `build/release`; compile Guardian; `cmd role` | D24 falls back to Device Owner plus privapp permissions; force time via DPM; tell 02 |
-| VG-3 | A Device Owner that solely sets `DISALLOW_FACTORY_RESET` can still `wipeData` [R16 F9] | Source reading only | Spike, M3 week 1 | Clear own restriction first; else `RecoverySystem` wipe |
+| VG-3 | A Device Owner that solely sets `DISALLOW_FACTORY_RESET` can still `wipeData` [R16 F9] | Source reading only | Spike, Z3 week 1 | Clear own restriction first; else `RecoverySystem` wipe |
 | VG-4 | `config_persistentDataPackageName` lets Guardian write the persistent data block, which survives recovery wipes [R05 F6] | Untested | Write, recovery-wipe, read on both Pixels | Drop LOCK-19; rely on server-side serial and attestation binding |
 | VG-5 | `OemLockManager` access, `DISALLOW_FACTORY_RESET` clearing the OEM-unlock bit, `get_unlock_ability` on 10a and 9a [R04 F7] | Pixel behaviour unmeasured | Read `OemLockService`; sacrificial Pixel | Service-unlock becomes signed recovery sideload only (04) |
 | VG-6 | IntentFirewall syntax and the 30-line `/system_ext/etc/ifw` patch cover WebView `intent:` launches; shortcut and share routes close with no handler [R04 F5] | Mirror only; shortcuts from memory | Read `IntentFirewall.java`; LT-02, LT-08 | CI "no handler" gate plus WebView gate; add IFW rules |
@@ -894,7 +894,7 @@ Out of scope: call allowlists, SMS vault, carrier lines; platform Supervision PI
 
 This section specifies the hardware and release layer under the Zune image: Pixel 10a (`stallion`) and 9a (`tegu`) device layers (both `zumapro`), vendor-module generation and stock pinning, AVB relock, key custody and signing, attestation, ZuneUpdater and OTA, the monthly security-patch pipeline, release gates G1-G6, infrastructure and the support promise.
 
-**Stage 1** (M2 to M7 in `01-prerequisites-and-phases.md`): two models, full OTAs, dev/pilot/production key sets, offline signing, monthly train. **Stage 2**: incremental OTAs, delegated keys, APEX side channel, automated ingest, a second device. Snapdragon candidates (D17) are a later tier; §4.12 records what a second device needs.
+**Stage 1** (Z2 to Z7 in `01-prerequisites-and-phases.md`): two models, full OTAs, dev/pilot/production key sets, offline signing, monthly train. **Stage 2**: incremental OTAs, delegated keys, APEX side channel, automated ingest, a second device. Snapdragon candidates (D17) are a later tier; §4.12 records what a second device needs.
 
 Not covered here:
 - Image composition, overlays, WebView provisioning: `02-os-image-and-product.md`.
@@ -926,15 +926,15 @@ Gate naming: "release gates G1-G6" are defined here [R10]. R17's OEM-redistribut
 - **REL-01 MUST** Support exactly `stallion` and `tegu`, each with its own product `zune_kids_<model>`, vendor module, kernel pin, stock pin, AVB key and OTA channel. System, system_ext and product code contains no codename or device-property reference (CI grep) [R02 §4].
 - **REL-02 MUST** `release/pins/<model>.yml` records Google build ID, factory and OTA zip SHA-256, kernel tarball ID, adevtool commit, bootloader, baseband, anti-rollback value and SPL. CI generates vendor modules from it with adevtool at a pinned commit; output is cached privately, never committed or published.
 - **REL-03 MUST** Each month pin the newest Google stock build per model, after a canary: it boots `zune_base` locked on a sacrificial unit and passes camera, audio, Wi-Fi, Bluetooth, GNSS and charging checks. A pin is never lower than the previous pin or than the highest bootloader, baseband or anti-rollback value on any phone queued for flashing.
-- **REL-04 MUST** By M2 exit record an ADR for the QPR1 skew using §4.3.
+- **REL-04 MUST** By Z2 exit record an ADR for the QPR1 skew using §4.3.
 
 **Keys, relock, signing**
-- **REL-05 MUST** Three key sets: `dev` (throwaway, `gen-dev-keys.sh`, on build host and CI, channel `dev`), `pilot` (offline, staff devices, from M6), `prod` (ceremony before the first external family, EXT-4). AOSP's public test keys are never used. A device accepts only artifacts of its own set.
+- **REL-05 MUST** Three key sets: `dev` (throwaway, `gen-dev-keys.sh`, on build host and CI, channel `dev`), `pilot` (offline, staff devices, from Z6), `prod` (ceremony before the first external family, EXT-4). AOSP's public test keys are never used. A device accepts only artifacts of its own set.
 - **REL-06 MUST** One AVB key per model per set (RSA-4096, `SHA256_RSA4096`); only `avb_pkmd_<model>.bin` leaves the signing host.
 - **REL-07 MUST** Provisioning sets `avb_custom_key`, runs `fastboot flashing lock` with a human confirmation, then Guardian turns OEM unlocking off. No exploit-based unlock, no write to modem, `persist` or IMEI partitions, `fastboot erase` only on an allowlist (`avb_custom_key`, userdata via `-w`).
 - **REL-08 MUST** After lock the station asserts boot state yellow, locked, `deviceLocked=true`, `SELF_SIGNED` and `verifiedBootKey` equal to the hash of the model's `avb_pkmd` [expected, V4].
 - **REL-09 MUST** The offline signing host is air-gapped, disk-encrypted, never the station or build host. Permanent keys are scrypt-encrypted PKCS#8, passphrase split 2-of-3 among three named custodians, with two sealed offsite encrypted backups. Signing needs two custodians and appends to a signed log.
-- **REL-10 MUST** Prove HSM signing (`avbtool --signing_helper`, `--payload_signer`) with a pilot key in M6. The production AVB key lives in an HSM if the proof passes; otherwise record an ADR and use encrypted files [R10 F3].
+- **REL-10 MUST** Prove HSM signing (`avbtool --signing_helper`, `--payload_signer`) with a pilot key in Z6. The production AVB key lives in an HSM if the proof passes; otherwise record an ADR and use encrypted files [R10 F3].
 - **REL-11 MUST** AVB rotation is a recall (per-phone service-unlock, wipe, reflash [R18 F7]), allowed only on compromise, one model at a time. `releasekey` rotates by OTA: one release ships `otacerts.zip` with old and new certs, the next is signed by the new key. App, platform and APEX keys are permanent (§4.4).
 - **REL-12 MUST** The only online key is `channel` (ed25519, signs channel metadata); `bundle` (ed25519, signs station bundles) is offline. AVB, OTA, platform and app keys never touch a build host, CI or station.
 - **REL-13 MUST** `BOARD_AVB_ROLLBACK_INDEX := $(PLATFORM_SECURITY_PATCH_TIMESTAMP)` per model; a build with a lower SPL than installed is refused by ZuneUpdater and, per model, by the bootloader (V8).
@@ -1069,7 +1069,7 @@ Monthly train. PD0 = first of: Google stock build for a model, public security p
 
 | Gate | Check |
 |---|---|
-| G1 | Two clean builds (different hosts once the second exists, by M5) give identical target-files after pinning build time, user and host. |
+| G1 | Two clean builds (different hosts once the second exists, by Z5) give identical target-files after pinning build time, user and host. |
 | G2 | SPDX SBOM (`tools/sbom/gen_sbom.py`), NOTICE, GPL sources for kernel and Vanadium patches; Google blobs not published. |
 | G3 | Cuttlefish boot, bypass suite (03, 12), policy tests, ZuneUpdater against a fake server: bad signature, expired, halted, wrong model, SPL downgrade, N-1 to N. |
 | G4 | `ro.debuggable=0`, `ro.adb.secure=1`, `user`, `release-keys`, no permissive domains, no AOSP test keys, `image_diff` and 16 KB checks (02), SPL monotonic. No CTS (a GMS step); SELinux and security subsets run [R10, INFERRED]. |
@@ -1078,7 +1078,7 @@ Monthly train. PD0 = first of: Google stock build for a model, public security p
 
 ### 4.11 Build infrastructure and cost (estimates [R10, memory]; get quotes)
 
-- Build host: one now (01 PRE-02), a second by M5 for CI and G1; no Chromium host (D26). About USD 250-400/month rented each, or about 6k bought. CI: self-hosted ephemeral runners, no keys.
+- Build host: one now (01 PRE-02), a second by Z5 for CI and G1; no Chromium host (D26). About USD 250-400/month rented each, or about 6k bought. CI: self-hosted ephemeral runners, no keys.
 - Artifacts: S3 plus CDN, full OTAs of about 2 GB x 200 devices a month, under USD 20/month [INFERRED]. Lab: 5 units per model (3 RC, 1 dev, 1 sacrificial; 01 PRE-04), Indian data SIMs (INR price unverified). Signing: two HSM-class devices, air-gapped laptop, about USD 2.5k once.
 
 ### 4.12 Support, EOL and a second device
@@ -1111,13 +1111,13 @@ Nothing below was read from Google's `android-17.0.0_r1` tree (sources: mirrors,
 | V1 | Tag is CP2A.260605.016, SPL 2026-06-05; `android17-security-release`, `android-security-17.*`, a Q4 branch exist and are timely [R01, R10] | Google hosts blocked; lag about 125 days | `git ls-remote`; release config after sync | Pin plus cross-checks only; SLA wording (REL-27); tell the founder |
 | V2 | adevtool output for both models boots with `zune_base` on Google's tag without GrapheneOS's forked repos [R02 F1] | GrapheneOS carries many forks | Build on the vanilla tag; read adevtool `docs/usage.md` | Carry the needed patches (ADR raising 02's fork cap), else escalate |
 | V3 | Indian SKUs have factory images and adevtool support (configs list US SKUs) [R17] | Unchecked | Run adevtool and flash an India-SKU unit | Add the SKU config, or drop the SKU at intake |
-| V4 | Both models relock with our key; attestation then shows our key hash and `SELF_SIGNED` [R02 F4, R17 F6] | AVB README via mirror; schema from a fork | Sacrificial-unit test in M2 | Stop; founder picks another device, or adopt the observed value in REL-08 |
+| V4 | Both models relock with our key; attestation then shows our key hash and `SELF_SIGNED` [R02 F4, R17 F6] | AVB README via mirror; schema from a fork | Sacrificial-unit test in Z2 | Stop; founder picks another device, or adopt the observed value in REL-08 |
 | V5 | QPR1 skew: date (GrapheneOS 2026-09-06 vs stock 2026-09-15), anti-rollback bump per model, variable name (`anti` or `ap-ar-s`) [R02, R17, R18 F9] | Search summaries; 10a reportedly outside the May 2026 bump | Compare factory builds; `fastboot getvar` per unit; boot r1 on the newest vendor | Option A: hold the pin, refuse newer phones |
 | V6 | Google's licence allows company flashing, blob-derived vendor images and OTAs [R17 F1]; Google publishes kernel source matching the 6.1 prebuilts | Never read; inferred | Read image, OTA and driver pages with counsel; compare tarball IDs with kernel tags | FW-1 stays open, 100-device cap; get or build kernel source before G2 |
 | V7 | Release tools behave as in R10: `make_key` RSA-4096, `--partial`, `--signing_helper`, `--payload_signer`, 44-key APEX map | Read in forks | `--help`; dry run on dev keys | `openssl` keys; encrypted-file signing; edit the partition list |
 | V8 | The bootloader enforces our rollback index with a custom key [R10 F5] | README only | Flash an older signed image on a sacrificial unit | Client SPL check is the only barrier; document |
-| V9 | `rkpd` works; Google's service serves non-GMS OSes; default `remote_provisioning.hostname` [R05 F8, R10 F12] | Empty by default; terms unknown | M2 attestation test | Station identity plus mTLS; own proxy |
-| V10 | Virtual A/B allows a Guardian gate before slot success; `--partial` yields a valid full OTA | Unread | M2 lab test | Skip the gate; roll forward; hold vendor OTAs |
+| V9 | `rkpd` works; Google's service serves non-GMS OSes; default `remote_provisioning.hostname` [R05 F8, R10 F12] | Empty by default; terms unknown | Z2 attestation test | Station identity plus mTLS; own proxy |
+| V10 | Virtual A/B allows a Guardian gate before slot success; `--partial` yields a valid full OTA | Unread | Z2 lab test | Skip the gate; roll forward; hold vendor OTAs |
 | V11 | Vanadium is redistributable, has a stable cert and installs over a system-app copy (02 V9) | Unread | Lab install | Ship only inside full OTAs, or self-build |
 | V12 | OEM-unlock service order [R18 F8] | GrapheneOS fork of upstream | Rehearsal (AT-R11) | Redesign; OEM unlock on for lab units only |
 | V13 | Support ends: 10a March 2033, 9a April 2032 [R02 F6]; costs [R10] | Secondary, memory | Google's update policy; quotes | Change `support_end` or do not list the model |
@@ -1135,7 +1135,7 @@ Risks:
 6. Attestation can be relayed or its service withdrawn: it is a signal only. Full OTAs of about 2 GB cost mobile data (REL-18).
 
 Gates:
-- [GATE: before build] V1, V2, V4 run on the first Pixels (M2); QPR1 ADR (REL-04).
+- [GATE: before build] V1, V2, V4 run on the first Pixels (Z2); QPR1 ADR (REL-04).
 - [GATE: before staff pilot] HSM proof and pilot key ceremony (REL-10); OTA, slot-fallback and service-unlock rehearsals on two sacrificial units per model (SP-6); G1-G6 evidence for the pilot build.
 - [GATE: before external family] EXT-4 production key ceremony, three named custodians; EXT-6 support promise (3 years, per-model end date); counsel review of SLA wording; partner-access request sent with the FW-1 letter.
 - [GATE: before charging] FW-1 closed, covering firmware in OTAs and blob-derived images beyond device 100.
@@ -1153,7 +1153,7 @@ Out of scope: second device and Snapdragon bring-up (D17); own hardware, ODM, BS
 
 This section specifies the cloud side: service boundaries, stack and AWS India topology, the one device channel owned by ZuneGuardian, enrolment with Rule-10 verification, authentication, the data model, the 12-month retention vault, tamper-evident audit, the Stage-1 Zune Portal and the staff console.
 
-**Stage 1** = every MUST, working end to end at M4 exit (`01-prerequisites-and-phases.md`); message and AI review pages complete at M5 when 06 and 07 land. **Stage 2** = Caregiver role, DigiLocker as default path, parent-side calling (D8), parent-key E2EE, billing, multi-device UI.
+**Stage 1** = every MUST, working end to end at Z4 exit (`01-prerequisites-and-phases.md`); message and AI review pages complete at Z5 when 06 and 07 land. **Stage 2** = Caregiver role, DigiLocker as default path, parent-side calling (D8), parent-key E2EE, billing, multi-device UI.
 
 Not covered here:
 - Guardian internals, enforcement, PIN, bypass tests: `03-lockdown-and-guardian.md`. Keys, OTA client, rings: `04-device-signing-ota-release.md`.
@@ -1161,7 +1161,7 @@ Not covered here:
 - ZuneSetup screens, on-device crash reporting: `09-core-apps-and-design-system.md`. Station, intake, kill-level semantics, support: `10-delivery-operations-and-pilot.md`.
 - Legal analysis, runbooks: `11-compliance-and-privacy-engineering.md`. Test execution: `12-testing-qa-and-acceptance.md`. AWS accounts, SCP: `01`.
 
-`<zone>` is the neutral domain fixed in the M0 ADR (name clearance pending, A5). 
+`<zone>` is the neutral domain fixed in the Z0 ADR (name clearance pending, A5). 
 
 ## Decisions applied and reconciliations
 
@@ -1216,11 +1216,11 @@ Not covered here:
 - **BE-23 MUST** `unenroll` needs step-up. `service_unlock` needs step-up, staff co-approval and a `zune-service-ca` KMS signature (03 LOCK-20). Both notify every guardian.
 
 **Authentication and roles**
-- **BE-24 MUST** Passkeys (`go-webauthn`, discoverable, user verification required, attestation `none`); the RP ID is the neutral domain from the M0 ADR and never changes.
+- **BE-24 MUST** Passkeys (`go-webauthn`, discoverable, user verification required, attestation `none`); the RP ID is the neutral domain from the Z0 ADR and never changes.
 - **BE-25 MUST** Server-side sessions, `__Host-` cookie, HttpOnly, Secure, SameSite=Lax, idle 2 h, absolute 12 h. Step-up (passkey assertion under 5 min old) is required to add or remove a guardian, release, service-unlock, PIN-reset, withdraw, erase, export, and to read vault content after 30 min without one.
 - **BE-26 MUST** Email OTP (6 digits, hashed, 10 min, 5 attempts) only registers a passkey from an invite or starts recovery, which waits 48 h with notice to all guardians unless staff re-inspect the ID. SMS OTP only after DLT registration.
 - **BE-27 MUST** Roles `owner`, `guardian`; `caregiver` in the enum without UI. At most 4 guardians; unverified guardians have no data powers; Stage 1 co-guardians need a staff-inspected ID; support may set a family `frozen`.
-- **BE-28 MUST** Staff use SSO with hardware keys (IdP: AWS IAM Identity Center or an equivalent India-region IdP, chosen in the M0 ADR, V11), roles `support|tns|verifier|station|release|sec|content|content_lead` (the last two per 08 CNT-22), no standing vault access; break-glass needs two approvers, lasts at most 4 h, is written to `staff_audit` and notified to the family unless counsel directs otherwise. Staff laptops are company-managed (disk encryption, screen lock, patching); offboarding revokes SSO, hardware keys, station access and break-glass eligibility within 1 h.
+- **BE-28 MUST** Staff use SSO with hardware keys (IdP: AWS IAM Identity Center or an equivalent India-region IdP, chosen in the Z0 ADR, V11), roles `support|tns|verifier|station|release|sec|content|content_lead` (the last two per 08 CNT-22), no standing vault access; break-glass needs two approvers, lasts at most 4 h, is written to `staff_audit` and notified to the family unless counsel directs otherwise. Staff laptops are company-managed (disk encryption, screen lock, patching); offboarding revokes SSO, hardware keys, station access and break-glass eligibility within 1 h.
 
 **Data, vault, audit**
 - **BE-29 MUST** Row-level security on every table with `family_id`, set only from the session.
@@ -1231,7 +1231,7 @@ Not covered here:
 - **BE-34 MUST** Withdrawal and erasure follow §4.6; `erasure_mode` defaults to `seal`, `delete_now` destroys DEKs at once; legal holds block deletion and need the `tns` lead plus a second approver. Export (step-up) is the family's own data as JSON in a ZIP, presigned URL 7 days, ready within 24 h [INFERRED].
 - **BE-35 MUST** Per-family audit hash chain (`SHA-256(prev || canonical entry)`), UPDATE and DELETE revoked; hourly KMS-signed Merkle root in an S3 Object Lock (compliance) bucket replicated to ap-south-2; daily verifier; failure is Sev-1.
 - **BE-36 MUST** Logs via a field-allowlist logger (no bodies, names, free text, tokens), kept 12 months with 180 days searchable, in India; servers sync via `chrony` to Indian NTP (hostnames per V8, also 02's `config_ntpServers`); incidents carry 6 h (CERT-In) and 72 h (DPDP Rule 7) clocks.
-- **BE-37 MUST** RDS backups at most 35 days with PITR plus cross-region replicas; the M4 drill records RPO and RTO (targets 15 min, 4 h [INFERRED]); a restored row with a destroyed DEK is unreadable.
+- **BE-37 MUST** RDS backups at most 35 days with PITR plus cross-region replicas; the Z4 drill records RPO and RTO (targets 15 min, 4 h [INFERRED]); a restored row with a destroyed DEK is unreadable.
 
 **Portal, notification, edge**
 - **BE-38 MUST** Portal pages of §4.7 with OpenAPI at `backend/gateway/openapi.yaml`, `If-Match` concurrency, audited writes, 360 px mobile-first, keyboard operable.
@@ -1246,8 +1246,8 @@ Not covered here:
 **Operations: endpoints, secrets, domain, paging, migration**
 - **BE-46 MUST** Every endpoint other sections call is declared in `backend/gateway/openapi.yaml` with owner, auth mode (session, mTLS, token-plus-attestation, station SSO), rate limit and body limit, and the gateway refuses an undeclared route. Cross-section routes owed here: `POST /v1/station/jobs` (issues the `factory_qa` token, 10 §4.5), `POST /v1/device/factory/qa` (authenticated by that token and the attested key, usable only before a claim), `POST /v1/device/shares` (09 §4.5, vault class `share`), `POST /v1/device/diag` (09 §4.8, 20 a day per device), `/v1/device/ai/*` (07 §4.2), `GET /v1/content/tier2/state` and content manifests (08), `/v1/weather/*` (08 §4.8), the Guardian-minted short-lived device token for Tier B REST calls (08 §4.10), and the portal routes `/children/{c}/home` and `/children/{c}/shared` (09).
 - **BE-47 MUST** All secrets (vendor API keys, LiveKit keys, VAPID keys, database credentials, HMAC keys for claim codes, `serial_hmac`, `doc_hmac` and `safety_identifier`) live in Secrets Manager or KMS (01 PRE-08), are named in `backend/infra/secrets.yaml` with an owner and rotation period (90 days, or at once on staff departure or suspected leak) and are rotated in a drill before C0. HMAC keys are versioned (`kid` stored beside each value) so rotation re-computes in the background and verifies against old and new; `serial_hmac` and `doc_hmac` uniqueness constraints are rebuilt per `kid`, never dropped. No secret appears in Terraform state, container images, logs or the repository (CI secret scan, PRE-08).
-- **BE-48 MUST** One registrar-locked domain `<zone>` (M0 ADR; devices bake hostnames into overlays and ZuneUpdater, so a rename after devices ship is an OTA event). `backend/infra/hostnames.yaml` lists every hostname (`device.`, `dns.`, `connectivity.`, `player.`, `dl.`, `weather.`, the portal host, SFU and TURN hosts from 06, `status.`) with its certificate source (ACM for ALB, NLB and CloudFront, a public CA for the Unbound DoT and TURN/TLS endpoints where ACM cannot be exported), automatic renewal and an alert 21 days before expiry. CAA records, DNSSEC and HSTS on the portal; the device CA and its chain follow BE-21. Outbound e-mail (OTP, notices) uses the same domain from an India-region sender (SES ap-south-1 [INFERRED, V11]) with SPF, DKIM and an enforced DMARC policy; role mailboxes (security, privacy, grievance, legal, safety) are monitored.
-- **BE-49 MUST** BE-45 alerts page a named engineering on-call (rota in `zune/docs/ops/oncall.md`; two people from M6) through a paging service whose payloads carry no personal data; severities follow 11 §4.3; a Sev-1 or Sev-2 outage lasting over 30 minutes shows a portal banner and a notice e-mail to guardians; each alert has a runbook in `zune/docs/ops/runbooks/`.
+- **BE-48 MUST** One registrar-locked domain `<zone>` (Z0 ADR; devices bake hostnames into overlays and ZuneUpdater, so a rename after devices ship is an OTA event). `backend/infra/hostnames.yaml` lists every hostname (`device.`, `dns.`, `connectivity.`, `player.`, `dl.`, `weather.`, the portal host, SFU and TURN hosts from 06, `status.`) with its certificate source (ACM for ALB, NLB and CloudFront, a public CA for the Unbound DoT and TURN/TLS endpoints where ACM cannot be exported), automatic renewal and an alert 21 days before expiry. CAA records, DNSSEC and HSTS on the portal; the device CA and its chain follow BE-21. Outbound e-mail (OTP, notices) uses the same domain from an India-region sender (SES ap-south-1 [INFERRED, V11]) with SPF, DKIM and an enforced DMARC policy; role mailboxes (security, privacy, grievance, legal, safety) are monitored.
+- **BE-49 MUST** BE-45 alerts page a named engineering on-call (rota in `zune/docs/ops/oncall.md`; two people from Z6) through a paging service whose payloads carry no personal data; severities follow 11 §4.3; a Sev-1 or Sev-2 outage lasting over 30 minutes shows a portal banner and a notice e-mail to guardians; each alert has a runbook in `zune/docs/ops/runbooks/`.
 - **BE-50 MUST** Versioning and migration: PostgreSQL schema changes are versioned SQL migrations (`golang-migrate` or equivalent, `sqlc` regenerated in CI), expand-then-contract across two releases, each rehearsed in staging on a restored copy of the latest snapshot with timing recorded; vault re-encryption and DEK rotation are background jobs, not migrations. The server keeps accepting a device client (channel `zune.channel.v1`, `/v1/device/*`, `policy-v1`) until no device on that build has reported in 30 days and the next ring has reached 100%; a breaking change ships as a new subprotocol or `/v2` beside the old one, and policy-schema changes are additive until Guardian understands both. The portal's OpenAPI changes are backward compatible within a release train.
 
 ## Design and build instructions
@@ -1370,7 +1370,7 @@ Erasure: `requested` (step-up), `applied` (views removed, processing stopped, de
 
 ### 4.8 Staff console, observability, cost
 
-Console: family lookup (no content), device lifecycle, verification, kill switches, break-glass requests, T&S flag queue, incidents, OTA publish, entitlements. Observability: OpenTelemetry with PII scrubbing to CloudWatch. Cost [INFERRED, about 2x either way, no quote]: Stage 1 fixed infrastructure with DR about USD 700-1,400 per month, USD 2-5 per device at about 300 devices (R05: USD 250-500 for 1,000 devices, no DR); vendors, SMS, staff excluded. Record actuals at M4 exit.
+Console: family lookup (no content), device lifecycle, verification, kill switches, break-glass requests, T&S flag queue, incidents, OTA publish, entitlements. Observability: OpenTelemetry with PII scrubbing to CloudWatch. Cost [INFERRED, about 2x either way, no quote]: Stage 1 fixed infrastructure with DR about USD 700-1,400 per month, USD 2-5 per device at about 300 devices (R05: USD 250-500 for 1,000 devices, no DR); vendors, SMS, staff excluded. Record actuals at Z4 exit.
 
 ## Acceptance criteria and tests
 
@@ -1387,7 +1387,7 @@ Console: family lookup (no content), device lifecycle, verification, kill switch
 - **BT-11** SOS reaches every guardian in 10 s; unacknowledged for 5 min pages `tns`.
 - **BT-12** A non-allowlisted name is refused over DoT, allowed names are not logged; `generate_204` returns 204 on both schemes.
 - **BT-13** OTA metadata needs two approvals; ZuneUpdater refuses a bad signature (04 G3).
-- **BT-14** DR drill: promote ap-south-2, devices reconnect; RPO and RTO recorded in `milestones/M4.md`.
+- **BT-14** DR drill: promote ap-south-2, devices reconnect; RPO and RTO recorded in `milestones/Z4.md`.
 - **BT-15** From the prod account an us-east-1 call is denied; a `policy` task cannot reach the internet; `ai-gateway` reaches only allowlisted hosts.
 - **BT-16** Playwright at 360 px passes each §4.7 acceptance cell.
 - **BT-17** A route absent from `openapi.yaml` is refused; every §BE-46 route exists with its auth mode; a pre-claim `factory/qa` call with a replayed token fails.
@@ -1404,13 +1404,13 @@ Nothing here was run on AWS; log results in `zune/docs/verified-facts.md`.
 | V1 | Both Indian regions offer Fargate, cross-region RDS replicas with multi-Region KMS, ElastiCache, NLB TLS, S3 Object Lock replication; RDS backups cap at 35 days [01 V12, MEMORY] | Unchecked | `terraform plan` in both | ECS on EC2 or reduced DR; founder re-approves spend |
 | V2 | KMS signs ES256 and Ed25519 (`channel`, 04 REL-12) in ap-south-1 [MEMORY] | Ed25519 unclear | Create keys; sign and verify in Go and Kotlin | `channel` becomes ECDSA P-256 (edit 04 REL-12, REL-16) |
 | V3 | DoT via NLB TLS with an ACM certificate satisfies strict Private DNS [03 VG-8] | Untested | Pixel with `setGlobalPrivateDnsModeSpecifiedHost` | Unbound terminates TLS with a public-CA certificate |
-| V4 | Privileged Guardian gets the serial in key attestation on 10a and 9a; `android/keyattestation` accepts Android 17 and P-384 chains [R05 F8, R10 F12] | RKP without GMS unverified | M2 attestation test | Parent confirms the last 4 serial characters ZuneSetup shows |
+| V4 | Privileged Guardian gets the serial in key attestation on 10a and 9a; `android/keyattestation` accepts Android 17 and P-384 chains [R05 F8, R10 F12] | RKP without GMS unverified | Z2 attestation test | Parent confirms the last 4 serial characters ZuneSetup shows |
 | V5 | One WebSocket survives Doze and carrier NAT at 180 s with acceptable battery [R13 F3, R05 §4.5] | Unmeasured; short pings hurt (R13) | Pixels, four carriers, Wi-Fi, 72 h | Longer keepalive, `JobScheduler` poll, tell 06 |
 | V6 | Staff-inspected ID plus OTP plus stored record meets Rule 10 without DigiLocker [R19 Q2] | Mirrors; corrigendum unread | Counsel (LEG-1, LEG-3) | DigiLocker mandatory; external families wait |
 | V7 | Rule 8(3) covers message content, and sealing satisfies s.6(4) and s.8(7) [R19 Q4; s.8(7) content MEMORY] | Scope ambiguous | Counsel | `erasure_mode=delete_now`; shorter content retention |
 | V8 | CERT-In: 180-day in-India logs, NIC or NPL time; DPDP Rule 7 72-hour breach report (11 VL-1, VL-5); no hostnames verified [R19, secondary] | Direction unread | Read the 28 Apr 2022 direction; set `config_ntpServers` (02) only from NIC or NPL pages | Own `chrony`; devices use signed server time |
 | V9 | Passkeys, DLT SMS, email and Web Push (iOS needs Home Screen install) work for Indian parents [R05 P, R19 MEMORY, R05 S] | Untested | Six phone and browser pairs; register DLT; send tests | Email OTP plus TOTP; email plus Web Push; `tns` phones for SOS |
-| V10 | Cost ranges (§4.8): USD 700-1,400 a month fixed with DR, about INR 340-670 per child-month at 200 children | No quotes; 01 Verify 12 and 10 §4.12 once quoted other figures | AWS calculator at M4 | Re-approve budget; PAY-1 re-prices |
+| V10 | Cost ranges (§4.8): USD 700-1,400 a month fixed with DR, about INR 340-670 per child-month at 200 children | No quotes; 01 Verify 12 and 10 §4.12 once quoted other figures | AWS calculator at Z4 | Re-approve budget; PAY-1 re-prices |
 | V11 | Staff IdP (AWS IAM Identity Center or equivalent in an India region), SES in ap-south-1 with DKIM and DMARC, Secrets Manager rotation, ACM export limits for DoT and TURN [MEMORY] | Unchecked | Create each in staging; send test mail; rotate a test secret | Self-hosted IdP; another India-region mail sender; public-CA certificates on the endpoints |
 
 ## Risks, open gates and out of scope
@@ -1573,7 +1573,7 @@ rtc:  {tcp_port: 7881, port_range_start: 50000, port_range_end: 50999, use_exter
 turn: {enabled: true, tls_port: 5349, udp_port: 3478}
 room: {auto_create: false, max_participants: 2, empty_timeout: 20}
 ```
-Keys: Secrets Manager (PRE-08). Pin the newest stable server and Android SDK at M5 start (`verified-facts.md`). A signed webhook fills the call log.
+Keys: Secrets Manager (PRE-08). Pin the newest stable server and Android SDK at Z5 start (`verified-facts.md`). A signed webhook fills the call log.
 
 Sequence: `call.invite` -> `Allowed(voice or video)` -> create room, mint caller token -> `call.ringing` to caller, `call.incoming` to callee -> Guardian launches `app.zune.calls/.IncomingCallActivity` (show-when-locked, turn-screen-on) -> `call.accept` -> callee token -> both join. Audio: Opus 24 kbps speech preset, DTX on, RED off [R08 F7]. Voice reuses the video stack (design confirmed): one SDK, minter and enforcement path outweigh the SFU hop. Persist deadlines across restarts.
 
@@ -1643,7 +1643,7 @@ Risks:
 2. **Moderation gaps.** Rules miss coded grooming; live voice, video and PTT are unmoderated. Do not market detection.
 3. **Vault and disclosure.** Server-readable children's chats are a high-value target (05, 11); a guardian reading another family's child rests on dual consent and counsel (s.9(3), interception law).
 4. **Hostile guardian.** The main threat; in v1 every guardian is verified at the company flash visit (D16, Rule 10).
-5. **Unmeasured:** relay stutter, battery, SFU operations. If CT-01 to CT-07 are not green by M5 week 8 [default], record an ADR to swap `MessageStore` for Prosody.
+5. **Unmeasured:** relay stutter, battery, SFU operations. If CT-01 to CT-07 are not green by Z5 week 8 [default], record an ADR to swap `MessageStore` for Prosody.
 
 Gates:
 - **[GATE: before build]** VC-1 and VC-2 recorded in `verified-facts.md` before building the Walkie and Calls wake paths; if either fails, redesign with 03.
@@ -1664,7 +1664,7 @@ Out of scope: guardian-side calling and messaging (D8), groups, media messages, 
 
 Specifies the Zune Assistant (`app.zune.assistant`: chat with text, push-to-talk voice and image input) and the AI Gateway (`zune/backend/ai-gateway`): providers, guardrails, moderation, crisis routing, parent visibility, caps, cost, evaluation, incidents. Position: **tutor, not companion**.
 
-**Stage 1** = every MUST, working at M5, eval gates passed before the staff pilot. **Stage 2** = on-device LLM from local packs [R07 F5], Indic languages (D20), self-hosted guard classifiers [R07 F3], system TextToSpeechService (02), wake word.
+**Stage 1** = every MUST, working at Z5, eval gates passed before the staff pilot. **Stage 2** = on-device LLM from local packs [R07 F5], Indic languages (D20), self-hosted guard classifiers [R07 F3], system TextToSpeechService (02), wake word.
 
 Not covered (files in `docs/build/`): vault, channel, consent ledger, kill state, portal (`05-backend-and-parent-portal.md`); Guardian, `policy-v1`, Emergency (`03-lockdown-and-guardian.md`); T&S, POCSO runbook (`06-communication.md`); packs, Videos (`08-content-videos-weather-reader.md`); screens (`09-core-apps-and-design-system.md`); kill levels (`10-delivery-operations-and-pilot.md`); DPDP analysis, consent text (`11-compliance-and-privacy-engineering.md`); test runs (`12-testing-qa-and-acceptance.md`).
 
@@ -1861,8 +1861,8 @@ Record results in `zune/docs/verified-facts.md`. OpenAI rows come from the mirro
 | ID | Claim | Why uncertain | How to verify | If false |
 |---|---|---|---|---|
 | VA-1 | OpenAI: no personal data of under-13s (or the age of digital consent) without ZDR; disclosures, filters, monitoring, audits [OA under-18]; under 18 needs parent permission [SEC]; Sol-class counts as "newest flagship"; a DPA meets DPDP s.8(2) and covers cross-border processing | Mirror and search; India's age of consent is arguably 18 [R19], so all users are covered [INFERRED]; approval beyond ZDR and DPDP terms unread | Re-read vendor site, Services Agreement, Usage Policies; ask OpenAI in writing (LEG-7); counsel reads the DPA (SP-1) | Anthropic or Bedrock as interim default needs a founder decision (D29) |
-| VA-2 | ZDR is approval-only, covers `/v1/responses`, `/v1/moderations`, audio; `store` forced false; PSP exists and some models may need it; India storage needs a Modified Retention amendment and enhanced ZDR for images [OA your-data, private-safety-processing] | Eligibility and per-model PSP scope not public | Apply at M0; OpenAI confirms in writing for `gpt-6.1-sol`, `gpt-6-luna`, `omni-moderation-latest`, audio | PSP needed: customer-owned bucket and KMS key holding doubly encrypted records at least 30 days, a documented exception to 05 BE-31; ZDR refused: no real child data (AI-09) |
-| VA-3 | Model IDs, effort support, prices of §4.3 and §4.6 [OA models, pricing; AN] | Fast-moving; mirror and cached table | `GET /v1/models` and pricing at M5 start; AI-26 per pin | Re-pick; rerun cost model |
+| VA-2 | ZDR is approval-only, covers `/v1/responses`, `/v1/moderations`, audio; `store` forced false; PSP exists and some models may need it; India storage needs a Modified Retention amendment and enhanced ZDR for images [OA your-data, private-safety-processing] | Eligibility and per-model PSP scope not public | Apply at Z0; OpenAI confirms in writing for `gpt-6.1-sol`, `gpt-6-luna`, `omni-moderation-latest`, audio | PSP needed: customer-owned bucket and KMS key holding doubly encrypted records at least 30 days, a documented exception to 05 BE-31; ZDR refused: no real child data (AI-09) |
+| VA-3 | Model IDs, effort support, prices of §4.3 and §4.6 [OA models, pricing; AN] | Fast-moving; mirror and cached table | `GET /v1/models` and pricing at Z5 start; AI-26 per pin | Re-pick; rerun cost model |
 | VA-4 | `omni-moderation-latest` detects §4.4 categories in English and romanised Hinglish; `sexual/minors` is text only [OA moderation] | Hinglish accuracy unmeasured; R20's AUC 0.75 itself unverified | AI-26 Hinglish sets versus the Luna classifier | Lean on the classifier; pull the self-hosted guard forward |
 | VA-5 | A blocked `safety_identifier` cannot be unblocked and an `epoch` bump is permitted; vendor classifiers can throttle the org on kids' chemistry or violence questions [OA safety-checks] | False-positive path, thresholds not public | Ask OpenAI; run the benign set on staging, watch warnings | Blocked child stays on the fallback; those topics go to cards |
 | VA-6 | Tele-MANAS 14416 and 1-800-891-4416 [SEC, MEMORY]; Childline 1098 works while merging into 112 by state [SEC] | Government pages unread | Call each number; counsel and expert approve cards | Print only 112 |
@@ -1880,7 +1880,7 @@ Risks:
 4. Vendor classifiers can block a child or the org (VA-5); child speech, Indian-English TTS and Hinglish moderation are unmeasured (VA-4, VA-8); AI cost is about a third of the unvalidated price (§4.6).
 
 Gates (IDs per 01):
-- **[GATE: before build]** M0 vendor accounts with spend limits; VA-1 and VA-2 sent to the vendors; model pins (VA-3) recorded at M5 start.
+- **[GATE: before build]** Z0 vendor accounts with spend limits; VA-1 and VA-2 sent to the vendors; model pins (VA-3) recorded at Z5 start.
 - **[GATE: before staff pilot]** ZDR approved in writing for the prod project, DPA signed, vendor register (SP-1); cards approved (AI-12); AI-26 gates passed on both vendors; kill switches drilled (SP-5); T&S on-call (SP-3); WER measured (AIT-10).
 - **[GATE: before external family]** LEG-1 (parent reading, s.9(2), cross-border); LEG-7 (written child-use confirmation from OpenAI and Anthropic); EXT-3; independent red-team including Hinglish.
 - **[GATE: before charging]** Measured cost per child inside the validated price (PAY-1); eight weeks of external operation.
@@ -1898,7 +1898,7 @@ Out of scope: companion or roleplay chat; cross-session memory; web search, link
 
 Specifies what the child sees in Videos, Weather and Reader and the pipelines behind them: catalog, licence register, signed content packs, Tier 1 offline video, Tier 2 YouTube made-for-kids (MFK) embeds behind a kill switch (D25), India weather with authored lessons, and the parent-approved EPUB library. Code: `zune/apps/{videos,weather,reader}`, `zune/backend/{content,weather}`.
 
-**Stage 1** = every MUST works end to end by M5 exit (`01-prerequisites-and-phases.md`); Tier 2 ships dark until the YouTube gate. **Stage 2** = PhET simulations, Wikipedia, multi-place weather, GNSS, live IMD data, reading statistics, Hindi (D20), publisher books.
+**Stage 1** = every MUST works end to end by Z5 exit (`01-prerequisites-and-phases.md`); Tier 2 ships dark until the YouTube gate. **Stage 2** = PhET simulations, Wikipedia, multi-place weather, GNSS, live IMD data, reading statistics, Hindi (D20), publisher books.
 
 Not covered: Guardian, policy engine (`03-lockdown-and-guardian.md`); WebView provider, cell-broadcast overlays (`02-os-image-and-product.md`); keys, ZuneUpdater internals (`04-device-signing-ota-release.md`); channel, portal pages, vault, `kill_state` (`05-backend-and-parent-portal.md`); Assistant (`07-ai-assistant.md`); app shells, TTS (`09-core-apps-and-design-system.md`); legal analysis (`11-compliance-and-privacy-engineering.md`); test execution (`12-testing-qa-and-acceptance.md`).
 
@@ -1963,7 +1963,7 @@ Evidence is mostly search summaries and GrapheneOS/LineageOS mirrors, not Google
 
 **Reader**
 - **CNT-32 MUST** `app.zune.reader` declares no `INTERNET`, no cleartext, no `ACTION_VIEW` of http(s); CI checks the built APK.
-- **CNT-33 MUST** Readium Kotlin `EpubNavigatorFragment` pinned to the version recorded at M5 start (R09: 3.4.0); external links inert; the system TTS voice-install flow never called.
+- **CNT-33 MUST** Readium Kotlin `EpubNavigatorFragment` pinned to the version recorded at Z5 start (R09: 3.4.0); external links inert; the system TTS voice-install flow never called.
 - **CNT-34 MUST** Ingest and open reject EPUBs with `<script>`, `<iframe>`, `<object>`, remote URLs, external entities or oversize files; blocked requests are counted.
 - **CNT-35 MUST** A title appears only if its band matches and the parent approved it (`content.allow` holds `book:` or `shelf:<band>`; the portal's "Approve starter shelf" is one explicit action); deny wins.
 - **CNT-36 SHOULD** Weather exposes a read-only `content://app.zune.weather.tile/summary` (temperature, condition id, icon id, updated-at, place label) to `app.zune.launcher` only, caller-checked by package and `zune-apps` digest, for 09 APP-11; it returns the last cached value and nothing when suspended or absent.
@@ -2081,14 +2081,14 @@ Compose hosts the legacy `EpubNavigatorFragment` (the Compose navigators are exp
 |---|---|---|---|---|
 | VN-1 | YouTube rules in §4.5, `status.madeForKids` and `embeddable` fields, `videos.list` 1 unit, `search.list` own bucket, 30-day cache, child-directed designation [R06, summaries] | Official pages unread | Read the developer policies, required minimum functionality, policy answer 9664901, API docs; file YQ1-YQ6; call `videos.list` on test ids | Adjust CNT-10 to CNT-21; if links must work, drop Tier 2 (CNT-19) |
 | VN-2 | Our origin keeps Referer (no Error 153) in Vanadium WebView; playback works with third-party cookies off; `addWebMessageListener` works; `getVideoUrl()` exposes related-video switches; host list is stable; YouTube may refuse stale Chromium [R06 F4, §2.3, I] | Untested; hosts drift | Dev Pixel, MFK test video, monthly host measurement | `loadDataWithBaseURL` origin; other state polling; domain-level allowlist; else drop Tier 2 |
-| VN-3 | ZuneUpdater can verify and serve packs; the caller-certificate check works; Guardian mints REST tokens [I] | Design assumption | M5 spike on Pixels | Provider moves to a Tier A component; tell 04, 05 |
+| VN-3 | ZuneUpdater can verify and serve packs; the caller-certificate check works; Guardian mints REST tokens [I] | Design assumption | Z5 spike on Pixels | Provider moves to a Tier A component; tell 04, 05 |
 | VN-4 | Oak OGL covers a paid product; NASA, ISRO, StoryWeaver (bulk, in-app), Blender, Wikimedia terms allow this use [R06 §2.5, R20 §2.4, S] | Pages blocked | Archive each page; written confirmations from Oak, Pratham, ISRO; counsel | Remove the source |
 | VN-5 | A plain-text licence URI satisfies CC BY attribution without a browser; IT Rules 2021 Part III ratings apply [R20 S]; public-domain basis in India (life plus 60 years [MEMORY]); Gutenberg trademark terms | Counsel questions | Counsel; Gutenberg terms | Summary text on screen, links in portal; `in_rating` internal; pre-cleared authors only |
 | VN-6 | Readium 3.4.0 (BSD-3, interception, `content://` open, external-link hook, script handling), Media3 1.11.1 current, 480p H.264 plays on both Pixels [R09 F6, S] | Mirrors and docs | Read source at the pinned version; hostile EPUB; play test | Copy to private file; patch or native renderer; pin newest |
 | VN-7 | SACHET feed URL, ETag, area format, events, languages, licence; CPCB data on `data.gov.in` (registration, licence, coverage, bands); IMD terms, charges, fixed-IP rule [R20 S, MEMORY] | Unread | Sample the feed 30 days; register; read terms; write to IMD | District-name matching; hide AQI; SACHET only |
 | VN-8 | Open-Meteo Standard price, call weighting, commercial host, attribution rule; MET Norway terms [R14, R20 S] | Pages blocked | Read terms; subscribe; test | Professional plan or self-host [R14] |
 | VN-9 | Cell broadcast in Google's tree: `always_on`, `link_method`, `enable_text_copy`, toggle flags, `DISALLOW_CONFIG_CELL_BROADCASTS`, MCC 404/405, carrier acceptance of non-tappable text [R14, R20] | Mirrors only | Read `packages/modules/CellBroadcast` at the tag; SACHET test alert | Patch the APEX; tell 02 |
-| VN-10 | NCERT class-to-age (about class 2 to 9 for ages 7-14), theme titles, UV 3 and 6, CPCB bands [MEMORY]; a 40 h pack is about 16 GB over hand-over Wi-Fi; every other [INFERRED] value | Memory, estimates | Education lead and meteorologist; measure at M5 | Tag by theme; reviewer sets values; smaller essentials subset |
+| VN-10 | NCERT class-to-age (about class 2 to 9 for ages 7-14), theme titles, UV 3 and 6, CPCB bands [MEMORY]; a 40 h pack is about 16 GB over hand-over Wi-Fi; every other [INFERRED] value | Memory, estimates | Education lead and meteorologist; measure at Z5 | Tag by theme; reviewer sets values; smaller essentials subset |
 
 ## Risks, open gates and out of scope
 
@@ -2100,7 +2100,7 @@ Compose hosts the legacy `EpubNavigatorFragment` (the Compose navigators are exp
 6. **Heavy first download** on Indian mobile data (CNT-05, VN-10).
 
 Gates:
-- **[GATE: before build]** Pin Readium, Media3, `androidx.webkit` at M5 start; VN-2 and VN-6 spikes recorded.
+- **[GATE: before build]** Pin Readium, Media3, `androidx.webkit` at Z5 start; VN-2 and VN-6 spikes recorded.
 - **[GATE: before staff pilot]** YouTube request filed by W2; licence register `cleared` for the pilot pack; weather pack signed by both reviewers; VN-9 passed.
 - **[GATE: before external family]** Counsel on Tier 2 third-party consent (DPDP), IT Rules ratings, public-domain method; written confirmations (Pratham, ISRO, Oak if used); Tier 2 approved in writing or dropped (CNT-19).
 - **[GATE: before charging]** Paid partner licences signed; Tier 2 in no price (CNT-21); IMD agreement only if IMD data is promised.
@@ -2118,7 +2118,7 @@ Out of scope: Hindi (D20), PhET, Wikipedia, NCERT text, parent-added channels, w
 
 Specifies the child-facing shell and first-party apps: build modes and stack, ZuneLauncher (gesture navigation, D31), ZuneSetup (first boot, QR pairing), MVPs for Camera, Photos, Journal, Notebook, utilities and the Reader and Settings entries, the ZuneKit design system, accessibility, crash reporting, tests, effort.
 
-**Stage 1** = every MUST, simplest form: Tier A apps proven at M3, Tier B apps at M5 (`01-prerequisites-and-phases.md`). **Stage 2** = the items under "Out of scope".
+**Stage 1** = every MUST, simplest form: Tier A apps proven at Z3, Tier B apps at Z5 (`01-prerequisites-and-phases.md`). **Stage 2** = the items under "Out of scope".
 
 Not covered here:
 - Guardian, PIN, policy engine, Emergency screen: `03-lockdown-and-guardian.md`. Image, overlays, ZuneSettings rows, navigation Paths A/B: `02-os-image-and-product.md`. Keys, signing, ZuneUpdater: `04-device-signing-ota-release.md`. Backend, portal, channel, vault: `05-backend-and-parent-portal.md`.
@@ -2300,14 +2300,14 @@ On next start the app reads its own `ApplicationExitInfo` and calls `IZuneDiag.c
 
 JUnit4 with Robolectric (sdk 37), Compose `ui-test`, Roborazzi goldens per band at font scale 1.0 and 2.0 in light and dark, ATF checks, Macrobenchmark with baseline profiles on dev Pixels (userdebug), Cuttlefish `connectedAndroidTest` on `zune_kids_cf-aosp_current-userdebug` per merge, and a rack of 6-10 phones [R09 §4.4].
 
-### 4.10 Effort and order (person-weeks [INFERRED]; re-baseline at M1 exit, 01 PRE-16 and Verify 13)
+### 4.10 Effort and order (person-weeks [INFERRED]; re-baseline at Z1 exit, 01 PRE-16 and Verify 13)
 
 | Wave | Weeks (01) | Work | pw |
 |---|---|---|---|
-| 0 | W1-W5 (M1) | Gradle, `libs/core`, ZuneKit v0, lint, APK-to-PINS-to-Cuttlefish CI, VP-1 and VP-3 spikes | 8 |
-| 1 | W8-W20 (M3) | ZuneLauncher 5, ZuneSetup 4 (mock pairing, real at M4) | 9 |
+| 0 | W1-W5 (Z1) | Gradle, `libs/core`, ZuneKit v0, lint, APK-to-PINS-to-Cuttlefish CI, VP-1 and VP-3 spikes | 8 |
+| 1 | W8-W20 (Z3) | ZuneLauncher 5, ZuneSetup 4 (mock pairing, real at Z4) | 9 |
 | 2 | W10-W24 | Photos with Camera 8, Journal 6, Notebook 6, Clock 2, Calculator and Recorder 2.5 | 24.5 |
-| 3 | W14-W30 (M5) | Sharing client 1.5, crash and diag 1, entries 0.5, hardening, accessibility, panels 12 | 15 |
+| 3 | W14-W30 (Z5) | Sharing client 1.5, crash and diag 1, entries 0.5, hardening, accessibility, panels 12 | 15 |
 
 Total 56.5 (Wave 0's 8 covers ZuneKit v0 and v1). Assistant UI, Walkie UI, Videos UI and Reader (about 20) are costed in 06, 07, 08.
 
@@ -2326,16 +2326,16 @@ Total 56.5 (Wave 0's 8 covers ZuneKit v0 and v1). Assistant UI, Walkie UI, Video
 - **APT-11** Goldens show no clipped text; target-size, contrast, copy-lint and ATF checks pass.
 - **APT-12** An exception with message `SECRET-123` yields a report without it; no consent uploads counts only; with consent one grouped row appears; the 21st upload that day is dropped.
 - **APT-13** Panels meet APP-36 for: open chat, take and find a photo, set an alarm, ask for time, find Emergency (`zune/docs/lab/usability-<wave>.md`).
-- **APT-14** [default] Home cold start p90 at most 800 ms, warm 300 ms; Camera preview within 1.2 s; shutter to saved 1.5 s p95; at most 5% janky frames; final numbers set at M1.
+- **APT-14** [default] Home cold start p90 at most 800 ms, warm 300 ms; Camera preview within 1.2 s; shutter to saved 1.5 s p95; at most 5% janky frames; final numbers set at Z1.
 - **APT-15** `MigrationTestHelper` N-1 to N passes for every database with seeded Journal, Notebook and Photos data; a failing migration keeps the old file and reports a health event (APP-37).
 
 ## Verify first
 
 | ID | Claim | Why uncertain | How to verify | If false |
 |---|---|---|---|---|
-| VP-1 | Gradle APKs imported with `certificate: "platform"` or `"zune-apps"`, `privileged`, `overrides` are re-signed by `sign_target_files_apks`; an `apk` update signed with the prod `zune-apps` key replaces the system copy (03 VG-7); Guardian and Setup need only system-API stubs, not hidden `setDeviceOwner` [R09 F3, 02 V12] | GrapheneOS tree only | M1 stub APK on Cuttlefish: key-map run, `pm install -r`, compile Setup against stubs | `presigned: true` with offline signing; Soong-native or framework-jar build for that app by ADR |
-| VP-2 | A `signature` permission does not reach `zune-apps` apps; `knownSigner` with `knownCerts` may [M] | Memory | M3 stub client | APP-06 caller check alone |
-| VP-3 | Stock Quickstep with ZuneLauncher gives working gestures (02 V5); Setup detects Back and Home as in §4.3 | Memory | Stub in M1, real in M3 (AT-06) | Path B (Launcher3-derived), about 5-8 pw more [INFERRED], escalate; tutorial uses taps |
+| VP-1 | Gradle APKs imported with `certificate: "platform"` or `"zune-apps"`, `privileged`, `overrides` are re-signed by `sign_target_files_apks`; an `apk` update signed with the prod `zune-apps` key replaces the system copy (03 VG-7); Guardian and Setup need only system-API stubs, not hidden `setDeviceOwner` [R09 F3, 02 V12] | GrapheneOS tree only | Z1 stub APK on Cuttlefish: key-map run, `pm install -r`, compile Setup against stubs | `presigned: true` with offline signing; Soong-native or framework-jar build for that app by ADR |
+| VP-2 | A `signature` permission does not reach `zune-apps` apps; `knownSigner` with `knownCerts` may [M] | Memory | Z3 stub client | APP-06 caller check alone |
+| VP-3 | Stock Quickstep with ZuneLauncher gives working gestures (02 V5); Setup detects Back and Home as in §4.3 | Memory | Stub in Z1, real in Z3 (AT-06) | Path B (Launcher3-derived), about 5-8 pw more [INFERRED], escalate; tutorial uses taps |
 | VP-4 | Ink 1.0.0, CameraX 1.6.2, Media3 1.11.1, Room 2.8.5, Readium 3.4.0 are current, GMS-free, 16 KB-aligned; Robolectric and Roborazzi run on sdk 37 [R09 F4-F6] | Doc summaries | `./gradlew dependencies`, grep, `check_elf_alignment.sh`, an sdk-37 test | Pin newest working; Ink to Compose Canvas (about 2 pw) |
 | VP-5 | SQLCipher works with Room 2.8.x on API 37, 16 KB aligned, redistribution allowed [R09 F5, M] | Licence unread | Sample DB; read licence | Plain Room plus Tink field encryption |
 | VP-6 | `default-permissions-zune.xml` grants CAMERA, RECORD_AUDIO, POST_NOTIFICATIONS to product system apps without dialogs; Guardian can revoke [R03 F8, M] | Unproven | Cuttlefish `dumpsys package`; toggle caps | `GRANT_RUNTIME_PERMISSIONS` from Guardian; DO limits on sensors [M] |
@@ -2389,7 +2389,7 @@ Not covered (`docs/build/`): image (`02-os-image-and-product.md`); Guardian, `se
 ## Requirements
 
 **Eligibility and intake**
-- **OPS-01 MUST** Service only `stallion` and `tegu` units whose model number is in `station/config/skus.yml` (India SKUs from the M2 dev units); refuse all others.
+- **OPS-01 MUST** Service only `stallion` and `tegu` units whose model number is in `station/config/skus.yml` (India SKUs from the Z2 dev units); refuse all others.
 - **OPS-02 MUST** Run the §4.1 hard checks on every phone, record pass or fail, return a failing phone unflashed. Never bypass FRP, accounts, MDM or carrier locks [R18 F11].
 - **OPS-03 MUST** Never store or log an IMEI, serial, number, screen content or PIN: KYM is a boolean plus timestamp; the backend keeps `serial_hmac` only. Staff never unlock a customer phone: the parent removes accounts and screen lock, then resets it in front of staff.
 - **OPS-04 MUST** Intake modes: in person (C0, C1); new-in-box phone shipped to us from the retailer (from C2); used-phone courier only in C3 and after EXT-5; returns by insured courier.
@@ -2581,7 +2581,7 @@ Nothing here was read from Google's `android-17.0.0_r1` tree. Log results in `zu
 | VO-2 | `-s` stays pinned across `reboot-bootloader` with four phones, no hangs [R18 F5, F6] | Upstream never pins | AT-O02 | Host-wide lock; replan |
 | VO-3 | Anti-rollback variable `anti` or `ap-ar-s`; 10a outside the May 2026 bump [R18 F9; 04 V5] | Search summaries | `getvar` per unit | Order by `version-bootloader`; hold units |
 | VO-4 | OEM-unlock toggle works on India SKUs with no carrier-ID lock; units have a nano-SIM tray [R20 §2.1] | No Indian unit tested | First India units; every intake | Refuse the SKU; Wi-Fi-only if no tray |
-| VO-5 | First-boot attestation works; a Guardian not yet Device Owner can turn OEM unlocking off [R18 F5, F8; 04 V4, V9, V12] | Forks and docs | M2 lab; read `OemLockService` at the tag | Seal at claim; no courier intake |
+| VO-5 | First-boot attestation works; a Guardian not yet Device Owner can turn OEM unlocking off [R18 F5, F8; 04 V4, V9, V12] | Forks and docs | Z2 lab; read `OemLockService` at the tag | Seal at claim; no courier intake |
 | VO-6 | Token plus server check is one-way: no FACTORY re-entry after claim or wipe | New design | Red-team: intents, boot reasons, USB, replay | Strip FACTORY from the image; hold C1 |
 | VO-7 | KYM by SMS to 14422 works for an unactivated phone [R20 §2.1] | DoT post only | Try dev units; else CEIR portal | Portal; else invoice only, tell counsel |
 | VO-8 | Battery health readable (`BATTERY_PROPERTY_STATE_OF_HEALTH`) [MEMORY] | Memory | Query dev units | Cycle count, or new-in-box only |
@@ -2602,7 +2602,7 @@ Risks:
 7. SIM in another phone, parent-assisted unlock, recovery wipe: disclosed limits (03).
 
 Gates (IDs per 01):
-- **[GATE: before build]** VO-1, VO-2, VO-5 run on the first Pixels (M2).
+- **[GATE: before build]** VO-1, VO-2, VO-5 run on the first Pixels (Z2).
 - **[GATE: before staff pilot]** SP-1..7 including SP-5 kill drill and SP-6 service-unlock; AT-O02 and AT-O07 passed; unbrick ladder rehearsed.
 - **[GATE: before external family]** §4.13 signed; LEG-1..10; EXT-1..7 including EXT-5 spare phones and EXT-7 notices; VO-6 and VO-11 closed.
 - **[GATE: before charging]** PAY-1 and FW-1; FW-1 is also needed before device 101.
@@ -2794,7 +2794,7 @@ Nothing below was read from Google's tree. Log results in `zune/docs/verified-fa
 | VL-6 | POCSO ss.19-21 and Rule 11 bind us as an intermediary; channel; s.21(2) exposure [R19 §2.4; judgment P] | Statute text unread | Counsel (R19 Q7) | Change RB-2 owner and clock; keep hold |
 | VL-7 | 2026 DoT authorisation, radio-equipment possession, user-identification and 2024 interception rules do not reach the messenger, calls or custody of customers' phones [R19 Q11] | Texts unread | Counsel | Authorisation, or staff phones only (10 VO-12) |
 | VL-8 | Panic Button and GPS Rules 2016 require a triple-press panic call and cover a voice-off handset [R19 §2.2, M] | Scope unread | Counsel; 03 VG-11 | Keep SOS (LOCK-35); disclose |
-| VL-9 | The station can show EFS, persist, IMEI untouched; Google's radio image counts as unmodified [R19 §4.1, I] | Pixel mechanics from mirrors | M2 fastboot transcripts, sacrificial unit | Rely on the command-allowlist log; tell counsel |
+| VL-9 | The station can show EFS, persist, IMEI untouched; Google's radio image counts as unmodified [R19 §4.1, I] | Pixel mechanics from mirrors | Z2 fastboot transcripts, sacrificial unit | Rely on the command-allowlist log; tell counsel |
 | VL-10 | Reported: 28 Sep 2026 Supreme Court statement, Karnataka under-16 ban, MeitY draft IT Rules, SIM-binding date, username notices [R19 §2.2, §2.4, S] | Sources blocked | Read order, notices, circulars | Stop external families (EXT-1); re-scope under-16 messaging |
 | VL-11 | TTS audio is outside synthetic-media labelling; RBI e-mandate (21 Apr 2026: Rs 15,000, 24 h issuer notice), aggregator, GST threshold, DLT [R19 §2.4, §2.5, S; M] | Secondary | Counsel; read at PAY-1 | Audible TTS disclosure; PAY-1 stays open |
 | VL-12 | The [default] clocks (24 h erasure, 12 h Board target, 24 h acknowledgement, 7-day resolution, 24 h POCSO decision) satisfy the law; only a parent can contract (Contract Act s.11 [M]) [I] | Chosen here | Counsel | Tighten the config |
@@ -2820,7 +2820,7 @@ Risks:
 | EXT-2 | Name clearance | Codename, neutral domain |
 | LEG-2, LEG-3, EXT-7 | Indian entity and resident officer (A11); Rule 10 and Rule 8(3) readings (VL-2, VL-3); Hindi parent notices [R19 Q10] | Staff-ID flow, `seal`, `lang` field ready |
 
-- **[GATE: before build]** None legal. The counsel brief and R19 questions go out by W2 (01 PRE-18); the inventory and `compliance-lint` skeleton exist by M1.
+- **[GATE: before build]** None legal. The counsel brief and R19 questions go out by W2 (01 PRE-18); the inventory and `compliance-lint` skeleton exist by Z1.
 - **[GATE: before staff pilot]** SP-1 (data map, vendor register, retention), SP-2 (CMP-16 to CMP-18), SP-3 (CMT-09, 11, 12 drills), SP-4 (CMP-26), SP-7; CMT-01 to CMT-10 and CMT-13 to CMT-15 pass; reporting officer, T&S lead and grievance mailbox named.
 - **[GATE: before external family]** LEG-1 to LEG-10, EXT-1, EXT-2, EXT-3, EXT-7, FW-1 or counsel's written view on the 100-device footing (01 PRE-20); VL-1 to VL-4 and VL-7 closed or a founder exception recorded in `gates.md`.
 - **[GATE: before charging]** PAY-1 (CMP-31 built, VL-11 read), FW-1, consumer terms from counsel.
@@ -2838,7 +2838,7 @@ Out of scope: legal advice and contract text; US and EU builds; own-hardware cer
 
 How the building session proves the v1 baseline works: CI, device and network matrices, bypass coverage, red-teaming, load, security, privacy, accessibility and usability tests, gate evidence, and the Definition of Done (DoD) for validating with about 200 families (D21; cohorts C0-C3 in `10-delivery-operations-and-pilot.md`).
 
-**Stage 1** = every MUST below, running from M1 and complete before the gate it names; the DoD gates M7. **Stage 2** = device farm, gesture robot, child-voice corpora, Indic sets (D20), continuous external red-team, HW-1..4.
+**Stage 1** = every MUST below, running from Z1 and complete before the gate it names; the DoD gates Z7. **Stage 2** = device farm, gesture robot, child-voice corpora, Indic sets (D20), continuous external red-team, HW-1..4.
 
 Owned here: pipelines, gate evidence, matrices, test governance, DoD. Test content stays in its home section: AT-nn (`02`), LT-nn and the bypass suite (`03`), AT-Rnn (`04`), BT-nn (`05`), CT-nn (`06`), AIT-nn (`07`), CNT-Tnn (`08`), APT-nn (`09`), AT-Onn (`10`), CMT-nn (`11`); new tests here are `QT-nn`. Not covered: milestones, gate register (`01-prerequisites-and-phases.md`); release-gate definitions, keys (`04-device-signing-ota-release.md`); legal gates (`11-compliance-and-privacy-engineering.md`); station operations (`10`). "MR" = push to a working branch (no pull request, 01 PRE-12). Never write a bare "G5": G1-G6 are 04's release gates; others are SP-, LEG-, EXT-, FW-1, PAY-1.
 
@@ -2878,7 +2878,7 @@ Owned here: pipelines, gate evidence, matrices, test governance, DoD. Test conte
 - **QA-13 MUST** Drills leave evidence in `zune/docs/qa/drills/`: key custody (absent custodian; REL-09, 10), `releasekey` rotation and AVB recall (AT-R11), bad-OTA drill (downgrade refused, roll-forward in 72 h), kill levels (AT-O08), signer renewal (05 §4.5), DR (BT-14), breach, S4 and outage tabletops (CMT-09, 12, 19), secrets rotation (BT-18). Before C0, then quarterly.
 
 **Devices, networks, quality**
-- **QA-14 MUST** Run the §4.5 matrix per model at M5 exit, before C0 and C1; later releases sample one data SIM and home Wi-Fi.
+- **QA-14 MUST** Run the §4.5 matrix per model at Z5 exit, before C0 and C1; later releases sample one data SIM and home Wi-Fi.
 - **QA-15 MUST** Per model: 3 RC units (locked, candidate's key set; re-flash by service-unlock when it changes), 1 dev unit (automation), 1 sacrificial unit (unlock, AVB rotation, bad OTA); key sets cannot share a phone (REL-05). `docs/lab/devices.md` records bootloader, baseband, anti-rollback, SPL (REL-03).
 - **QA-16 MUST** 112 evidence per LOCK-36 for Jio, Airtel, Vi, BSNL on both models. A live 112 call needs prior written agreement with the carrier or state emergency centre; otherwise use `cmd phone emergency-number-test-mode` and record live behaviour as untested (LOCK-37). Archive for counsel.
 - **QA-17 MUST** QT-03 and QT-05 meet bars Q6 and Q8 on both models; C0 data replaces [default] thresholds by ADR.
@@ -2898,7 +2898,7 @@ Owned here: pipelines, gate evidence, matrices, test governance, DoD. Test conte
 - **QA-27 SHOULD** QT-14: at least 6 guardians on a phone browser complete claim, two-family contact approval, bedtime, reading a thread, remote lock, consent withdrawal; 80% unaided, median under 3 minutes per task [default].
 
 **Gates and DoD**
-- **QA-28 MUST** `zune/docs/qa/DOD.md` is generated from the DoD tables with the latest run IDs; the founder acknowledges it at M7 entry. `limitations.md` feeds the parent pack, hand-over script (10 §4.6) and agreement, claims within LOCK-37 (CMP-35).
+- **QA-28 MUST** `zune/docs/qa/DOD.md` is generated from the DoD tables with the latest run IDs; the founder acknowledges it at Z7 entry. `limitations.md` feeds the parent pack, hand-over script (10 §4.6) and agreement, claims within LOCK-37 (CMP-35).
 - **QA-29 MUST** During cohorts a weekly report compares measurements with bars Q1-Q13 (`ev.health` crash and ANR counts, OTA, latency); a breached stop-ship trigger freezes new flashes (OPS-21).
 
 ## Design and build instructions
@@ -3001,7 +3001,7 @@ The baseline is done for validation with about 200 customers when **DOD-1 to DOD
 - **DOD-5** The 13 limitations below are disclosed in the agreement, hand-over script and portal.
 - **DOD-6** OTA reached every C0 device; one real monthly patch train ran (REL-25) with ship-lag measured; the station processed C0; QA-13 drills done.
 
-"Validated" = Q10, Q11 and the other 10 §4.9 thresholds for C1-C3 met, including OTA from the first external device (00-START-HERE §7), and the M8 review done.
+"Validated" = Q10, Q11 and the other 10 §4.9 thresholds for C1-C3 met, including OTA from the first external device (00-START-HERE §7), and the Z8 review done.
 
 **Features (done when):** F1 Messenger 1:1, parent-visible: CT-01..07. F2 Voice and video 1:1: CT-08..10, QT-05. F3 Walkie-talkie: CT-12, 13, LP3. F4 Assistant text, voice, image: AIT-01..11, QT-11. F5 Videos, Tier 2 dark: CNT-T01..07. F6 Weather: CNT-T08..10. F7 Camera, Photos, Journal, Notebook, Reader, utilities: APT-06..10, CNT-T11, QT-13. F8 Settings, D31 defaults, gestures: AT-04..06, 08, LT-05, 06. F9 No browser, no YouTube route, no calls or SMS, 112 only: LT-01..19, QT-06, 07, 16. F10 Portal, consent, vault, erasure: BT-01..20, CMT-01..19, QT-14. F11 Provisioning, hand-over, return-to-stock: AT-O01..09. F12 OTA, patch pipeline: AT-R05..12.
 
@@ -3019,15 +3019,15 @@ Log results in `zune/docs/verified-facts.md`. None of this was read from Google'
 
 | ID | Claim | Why uncertain | How to verify | If false |
 |---|---|---|---|---|
-| VQ-1 | `zune_kids_cf` boots on a CI runner with `/dev/kvm`; `sdk_phone16k_x86_64` exists [R01 F7] | Names from GrapheneOS trees; nested virtualisation varies | M1 build and boot | Listed `aosp_cf_*` or goldfish names; bare metal |
+| VQ-1 | `zune_kids_cf` boots on a CI runner with `/dev/kvm`; `sdk_phone16k_x86_64` exists [R01 F7] | Names from GrapheneOS trees; nested virtualisation varies | Z1 build and boot | Listed `aosp_cf_*` or goldfish names; bare metal |
 | VQ-2 | Vanilla `aosp_cf_x86_64_only_phone` ships a browser and fails IG-1, 2, 3 [R01 F5, R04 F1] | Stock 17 `handheld_product.mk` unread | QT-02 on the vanilla build | If it passes, read the makefiles; fix gate or claim |
-| VQ-3 | `adb shell input` swipes drive Quickstep gestures on Cuttlefish; `cmd package query-activities` takes `-c`, `-d` [R04 F5] | Untested; GrapheneOS tree | M1 with a stub launcher (02 V5) | NAV suite manual on Pixels; scan manifests only |
+| VQ-3 | `adb shell input` swipes drive Quickstep gestures on Cuttlefish; `cmd package query-activities` takes `-c`, `-d` [R04 F5] | Untested; GrapheneOS tree | Z1 with a stub launcher (02 V5) | NAV suite manual on Pixels; scan manifests only |
 | VQ-4 | Userdebug differs from `user` only by the allowlisted diff [R18 §6] | `userdebug_or_eng` SELinux rules differ | Policy and file diff of the first `zune_kids_cf` pair | Move tests to RC; disclose |
-| VQ-5 | Posture, factory QA and in-process audits give enough RC evidence without adb (03 LOCK-06, 10 §4.5) | Assumption | M3, locked dev unit | Extend posture; never add a QA shell to `user` |
+| VQ-5 | Posture, factory QA and in-process audits give enough RC evidence without adb (03 LOCK-06, 10 §4.5) | Assumption | Z3, locked dev unit | Extend posture; never add a QA shell to `user` |
 | VQ-6 | `cmd phone emergency-number-test-mode` and `cmd audio set-enable-hardening enable` work on the Pixels [R10 F14, R13 F3] | GrapheneOS trees | Run on both | Agreed live 112 test; 06 VC-1 redesign |
 | VQ-7 | The vendor tolerates adversarial eval prompts [07 VA-5]; LiveKit ships a load-test tool [MEMORY] | Unread | Ask OpenAI in writing; check the release | Pause eval runs; write `loadgen` |
 | VQ-8 | Counsel accepts minors in panels under the QA-26 form | Indian texts unread | Counsel (LEG-1) | Staff children only; adults role-play |
-| VQ-9 | Data-active SIMs for four Indian carriers can be bought and used with 112; IPv6 or CGNAT behaviour per carrier | Terms, KYC unread | Procure at M2; LOCK-36 | Fewer carriers; disclose |
+| VQ-9 | Data-active SIMs for four Indian carriers can be bought and used with 112; IPv6 or CGNAT behaviour per carrier | Terms, KYC unread | Procure at Z2; LOCK-36 | Fewer carriers; disclose |
 
 ## Risks, open gates and out of scope
 
@@ -3063,13 +3063,13 @@ Conventions:
 ## 1. What changed (file: before -> after)
 
 ### 01 prerequisites
-- PRE-04: 3 Pixels per model before M6 -> 5 per model (3 release-candidate, 1 dev, 1 sacrificial), matching 12 QA-15 and 04 G5.
+- PRE-04: 3 Pixels per model before Z6 -> 5 per model (3 release-candidate, 1 dev, 1 sacrificial), matching 12 QA-15 and 04 G5.
 - PRE-09 and §4.3 placement: monorepo checked out at `vendor/zune` (01) vs checked out at `<aosp>/zune` with linkfiles (02) -> one design: `<aosp>/zune` plus directory linkfiles, root `.find-ignore`, `vendor/zune` checkout as fallback (a); Verify 6 reworded to match.
 - §4.3 layout: Tier A "Soong, platform key" -> Gradle-built and imported by Soong (09 Mode G); `eval/` and more `docs/` subfolders listed.
 - PRE-12: "no model names in commits or artifacts" -> no model names in commit messages, trailers or authorship lines (07's vendor model IDs are product config).
 - PRE-20, FW-1 row, §4.6: "100 devices before FW-1" with 04, 10, 11 disagreeing on whether external families fall inside it -> staff-owned phones only until the licence is read and counsel gives a written footing view; first external family needs FW-1 or that view.
-- §4.4 roles and M4 deliverables: no engineering on-call, secrets or domain owner -> added (05 BE-47..50).
-- Verify 12 (cloud cost USD 0.5-0.9k/month) -> USD 0.7-1.4k with DR to match 05; rows 14 (Pixel codenames, platform, India SKU), 15 (DPDP date) and 16 (price and cost conflict) added; M0 and M2 exit criteria cite them.
+- §4.4 roles and Z4 deliverables: no engineering on-call, secrets or domain owner -> added (05 BE-47..50).
+- Verify 12 (cloud cost USD 0.5-0.9k/month) -> USD 0.7-1.4k with DR to match 05; rows 14 (Pixel codenames, platform, India SKU), 15 (DPDP date) and 16 (price and cost conflict) added; Z0 and Z2 exit criteria cite them.
 - `RB-1` -> `REBASE-1` (3 places; also 04).
 
 ### 02 OS image
@@ -3116,7 +3116,7 @@ Conventions:
 - `ContentStoreProvider` in "app.zune.content" vs "provider in app.zune.updater [assumed]" -> one provider inside `app.zune.updater` with authority `app.zune.content`. 04 interface note updated. New CNT-36 for the weather tile provider that 09 APP-11 depends on.
 
 ### 09 core apps
-- APP-13 allows `ZUNE1S:`; APP-24 note "03 must add both" -> added in 03; Wave 0 `W1-W6` -> `W1-W5` (01 M1). Mode G risk text updated (01-03 adopt it). New APP-37 and APT-15: Room, SQLCipher and DataStore migrations.
+- APP-13 allows `ZUNE1S:`; APP-24 note "03 must add both" -> added in 03; Wave 0 `W1-W6` -> `W1-W5` (01 Z1). Mode G risk text updated (01-03 adopt it). New APP-37 and APT-15: Room, SQLCipher and DataStore migrations.
 
 ### 10 delivery and pilot
 - L1 kill features list lacked `assistant_images`, `assistant_voice`, `videos_tier2` -> added. §4.12 cloud cost "INR 4.3-4.8 lakh a year" vs 05's USD 700-1,400 a month -> INR 8.1-16.1 lakh with DR plus AI per child. Consent checklist gains `third_party_video`. Added helpdesk tooling rule and survey rule (no third-party tools).
@@ -3139,7 +3139,7 @@ Each shows the conflict and the default applied in the text.
 2. **Parent reading of messages and AI chats (D27) against DPDP s.9(3).** Every section builds the strict reading with full parent access, child notice, audit and seal; counsel decides at LEG-1. Decide whether the pilot proceeds on that exposure (up to Rs 200 crore per R19) and which fallback you pre-approve (shorter retention, summaries at 13-14).
 3. **Unit economics and spend.** Prices conflict (INR 199 founding, INR 399 in 07, INR 1,850 per-device floor, 10 §4.12 ceiling INR 8,200-12,000). Fixed cloud with DR is about INR 340-670 per child-month at 200 children (05), plus AI about INR 138 (07): above every price in the reports. The pilot is free, so the company carries about INR 8-16 lakh a year of cloud plus 3.7-24 lakh of flashing, counsel and insurance (10 §4.12). Decide B-1 spend and whether to re-price before PAY-1.
 4. **OpenAI default and data residency (D29).** OpenAI direct processes outside India (07); R19 wanted in-country inference. Applied: disclosed cross-border transfer. If counsel or you require India processing, the Anthropic-via-Bedrock path becomes default and D29 must be amended.
-5. **Gesture navigation fallback (D31).** If Path A and Path B both fail at M3 exit, 02 and 09 say stop and escalate. Decide now whether three-button is an acceptable fallback or the pilot waits.
+5. **Gesture navigation fallback (D31).** If Path A and Path B both fail at Z3 exit, 02 and 09 say stop and escalate. Decide now whether three-button is an acceptable fallback or the pilot waits.
 6. **SOS location and auto-dial (D31, D28).** D31 limits Stage-1 location to parent-set places; 03/05/11 add a location fix on SOS and 03 dials 112 by default after a 5-second countdown. Confirm both.
 7. **YouTube Tier 2 and D2.** YouTube's rules say do not disable player links; Zune refuses navigation (08 §4.5 YQ2). Applied: D2 wins, Tier 2 dropped on refusal or silence at Y0+56 (2026-12-14 if filed 2026-10-19). Confirm D2 wins and that launch never depends on Tier 2.
 8. **Journal, Notebook and Photos are private (09) while D24 gives the parent full control.** D27 covers messages and AI chats only; shares are per item. Confirm the parent may not read these.
@@ -3160,11 +3160,11 @@ Each shows the conflict and the default applied in the text.
 - Support visibility on `user` builds: only posture, health counts and consented crash reports exist; no remote log pull.
 - Penetration-test vendor choice and cadence beyond the one pre-launch test (12 QA-12).
 - Customer-data export for Journal, Notebook and Photos (wiped on reflash; backup is Stage 2).
-- Cyber and product-liability insurance scope (01 only names a broker at M6).
+- Cyber and product-liability insurance scope (01 only names a broker at Z6).
 
 ## 4. All [GATE: ...] items by gate type
 
-Gate IDs are canonical in 01 (B-1, SP-1..7, LEG-1..10, EXT-1..7, FW-1, PAY-1; HW-1..4 are M8 evidence, not a gate). Section items are in addition.
+Gate IDs are canonical in 01 (B-1, SP-1..7, LEG-1..10, EXT-1..7, FW-1, PAY-1; HW-1..4 are Z8 evidence, not a gate). Section items are in addition.
 
 ### [GATE: before build]
 | Gate | Source |
@@ -3175,18 +3175,18 @@ Gate IDs are canonical in 01 (B-1, SP-1..7, LEG-1..10, EXT-1..7, FW-1, PAY-1; HW
 | V1, V2, V4 on first Pixels; QPR1 ADR (REL-04) | 04 |
 | V1, V2 recorded; neutral domain and RP-ID ADR; AWS spend approved | 05 |
 | VC-1, VC-2 recorded before building Walkie and Calls wake paths | 06 |
-| M0 vendor accounts with spend limits; VA-1, VA-2 sent; model pins at M5 start | 07 |
-| Pin Readium, Media3, `androidx.webkit` at M5 start; VN-2, VN-6 spikes | 08 |
+| Z0 vendor accounts with spend limits; VA-1, VA-2 sent; model pins at Z5 start | 07 |
+| Pin Readium, Media3, `androidx.webkit` at Z5 start; VN-2, VN-6 spikes | 08 |
 | VP-1, VP-2 recorded (Mode G) | 09 |
 | VO-1, VO-2, VO-5 on first Pixels | 10 |
-| No legal gate; counsel brief out by W2; data inventory and `compliance-lint` skeleton by M1 | 11 |
+| No legal gate; counsel brief out by W2; data inventory and `compliance-lint` skeleton by Z1 | 11 |
 | VQ-1, VQ-2 recorded; CI runner with `/dev/kvm` | 12 |
 
 ### [GATE: before staff pilot]
 | Gate | Source |
 |---|---|
 | SP-1 data map, vendor register, retention; SP-2 security baseline; SP-3 incident plan and drill; SP-4 112 field test and triple-press SOS; SP-5 kill switches L1-L4; SP-6 service-unlock built or exception; SP-7 staff consent terms | 01 |
-| Gesture navigation Path A or B passes AT-06 (else founder accepts three-button); named WebView owner and off-OTA update shown; 112 test on both Pixels; name settled; stop and escalate if A fails and B is not passing at M3 exit | 02 |
+| Gesture navigation Path A or B passes AT-06 (else founder accepts three-button); named WebView owner and off-OTA update shown; 112 test on both Pixels; name settled; stop and escalate if A fails and B is not passing at Z3 exit | 02 |
 | Zero P0 bypass; LT-13, LT-14 pass or SP-6 exception; real Private DNS resolver; 112 field test and SOS shipped | 03 |
 | HSM proof and pilot key ceremony (REL-10); OTA, slot-fallback, service-unlock rehearsals on two sacrificial units per model; G1-G6 for the pilot build | 04 |
 | SP-1..3; BT-08, BT-14, BT-17..20; named on-call rota; signer-renewal rehearsal; independent portal and device-API test | 05 |
@@ -3234,18 +3234,18 @@ All rows stay in their own section's table; this is the order across sections. C
 1. **Day 0, access and tag.** 01#1, 01#2, 02/V1, 04/V1: AOSP reachable, `android-17.0.0_r1` is CP2A.260605.016 with SPL 2026-06-05, security branches exist and are timely. Everything else assumes this.
 2. **Send in week 1-2, answered last (long lead).** Google licence 01#3, 04/V6, 10/VO-9; vendor terms 07/VA-1, 07/VA-2; YouTube request 08/VN-1 (file by 2026-10-19); counsel brief 01#15, 11/VL-1, VL-2, VL-3, VL-4, VL-5, VL-6, VL-7, VL-10, VL-11, VL-12, 05/V6, 05/V7, 05/V8, 06/VC-9, 08/VN-5, 12/VQ-8.
 3. **Days 1-5, build environment.** 01#5, 02/V2, 02/V15, 12/VQ-1: Ubuntu 24.04, host size, `/dev/kvm`, `aosp_current`, product names.
-4. **M1, read the stock tree.** 01#4, 02/V3, 02/V4, 02/V10, 12/VQ-2, 03/VG-2: `base_product.mk`, REMOVE rows, RRO overrides, supervision framework, Settings counts.
-5. **M1 and M3 week 1, existential spikes.** 03/VG-1, 03/VG-3 (Device Owner route, wipe with sole restriction setter); 01#6, 02/V11, 09/VP-1, 09/VP-2, 02/V12 (placement, Mode G, signing); 02/V5, 02/V6, 09/VP-3, 12/VQ-3 (gestures with a non-Quickstep home).
-6. **M1, WebView.** 01#7, 02/V8, 02/V9, 04/V11: Vanadium obtainable, redistributable, gated by P-FWK-1.
-7. **M2, first Pixels.** 01#14, 04/V15, 04/V2, 04/V3, 01#8, 04/V5 (codenames, India SKU, adevtool, QPR1 skew); 01#9, 04/V4, 04/V8 (relock with our key, rollback); 01#10, 04/V9, 04/V14, 05/V4 (attestation); 01#11 (adevtool on Indian SKUs).
-8. **M2, locked-state and unlock.** 03/VG-4, 03/VG-5, 04/V12, 04/V10, 04/V7, 04/V13; station 10/VO-1, VO-2, VO-3, VO-4, VO-5, VO-6; 11/VL-9.
-9. **M2-M3, emergency path.** 02/V7, 03/VG-9, 03/VG-10, 03/VG-11, 11/VL-8, 12/VQ-6, 12/VQ-9: in-call UI, inbound rejection, panic button, 112 on SIM, no-SIM and data-SIM.
-10. **M3, bypass surface.** 03/VG-6, VG-7, VG-8; 02/V13, V14; 05/V3 (Private DNS over DoT).
-11. **M4, cloud.** 01#12, 05/V1, V2, V5, V9, V10, V11; 05/V5 is also a comms battery check (item 12).
-12. **M4-M5 start, comms Android behaviour.** 06/VC-1, VC-2, VC-3 (before the wake paths), VC-4, VC-5, VC-6, VC-7, VC-8; 12/VQ-7.
-13. **M5 start, AI.** 07/VA-3, VA-4, VA-5, VA-6, VA-7, VA-8, VA-9, VA-10 (VA-1, VA-2 are item 2).
-14. **M5 start, content and apps.** 08/VN-2, VN-3, VN-4, VN-6, VN-7, VN-8, VN-9, VN-10; 09/VP-4 to VP-11.
-15. **M5 and C0, validation numbers.** 10/VO-7, VO-8, VO-10, VO-11, VO-12; 01#13, 01#16; 12/VQ-4, VQ-5.
+4. **Z1, read the stock tree.** 01#4, 02/V3, 02/V4, 02/V10, 12/VQ-2, 03/VG-2: `base_product.mk`, REMOVE rows, RRO overrides, supervision framework, Settings counts.
+5. **Z1 and Z3 week 1, existential spikes.** 03/VG-1, 03/VG-3 (Device Owner route, wipe with sole restriction setter); 01#6, 02/V11, 09/VP-1, 09/VP-2, 02/V12 (placement, Mode G, signing); 02/V5, 02/V6, 09/VP-3, 12/VQ-3 (gestures with a non-Quickstep home).
+6. **Z1, WebView.** 01#7, 02/V8, 02/V9, 04/V11: Vanadium obtainable, redistributable, gated by P-FWK-1.
+7. **Z2, first Pixels.** 01#14, 04/V15, 04/V2, 04/V3, 01#8, 04/V5 (codenames, India SKU, adevtool, QPR1 skew); 01#9, 04/V4, 04/V8 (relock with our key, rollback); 01#10, 04/V9, 04/V14, 05/V4 (attestation); 01#11 (adevtool on Indian SKUs).
+8. **Z2, locked-state and unlock.** 03/VG-4, 03/VG-5, 04/V12, 04/V10, 04/V7, 04/V13; station 10/VO-1, VO-2, VO-3, VO-4, VO-5, VO-6; 11/VL-9.
+9. **Z2-Z3, emergency path.** 02/V7, 03/VG-9, 03/VG-10, 03/VG-11, 11/VL-8, 12/VQ-6, 12/VQ-9: in-call UI, inbound rejection, panic button, 112 on SIM, no-SIM and data-SIM.
+10. **Z3, bypass surface.** 03/VG-6, VG-7, VG-8; 02/V13, V14; 05/V3 (Private DNS over DoT).
+11. **Z4, cloud.** 01#12, 05/V1, V2, V5, V9, V10, V11; 05/V5 is also a comms battery check (item 12).
+12. **Z4-Z5 start, comms Android behaviour.** 06/VC-1, VC-2, VC-3 (before the wake paths), VC-4, VC-5, VC-6, VC-7, VC-8; 12/VQ-7.
+13. **Z5 start, AI.** 07/VA-3, VA-4, VA-5, VA-6, VA-7, VA-8, VA-9, VA-10 (VA-1, VA-2 are item 2).
+14. **Z5 start, content and apps.** 08/VN-2, VN-3, VN-4, VN-6, VN-7, VN-8, VN-9, VN-10; 09/VP-4 to VP-11.
+15. **Z5 and C0, validation numbers.** 10/VO-7, VO-8, VO-10, VO-11, VO-12; 01#13, 01#16; 12/VQ-4, VQ-5.
 
 
 ---
@@ -3264,13 +3264,13 @@ Conventions:
 ## 1. What changed (file: before -> after)
 
 ### 01 prerequisites
-- PRE-04: 3 Pixels per model before M6 -> 5 per model (3 release-candidate, 1 dev, 1 sacrificial), matching 12 QA-15 and 04 G5.
+- PRE-04: 3 Pixels per model before Z6 -> 5 per model (3 release-candidate, 1 dev, 1 sacrificial), matching 12 QA-15 and 04 G5.
 - PRE-09 and §4.3 placement: monorepo checked out at `vendor/zune` (01) vs checked out at `<aosp>/zune` with linkfiles (02) -> one design: `<aosp>/zune` plus directory linkfiles, root `.find-ignore`, `vendor/zune` checkout as fallback (a); Verify 6 reworded to match.
 - §4.3 layout: Tier A "Soong, platform key" -> Gradle-built and imported by Soong (09 Mode G); `eval/` and more `docs/` subfolders listed.
 - PRE-12: "no model names in commits or artifacts" -> no model names in commit messages, trailers or authorship lines (07's vendor model IDs are product config).
 - PRE-20, FW-1 row, §4.6: "100 devices before FW-1" with 04, 10, 11 disagreeing on whether external families fall inside it -> staff-owned phones only until the licence is read and counsel gives a written footing view; first external family needs FW-1 or that view.
-- §4.4 roles and M4 deliverables: no engineering on-call, secrets or domain owner -> added (05 BE-47..50).
-- Verify 12 (cloud cost USD 0.5-0.9k/month) -> USD 0.7-1.4k with DR to match 05; rows 14 (Pixel codenames, platform, India SKU), 15 (DPDP date) and 16 (price and cost conflict) added; M0 and M2 exit criteria cite them.
+- §4.4 roles and Z4 deliverables: no engineering on-call, secrets or domain owner -> added (05 BE-47..50).
+- Verify 12 (cloud cost USD 0.5-0.9k/month) -> USD 0.7-1.4k with DR to match 05; rows 14 (Pixel codenames, platform, India SKU), 15 (DPDP date) and 16 (price and cost conflict) added; Z0 and Z2 exit criteria cite them.
 - `RB-1` -> `REBASE-1` (3 places; also 04).
 
 ### 02 OS image
@@ -3317,7 +3317,7 @@ Conventions:
 - `ContentStoreProvider` in "app.zune.content" vs "provider in app.zune.updater [assumed]" -> one provider inside `app.zune.updater` with authority `app.zune.content`. 04 interface note updated. New CNT-36 for the weather tile provider that 09 APP-11 depends on.
 
 ### 09 core apps
-- APP-13 allows `ZUNE1S:`; APP-24 note "03 must add both" -> added in 03; Wave 0 `W1-W6` -> `W1-W5` (01 M1). Mode G risk text updated (01-03 adopt it). New APP-37 and APT-15: Room, SQLCipher and DataStore migrations.
+- APP-13 allows `ZUNE1S:`; APP-24 note "03 must add both" -> added in 03; Wave 0 `W1-W6` -> `W1-W5` (01 Z1). Mode G risk text updated (01-03 adopt it). New APP-37 and APT-15: Room, SQLCipher and DataStore migrations.
 
 ### 10 delivery and pilot
 - L1 kill features list lacked `assistant_images`, `assistant_voice`, `videos_tier2` -> added. §4.12 cloud cost "INR 4.3-4.8 lakh a year" vs 05's USD 700-1,400 a month -> INR 8.1-16.1 lakh with DR plus AI per child. Consent checklist gains `third_party_video`. Added helpdesk tooling rule and survey rule (no third-party tools).
@@ -3340,7 +3340,7 @@ Each shows the conflict and the default applied in the text.
 2. **Parent reading of messages and AI chats (D27) against DPDP s.9(3).** Every section builds the strict reading with full parent access, child notice, audit and seal; counsel decides at LEG-1. Decide whether the pilot proceeds on that exposure (up to Rs 200 crore per R19) and which fallback you pre-approve (shorter retention, summaries at 13-14).
 3. **Unit economics and spend.** Prices conflict (INR 199 founding, INR 399 in 07, INR 1,850 per-device floor, 10 §4.12 ceiling INR 8,200-12,000). Fixed cloud with DR is about INR 340-670 per child-month at 200 children (05), plus AI about INR 138 (07): above every price in the reports. The pilot is free, so the company carries about INR 8-16 lakh a year of cloud plus 3.7-24 lakh of flashing, counsel and insurance (10 §4.12). Decide B-1 spend and whether to re-price before PAY-1.
 4. **OpenAI default and data residency (D29).** OpenAI direct processes outside India (07); R19 wanted in-country inference. Applied: disclosed cross-border transfer. If counsel or you require India processing, the Anthropic-via-Bedrock path becomes default and D29 must be amended.
-5. **Gesture navigation fallback (D31).** If Path A and Path B both fail at M3 exit, 02 and 09 say stop and escalate. Decide now whether three-button is an acceptable fallback or the pilot waits.
+5. **Gesture navigation fallback (D31).** If Path A and Path B both fail at Z3 exit, 02 and 09 say stop and escalate. Decide now whether three-button is an acceptable fallback or the pilot waits.
 6. **SOS location and auto-dial (D31, D28).** D31 limits Stage-1 location to parent-set places; 03/05/11 add a location fix on SOS and 03 dials 112 by default after a 5-second countdown. Confirm both.
 7. **YouTube Tier 2 and D2.** YouTube's rules say do not disable player links; Zune refuses navigation (08 §4.5 YQ2). Applied: D2 wins, Tier 2 dropped on refusal or silence at Y0+56 (2026-12-14 if filed 2026-10-19). Confirm D2 wins and that launch never depends on Tier 2.
 8. **Journal, Notebook and Photos are private (09) while D24 gives the parent full control.** D27 covers messages and AI chats only; shares are per item. Confirm the parent may not read these.
@@ -3361,11 +3361,11 @@ Each shows the conflict and the default applied in the text.
 - Support visibility on `user` builds: only posture, health counts and consented crash reports exist; no remote log pull.
 - Penetration-test vendor choice and cadence beyond the one pre-launch test (12 QA-12).
 - Customer-data export for Journal, Notebook and Photos (wiped on reflash; backup is Stage 2).
-- Cyber and product-liability insurance scope (01 only names a broker at M6).
+- Cyber and product-liability insurance scope (01 only names a broker at Z6).
 
 ## 4. All [GATE: ...] items by gate type
 
-Gate IDs are canonical in 01 (B-1, SP-1..7, LEG-1..10, EXT-1..7, FW-1, PAY-1; HW-1..4 are M8 evidence, not a gate). Section items are in addition.
+Gate IDs are canonical in 01 (B-1, SP-1..7, LEG-1..10, EXT-1..7, FW-1, PAY-1; HW-1..4 are Z8 evidence, not a gate). Section items are in addition.
 
 ### [GATE: before build]
 | Gate | Source |
@@ -3376,18 +3376,18 @@ Gate IDs are canonical in 01 (B-1, SP-1..7, LEG-1..10, EXT-1..7, FW-1, PAY-1; HW
 | V1, V2, V4 on first Pixels; QPR1 ADR (REL-04) | 04 |
 | V1, V2 recorded; neutral domain and RP-ID ADR; AWS spend approved | 05 |
 | VC-1, VC-2 recorded before building Walkie and Calls wake paths | 06 |
-| M0 vendor accounts with spend limits; VA-1, VA-2 sent; model pins at M5 start | 07 |
-| Pin Readium, Media3, `androidx.webkit` at M5 start; VN-2, VN-6 spikes | 08 |
+| Z0 vendor accounts with spend limits; VA-1, VA-2 sent; model pins at Z5 start | 07 |
+| Pin Readium, Media3, `androidx.webkit` at Z5 start; VN-2, VN-6 spikes | 08 |
 | VP-1, VP-2 recorded (Mode G) | 09 |
 | VO-1, VO-2, VO-5 on first Pixels | 10 |
-| No legal gate; counsel brief out by W2; data inventory and `compliance-lint` skeleton by M1 | 11 |
+| No legal gate; counsel brief out by W2; data inventory and `compliance-lint` skeleton by Z1 | 11 |
 | VQ-1, VQ-2 recorded; CI runner with `/dev/kvm` | 12 |
 
 ### [GATE: before staff pilot]
 | Gate | Source |
 |---|---|
 | SP-1 data map, vendor register, retention; SP-2 security baseline; SP-3 incident plan and drill; SP-4 112 field test and triple-press SOS; SP-5 kill switches L1-L4; SP-6 service-unlock built or exception; SP-7 staff consent terms | 01 |
-| Gesture navigation Path A or B passes AT-06 (else founder accepts three-button); named WebView owner and off-OTA update shown; 112 test on both Pixels; name settled; stop and escalate if A fails and B is not passing at M3 exit | 02 |
+| Gesture navigation Path A or B passes AT-06 (else founder accepts three-button); named WebView owner and off-OTA update shown; 112 test on both Pixels; name settled; stop and escalate if A fails and B is not passing at Z3 exit | 02 |
 | Zero P0 bypass; LT-13, LT-14 pass or SP-6 exception; real Private DNS resolver; 112 field test and SOS shipped | 03 |
 | HSM proof and pilot key ceremony (REL-10); OTA, slot-fallback, service-unlock rehearsals on two sacrificial units per model; G1-G6 for the pilot build | 04 |
 | SP-1..3; BT-08, BT-14, BT-17..20; named on-call rota; signer-renewal rehearsal; independent portal and device-API test | 05 |
@@ -3435,15 +3435,15 @@ All rows stay in their own section's table; this is the order across sections. C
 1. **Day 0, access and tag.** 01#1, 01#2, 02/V1, 04/V1: AOSP reachable, `android-17.0.0_r1` is CP2A.260605.016 with SPL 2026-06-05, security branches exist and are timely. Everything else assumes this.
 2. **Send in week 1-2, answered last (long lead).** Google licence 01#3, 04/V6, 10/VO-9; vendor terms 07/VA-1, 07/VA-2; YouTube request 08/VN-1 (file by 2026-10-19); counsel brief 01#15, 11/VL-1, VL-2, VL-3, VL-4, VL-5, VL-6, VL-7, VL-10, VL-11, VL-12, 05/V6, 05/V7, 05/V8, 06/VC-9, 08/VN-5, 12/VQ-8.
 3. **Days 1-5, build environment.** 01#5, 02/V2, 02/V15, 12/VQ-1: Ubuntu 24.04, host size, `/dev/kvm`, `aosp_current`, product names.
-4. **M1, read the stock tree.** 01#4, 02/V3, 02/V4, 02/V10, 12/VQ-2, 03/VG-2: `base_product.mk`, REMOVE rows, RRO overrides, supervision framework, Settings counts.
-5. **M1 and M3 week 1, existential spikes.** 03/VG-1, 03/VG-3 (Device Owner route, wipe with sole restriction setter); 01#6, 02/V11, 09/VP-1, 09/VP-2, 02/V12 (placement, Mode G, signing); 02/V5, 02/V6, 09/VP-3, 12/VQ-3 (gestures with a non-Quickstep home).
-6. **M1, WebView.** 01#7, 02/V8, 02/V9, 04/V11: Vanadium obtainable, redistributable, gated by P-FWK-1.
-7. **M2, first Pixels.** 01#14, 04/V15, 04/V2, 04/V3, 01#8, 04/V5 (codenames, India SKU, adevtool, QPR1 skew); 01#9, 04/V4, 04/V8 (relock with our key, rollback); 01#10, 04/V9, 04/V14, 05/V4 (attestation); 01#11 (adevtool on Indian SKUs).
-8. **M2, locked-state and unlock.** 03/VG-4, 03/VG-5, 04/V12, 04/V10, 04/V7, 04/V13; station 10/VO-1, VO-2, VO-3, VO-4, VO-5, VO-6; 11/VL-9.
-9. **M2-M3, emergency path.** 02/V7, 03/VG-9, 03/VG-10, 03/VG-11, 11/VL-8, 12/VQ-6, 12/VQ-9: in-call UI, inbound rejection, panic button, 112 on SIM, no-SIM and data-SIM.
-10. **M3, bypass surface.** 03/VG-6, VG-7, VG-8; 02/V13, V14; 05/V3 (Private DNS over DoT).
-11. **M4, cloud.** 01#12, 05/V1, V2, V5, V9, V10, V11; 05/V5 is also a comms battery check (item 12).
-12. **M4-M5 start, comms Android behaviour.** 06/VC-1, VC-2, VC-3 (before the wake paths), VC-4, VC-5, VC-6, VC-7, VC-8; 12/VQ-7.
-13. **M5 start, AI.** 07/VA-3, VA-4, VA-5, VA-6, VA-7, VA-8, VA-9, VA-10 (VA-1, VA-2 are item 2).
-14. **M5 start, content and apps.** 08/VN-2, VN-3, VN-4, VN-6, VN-7, VN-8, VN-9, VN-10; 09/VP-4 to VP-11.
-15. **M5 and C0, validation numbers.** 10/VO-7, VO-8, VO-10, VO-11, VO-12; 01#13, 01#16; 12/VQ-4, VQ-5.
+4. **Z1, read the stock tree.** 01#4, 02/V3, 02/V4, 02/V10, 12/VQ-2, 03/VG-2: `base_product.mk`, REMOVE rows, RRO overrides, supervision framework, Settings counts.
+5. **Z1 and Z3 week 1, existential spikes.** 03/VG-1, 03/VG-3 (Device Owner route, wipe with sole restriction setter); 01#6, 02/V11, 09/VP-1, 09/VP-2, 02/V12 (placement, Mode G, signing); 02/V5, 02/V6, 09/VP-3, 12/VQ-3 (gestures with a non-Quickstep home).
+6. **Z1, WebView.** 01#7, 02/V8, 02/V9, 04/V11: Vanadium obtainable, redistributable, gated by P-FWK-1.
+7. **Z2, first Pixels.** 01#14, 04/V15, 04/V2, 04/V3, 01#8, 04/V5 (codenames, India SKU, adevtool, QPR1 skew); 01#9, 04/V4, 04/V8 (relock with our key, rollback); 01#10, 04/V9, 04/V14, 05/V4 (attestation); 01#11 (adevtool on Indian SKUs).
+8. **Z2, locked-state and unlock.** 03/VG-4, 03/VG-5, 04/V12, 04/V10, 04/V7, 04/V13; station 10/VO-1, VO-2, VO-3, VO-4, VO-5, VO-6; 11/VL-9.
+9. **Z2-Z3, emergency path.** 02/V7, 03/VG-9, 03/VG-10, 03/VG-11, 11/VL-8, 12/VQ-6, 12/VQ-9: in-call UI, inbound rejection, panic button, 112 on SIM, no-SIM and data-SIM.
+10. **Z3, bypass surface.** 03/VG-6, VG-7, VG-8; 02/V13, V14; 05/V3 (Private DNS over DoT).
+11. **Z4, cloud.** 01#12, 05/V1, V2, V5, V9, V10, V11; 05/V5 is also a comms battery check (item 12).
+12. **Z4-Z5 start, comms Android behaviour.** 06/VC-1, VC-2, VC-3 (before the wake paths), VC-4, VC-5, VC-6, VC-7, VC-8; 12/VQ-7.
+13. **Z5 start, AI.** 07/VA-3, VA-4, VA-5, VA-6, VA-7, VA-8, VA-9, VA-10 (VA-1, VA-2 are item 2).
+14. **Z5 start, content and apps.** 08/VN-2, VN-3, VN-4, VN-6, VN-7, VN-8, VN-9, VN-10; 09/VP-4 to VP-11.
+15. **Z5 and C0, validation numbers.** 10/VO-7, VO-8, VO-10, VO-11, VO-12; 01#13, 01#16; 12/VQ-4, VQ-5.

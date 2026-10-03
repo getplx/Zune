@@ -4,7 +4,7 @@
 
 Specifies the Zune Assistant (`app.zune.assistant`: chat with text, push-to-talk voice and image input) and the AI Gateway (`zune/backend/ai-gateway`): providers, guardrails, moderation, crisis routing, parent visibility, caps, cost, evaluation, incidents. Position: **tutor, not companion**.
 
-**Stage 1** = every MUST, working at M5, eval gates passed before the staff pilot. **Stage 2** = on-device LLM from local packs [R07 F5], Indic languages (D20), self-hosted guard classifiers [R07 F3], system TextToSpeechService (02), wake word.
+**Stage 1** = every MUST, working at Z5, eval gates passed before the staff pilot. **Stage 2** = on-device LLM from local packs [R07 F5], Indic languages (D20), self-hosted guard classifiers [R07 F3], system TextToSpeechService (02), wake word.
 
 Not covered (files in `docs/build/`): vault, channel, consent ledger, kill state, portal (`05-backend-and-parent-portal.md`); Guardian, `policy-v1`, Emergency (`03-lockdown-and-guardian.md`); T&S, POCSO runbook (`06-communication.md`); packs, Videos (`08-content-videos-weather-reader.md`); screens (`09-core-apps-and-design-system.md`); kill levels (`10-delivery-operations-and-pilot.md`); DPDP analysis, consent text (`11-compliance-and-privacy-engineering.md`); test runs (`12-testing-qa-and-acceptance.md`).
 
@@ -201,8 +201,8 @@ Record results in `zune/docs/verified-facts.md`. OpenAI rows come from the mirro
 | ID | Claim | Why uncertain | How to verify | If false |
 |---|---|---|---|---|
 | VA-1 | OpenAI: no personal data of under-13s (or the age of digital consent) without ZDR; disclosures, filters, monitoring, audits [OA under-18]; under 18 needs parent permission [SEC]; Sol-class counts as "newest flagship"; a DPA meets DPDP s.8(2) and covers cross-border processing | Mirror and search; India's age of consent is arguably 18 [R19], so all users are covered [INFERRED]; approval beyond ZDR and DPDP terms unread | Re-read vendor site, Services Agreement, Usage Policies; ask OpenAI in writing (LEG-7); counsel reads the DPA (SP-1) | Anthropic or Bedrock as interim default needs a founder decision (D29) |
-| VA-2 | ZDR is approval-only, covers `/v1/responses`, `/v1/moderations`, audio; `store` forced false; PSP exists and some models may need it; India storage needs a Modified Retention amendment and enhanced ZDR for images [OA your-data, private-safety-processing] | Eligibility and per-model PSP scope not public | Apply at M0; OpenAI confirms in writing for `gpt-6.1-sol`, `gpt-6-luna`, `omni-moderation-latest`, audio | PSP needed: customer-owned bucket and KMS key holding doubly encrypted records at least 30 days, a documented exception to 05 BE-31; ZDR refused: no real child data (AI-09) |
-| VA-3 | Model IDs, effort support, prices of §4.3 and §4.6 [OA models, pricing; AN] | Fast-moving; mirror and cached table | `GET /v1/models` and pricing at M5 start; AI-26 per pin | Re-pick; rerun cost model |
+| VA-2 | ZDR is approval-only, covers `/v1/responses`, `/v1/moderations`, audio; `store` forced false; PSP exists and some models may need it; India storage needs a Modified Retention amendment and enhanced ZDR for images [OA your-data, private-safety-processing] | Eligibility and per-model PSP scope not public | Apply at Z0; OpenAI confirms in writing for `gpt-6.1-sol`, `gpt-6-luna`, `omni-moderation-latest`, audio | PSP needed: customer-owned bucket and KMS key holding doubly encrypted records at least 30 days, a documented exception to 05 BE-31; ZDR refused: no real child data (AI-09) |
+| VA-3 | Model IDs, effort support, prices of §4.3 and §4.6 [OA models, pricing; AN] | Fast-moving; mirror and cached table | `GET /v1/models` and pricing at Z5 start; AI-26 per pin | Re-pick; rerun cost model |
 | VA-4 | `omni-moderation-latest` detects §4.4 categories in English and romanised Hinglish; `sexual/minors` is text only [OA moderation] | Hinglish accuracy unmeasured; R20's AUC 0.75 itself unverified | AI-26 Hinglish sets versus the Luna classifier | Lean on the classifier; pull the self-hosted guard forward |
 | VA-5 | A blocked `safety_identifier` cannot be unblocked and an `epoch` bump is permitted; vendor classifiers can throttle the org on kids' chemistry or violence questions [OA safety-checks] | False-positive path, thresholds not public | Ask OpenAI; run the benign set on staging, watch warnings | Blocked child stays on the fallback; those topics go to cards |
 | VA-6 | Tele-MANAS 14416 and 1-800-891-4416 [SEC, MEMORY]; Childline 1098 works while merging into 112 by state [SEC] | Government pages unread | Call each number; counsel and expert approve cards | Print only 112 |
@@ -220,7 +220,7 @@ Risks:
 4. Vendor classifiers can block a child or the org (VA-5); child speech, Indian-English TTS and Hinglish moderation are unmeasured (VA-4, VA-8); AI cost is about a third of the unvalidated price (§4.6).
 
 Gates (IDs per 01):
-- **[GATE: before build]** M0 vendor accounts with spend limits; VA-1 and VA-2 sent to the vendors; model pins (VA-3) recorded at M5 start.
+- **[GATE: before build]** Z0 vendor accounts with spend limits; VA-1 and VA-2 sent to the vendors; model pins (VA-3) recorded at Z5 start.
 - **[GATE: before staff pilot]** ZDR approved in writing for the prod project, DPA signed, vendor register (SP-1); cards approved (AI-12); AI-26 gates passed on both vendors; kill switches drilled (SP-5); T&S on-call (SP-3); WER measured (AIT-10).
 - **[GATE: before external family]** LEG-1 (parent reading, s.9(2), cross-border); LEG-7 (written child-use confirmation from OpenAI and Anthropic); EXT-3; independent red-team including Hinglish.
 - **[GATE: before charging]** Measured cost per child inside the validated price (PAY-1); eight weeks of external operation.

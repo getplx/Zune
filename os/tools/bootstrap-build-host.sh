@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
-# Zune M1 baseline on the build host (01 §4.1, PRE-02, PRE-10). Ubuntu 24.04 x86_64 ONLY.
+# Zune Z1 baseline on the build host (01 §4.1, PRE-02, PRE-10). Ubuntu 24.04 x86_64 ONLY.
 # Usage: bootstrap-build-host.sh [workdir]   default workdir: $HOME/aosp
-# Records wall time, disk use and ro.build.id in $WORK/m1-baseline.log for the M1 re-baseline (PRE-16).
+# Records wall time, disk use and ro.build.id in $WORK/m1-baseline.log for the Z1 re-baseline (PRE-16).
 set -euo pipefail
 TAG="${AOSP_TAG:-android-17.0.0_r1}"   # pinned, never a floating branch (PRE-10)
 WORK="${1:-$HOME/aosp}"

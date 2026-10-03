@@ -72,7 +72,7 @@ Package namespace (provisional, name clearance): `app.zune.<module>` for every a
 **Navigation**
 - **OS-23 MUST** Gesture navigation is default, not child-changeable, with no button bar (the thin gesture handle is allowed); ZuneSetup shows a first-boot gesture tutorial (`09`).
 - **OS-24 MUST** HOME resolves to `app.zune.launcher`: Guardian sets persistent preferred activity and HOME role.
-- **OS-25 MUST** Build Path A (§7); it passes NAV-1..8 (AT-06) by M3 exit or Path B replaces it. Path C forbidden in Stage 1. Three-button only by founder decision.
+- **OS-25 MUST** Build Path A (§7); it passes NAV-1..8 (AT-06) by Z3 exit or Path B replaces it. Path C forbidden in Stage 1. Three-button only by founder decision.
 
 **WebView**
 - **OS-26 MUST** Vanadium is the only entry in `config_webview_packages.xml`; the Vanadium browser APK never ships.
@@ -194,11 +194,11 @@ SystemUI gesture mode relies on a launcher-proxy service in the package named by
 | Path | Architecture | Verdict |
 |---|---|---|
 | **A (build first)** | Stock `Launcher3QuickStep` stays as recents provider with RRO trim; `ZuneLauncher` is a plain Compose HOME app. Launcher3's `OverviewComponentObserver` falls back to `RecentsActivity` when another package is default home, as third-party launchers rely on [M]. | Zero fork if RRO suffices; else P-LAU-1. |
-| **B (fallback)** | Fork `packages/apps/Launcher3`, strip workspace, all-apps, widgets; ZuneLauncher is the single Launcher3QuickStep-derived package. | Larger fork, churn each drop; estimate in M3 spike. |
+| **B (fallback)** | Fork `packages/apps/Launcher3`, strip workspace, all-apps, widgets; ZuneLauncher is the single Launcher3QuickStep-derived package. | Larger fork, churn each drop; estimate in Z3 spike. |
 | **C** | Own launcher proxy, recents animation, input consumers. | Forbidden in Stage 1: hidden AIDL renamed between releases, no CTS coverage. |
 | **D** | Three-button, ZuneLauncher only [R03 F5]. | Violates D31; founder decision only. |
 
-Sequence: Guardian (Device Owner) calls `addPersistentPreferredActivity` for HOME and sets the HOME role to ZuneLauncher; SystemUI binds the Launcher3 proxy and swipe-up-and-hold opens `RecentsActivity`. Risks: overview chrome is Launcher3's (little theming); overview actions and search must be off; Launcher3's HOME activity must stay enabled or `OverviewComponentObserver` fails [M]; each rebase touches Quickstep. If A fails and B is not passing at M3 exit, stop and escalate [GATE: before staff pilot].
+Sequence: Guardian (Device Owner) calls `addPersistentPreferredActivity` for HOME and sets the HOME role to ZuneLauncher; SystemUI binds the Launcher3 proxy and swipe-up-and-hold opens `RecentsActivity`. Risks: overview chrome is Launcher3's (little theming); overview actions and search must be off; Launcher3's HOME activity must stay enabled or `OverviewComponentObserver` fails [M]; each rebase touches Quickstep. If A fails and B is not passing at Z3 exit, stop and escalate [GATE: before staff pilot].
 
 ### 8. WebView (D26)
 
@@ -232,13 +232,13 @@ repo init -u https://github.com/getplx/Zune -b research/android-kids-foundation 
   -m zune/os/manifest/zune.xml --partial-clone --clone-filter=blob:limit=10M --no-clone-bundle
 repo sync -c -j8 --no-tags
 source build/envsetup.sh && lunch zune_kids_cf-aosp_current-userdebug && m -j"$(nproc)"
-# M1 vanilla: repo init -u https://android.googlesource.com/platform/manifest -b refs/tags/android-17.0.0_r1
+# Z1 vanilla: repo init -u https://android.googlesource.com/platform/manifest -b refs/tags/android-17.0.0_r1
 ```
 Release config is `aosp_current` (alias of `cp2a`, V2); flag overrides live in `vendor/zune/release/`; SPL bumps only via 04's pipeline. Use the working branch until `main` exists [HANDOFF §2]. Host: 32 vCPU, 128 GB RAM, 1 TB NVMe minimum (2 TB recommended, 01 PRE-02), Ubuntu 24.04 container, `/dev/kvm` [R01 F4].
 
 | Lunch target | Use |
 |---|---|
-| `aosp_cf_x86_64_only_phone-aosp_current-userdebug` | M1 vanilla baseline; record sync size, build time. |
+| `aosp_cf_x86_64_only_phone-aosp_current-userdebug` | Z1 vanilla baseline; record sync size, build time. |
 | `zune_kids_cf-aosp_current-userdebug` | Every merge request: boot, `image_diff`, Settings crawl, NAV suite, WebView test. |
 | `zune_kids_cf-aosp_current-user` | Nightly static gates; user-vs-userdebug file diff equals the debug allowlist. |
 | `sdk_phone16k_x86_64-aosp_current-userdebug` (name per goldfish tree) | Nightly 16 KB boot, install Zune APKs, smoke. |
@@ -269,24 +269,24 @@ Do V1 to V3 before anything else.
 | V2 | `aosp_current` = `cp2a`; lunch is `product-release-variant`; vendor release-config map overrides `RELEASE_WEBAPP_MODULE`, SPL, supervision flags | GrapheneOS tree; override inferred [R03 F3] | Read `build/release/`; build with a map | Use real names; P-REL-1. |
 | V3 | `base_product.mk` exists; contents of `handheld_*`, `telephony_*`, `media_*`; every REMOVE row removable; RRO overrides supervision keys and the WebView xml | Stock 17 not read [R01 F6, R03 F1] | Read files; build `zune_kids_cf`; boot; `image_diff` | `overrides:` stubs [R03 F2]; `PRODUCT_PACKAGE_OVERLAYS`; one `build/make` fork at most. |
 | V4 | OsuLogin neutralisable by override or P-WIFI-1 | APEX-contained [R04 F1] | Inspect `com.android.wifi` | Rely on P-FWK-1 and 03's network deny. |
-| V5 | Stock Quickstep with another default home gives working gestures; names `config_recentsComponentName`, `QUICKSTEP_SERVICE`, `LauncherProxyService`; Launcher3 HOME must stay enabled | From memory [R03 F5, M] | Read `OverviewComponentObserver`, `TouchInteractionService`, SystemUI; NAV suite with a stub ZuneLauncher in M1 | Path B; then §7 gate. |
+| V5 | Stock Quickstep with another default home gives working gestures; names `config_recentsComponentName`, `QUICKSTEP_SERVICE`, `LauncherProxyService`; Launcher3 HOME must stay enabled | From memory [R03 F5, M] | Read `OverviewComponentObserver`, `TouchInteractionService`, SystemUI; NAV suite with a stub ZuneLauncher in Z1 | Path B; then §7 gate. |
 | V6 | `config_navBarInteractionMode=2` selects gestures; navigation-mode page unreachable | Inferred | `settings get secure navigation_mode` | Guardian sets it. |
 | V7 | An in-call UI exists at the tag; `DISALLOW_OUTGOING_CALLS` permits emergency calls; `cmd phone emergency-number-test-mode` works; CB config covers MCC 404/405 | Dialer in 17 unverified [R03 §3, I] | Inspect manifest; Cuttlefish modem simulator; Pixel | Guardian ships an `InCallService` (03). |
 | V8 | `waitForAndGetProvider()` is the choke point; zygote preload does not bypass it; Vanadium needs a Trichrome library | GrapheneOS source [R04 F3, I] | Read `WebViewFactory`, `WebViewUpdateServiceImpl`; AT-07 | Gate in `WebViewFactory.getProvider()` plus CI scan that only Reader and Videos reference `android.webkit.WebView`. |
 | V9 | Vanadium binaries obtainable, redistributable (GPL-2.0-only patches), arm64, 16 KB-aligned, Android 17-compatible | Licence and distribution unread [R04 F2] | Read repo, licence, releases; ask GrapheneOS; alignment scan | Build Vanadium (or LineageOS WebView patches) on a dedicated host [GATE: before build]. |
 | V10 | Settings counts, `config_show_*` effects, Catalyst behaviour, disabled-host behaviour; SystemUI ids | GrapheneOS/LineageOS only [R16] | Read the tag; tap-every-row crawl | Widen allowlist or patches. |
-| V11 | `repo init -m <subdir>` and directory `<linkfile>` work with Soong, Kati, `AndroidProducts.mk` discovery | Unverified | M1: link stub `device/zune`, run `lunch` | Separate repos split by CI. |
-| V12 | Mode G works: Gradle-built Tier A APKs imported as `android_app_import` with the platform key are re-signed at release and run as privileged system apps (09 VP-1); in-tree Compose under Soong is only the fallback | Unverified | M1 stub APK (09 Wave 0) | In-tree Soong build by ADR, Compose under Soong unproven (`09`). |
+| V11 | `repo init -m <subdir>` and directory `<linkfile>` work with Soong, Kati, `AndroidProducts.mk` discovery | Unverified | Z1: link stub `device/zune`, run `lunch` | Separate repos split by CI. |
+| V12 | Mode G works: Gradle-built Tier A APKs imported as `android_app_import` with the platform key are re-signed at release and run as privileged system apps (09 VP-1); in-tree Compose under Soong is only the fallback | Unverified | Z1 stub APK (09 Wave 0) | In-tree Soong build by ADR, Compose under Soong unproven (`09`). |
 | V13 | NFC mask, restriction constants, Bluetooth profile properties, provider default keys, USB default work on the Pixel vendor image | Inferred [R03 F7, R16 row 13] | AT-08 on both Pixels | Guardian assertions. |
 | V14 | `android.net.conn.CAPTIVE_PORTAL` is the sign-in action; no crash loop without CaptivePortalLogin | Memory | Fake captive network on Cuttlefish | Set `captive_portal_mode`; keep explainer. |
-| V15 | Host sizing, Ubuntu 24.04, 1.5-3 h clean build, Cuttlefish product names | Estimates [R01 F4] | M1 baseline build | Resize; keep a 22.04 image. |
+| V15 | Host sizing, Ubuntu 24.04, 1.5-3 h clean build, Cuttlefish product names | Estimates [R01 F4] | Z1 baseline build | Resize; keep a 22.04 image. |
 
 ## Risks, open gates and out of scope
 
 - **Gesture navigation** may fail with a non-Quickstep home (V5). [GATE: before staff pilot] Path A or B passes AT-06, or the founder accepts three-button (a D31 deviation).
 - **WebView** is a permanent Chromium update burden. [GATE: before build] V9 decides consume vs build. [GATE: before staff pilot] named owner and a demonstrated off-OTA update. [GATE: before charging] SLA met for two consecutive Chromium releases.
 - **Security patching** of the tag and Mainline is the central risk (04). [GATE: before external family] pipeline running.
-- **Patch drift**: Catalyst screens grew 27 to 237 in 18 months [R16]; Quickstep churns each drop; re-estimate after M3.
+- **Patch drift**: Catalyst screens grew 27 to 237 in 18 months [R16]; Quickstep churns each drop; re-estimate after Z3.
 - **112 without a stock dialer** (V7). [GATE: before staff pilot] 112 test passes on both Pixels (`12`).
 - **Name clearance**: renaming `app.zune.*` costs a reflash. [GATE: before staff pilot] settle it.
 - **Counsel** [GATE: before external family]: GPL-2.0 source duties (Vanadium, kernels); regulatory-label rules for India (unknown; R16's FCC and CVAA material is US, secondary); accessibility duties without TalkBack and TTS.

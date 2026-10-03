@@ -4,7 +4,7 @@
 
 This section specifies the hardware and release layer under the Zune image: Pixel 10a (`stallion`) and 9a (`tegu`) device layers (both `zumapro`), vendor-module generation and stock pinning, AVB relock, key custody and signing, attestation, ZuneUpdater and OTA, the monthly security-patch pipeline, release gates G1-G6, infrastructure and the support promise.
 
-**Stage 1** (M2 to M7 in `01-prerequisites-and-phases.md`): two models, full OTAs, dev/pilot/production key sets, offline signing, monthly train. **Stage 2**: incremental OTAs, delegated keys, APEX side channel, automated ingest, a second device. Snapdragon candidates (D17) are a later tier; §4.12 records what a second device needs.
+**Stage 1** (Z2 to Z7 in `01-prerequisites-and-phases.md`): two models, full OTAs, dev/pilot/production key sets, offline signing, monthly train. **Stage 2**: incremental OTAs, delegated keys, APEX side channel, automated ingest, a second device. Snapdragon candidates (D17) are a later tier; §4.12 records what a second device needs.
 
 Not covered here:
 - Image composition, overlays, WebView provisioning: `02-os-image-and-product.md`.
@@ -36,15 +36,15 @@ Gate naming: "release gates G1-G6" are defined here [R10]. R17's OEM-redistribut
 - **REL-01 MUST** Support exactly `stallion` and `tegu`, each with its own product `zune_kids_<model>`, vendor module, kernel pin, stock pin, AVB key and OTA channel. System, system_ext and product code contains no codename or device-property reference (CI grep) [R02 §4].
 - **REL-02 MUST** `release/pins/<model>.yml` records Google build ID, factory and OTA zip SHA-256, kernel tarball ID, adevtool commit, bootloader, baseband, anti-rollback value and SPL. CI generates vendor modules from it with adevtool at a pinned commit; output is cached privately, never committed or published.
 - **REL-03 MUST** Each month pin the newest Google stock build per model, after a canary: it boots `zune_base` locked on a sacrificial unit and passes camera, audio, Wi-Fi, Bluetooth, GNSS and charging checks. A pin is never lower than the previous pin or than the highest bootloader, baseband or anti-rollback value on any phone queued for flashing.
-- **REL-04 MUST** By M2 exit record an ADR for the QPR1 skew using §4.3.
+- **REL-04 MUST** By Z2 exit record an ADR for the QPR1 skew using §4.3.
 
 **Keys, relock, signing**
-- **REL-05 MUST** Three key sets: `dev` (throwaway, `gen-dev-keys.sh`, on build host and CI, channel `dev`), `pilot` (offline, staff devices, from M6), `prod` (ceremony before the first external family, EXT-4). AOSP's public test keys are never used. A device accepts only artifacts of its own set.
+- **REL-05 MUST** Three key sets: `dev` (throwaway, `gen-dev-keys.sh`, on build host and CI, channel `dev`), `pilot` (offline, staff devices, from Z6), `prod` (ceremony before the first external family, EXT-4). AOSP's public test keys are never used. A device accepts only artifacts of its own set.
 - **REL-06 MUST** One AVB key per model per set (RSA-4096, `SHA256_RSA4096`); only `avb_pkmd_<model>.bin` leaves the signing host.
 - **REL-07 MUST** Provisioning sets `avb_custom_key`, runs `fastboot flashing lock` with a human confirmation, then Guardian turns OEM unlocking off. No exploit-based unlock, no write to modem, `persist` or IMEI partitions, `fastboot erase` only on an allowlist (`avb_custom_key`, userdata via `-w`).
 - **REL-08 MUST** After lock the station asserts boot state yellow, locked, `deviceLocked=true`, `SELF_SIGNED` and `verifiedBootKey` equal to the hash of the model's `avb_pkmd` [expected, V4].
 - **REL-09 MUST** The offline signing host is air-gapped, disk-encrypted, never the station or build host. Permanent keys are scrypt-encrypted PKCS#8, passphrase split 2-of-3 among three named custodians, with two sealed offsite encrypted backups. Signing needs two custodians and appends to a signed log.
-- **REL-10 MUST** Prove HSM signing (`avbtool --signing_helper`, `--payload_signer`) with a pilot key in M6. The production AVB key lives in an HSM if the proof passes; otherwise record an ADR and use encrypted files [R10 F3].
+- **REL-10 MUST** Prove HSM signing (`avbtool --signing_helper`, `--payload_signer`) with a pilot key in Z6. The production AVB key lives in an HSM if the proof passes; otherwise record an ADR and use encrypted files [R10 F3].
 - **REL-11 MUST** AVB rotation is a recall (per-phone service-unlock, wipe, reflash [R18 F7]), allowed only on compromise, one model at a time. `releasekey` rotates by OTA: one release ships `otacerts.zip` with old and new certs, the next is signed by the new key. App, platform and APEX keys are permanent (§4.4).
 - **REL-12 MUST** The only online key is `channel` (ed25519, signs channel metadata); `bundle` (ed25519, signs station bundles) is offline. AVB, OTA, platform and app keys never touch a build host, CI or station.
 - **REL-13 MUST** `BOARD_AVB_ROLLBACK_INDEX := $(PLATFORM_SECURITY_PATCH_TIMESTAMP)` per model; a build with a lower SPL than installed is refused by ZuneUpdater and, per model, by the bootloader (V8).
@@ -179,7 +179,7 @@ Monthly train. PD0 = first of: Google stock build for a model, public security p
 
 | Gate | Check |
 |---|---|
-| G1 | Two clean builds (different hosts once the second exists, by M5) give identical target-files after pinning build time, user and host. |
+| G1 | Two clean builds (different hosts once the second exists, by Z5) give identical target-files after pinning build time, user and host. |
 | G2 | SPDX SBOM (`tools/sbom/gen_sbom.py`), NOTICE, GPL sources for kernel and Vanadium patches; Google blobs not published. |
 | G3 | Cuttlefish boot, bypass suite (03, 12), policy tests, ZuneUpdater against a fake server: bad signature, expired, halted, wrong model, SPL downgrade, N-1 to N. |
 | G4 | `ro.debuggable=0`, `ro.adb.secure=1`, `user`, `release-keys`, no permissive domains, no AOSP test keys, `image_diff` and 16 KB checks (02), SPL monotonic. No CTS (a GMS step); SELinux and security subsets run [R10, INFERRED]. |
@@ -188,7 +188,7 @@ Monthly train. PD0 = first of: Google stock build for a model, public security p
 
 ### 4.11 Build infrastructure and cost (estimates [R10, memory]; get quotes)
 
-- Build host: one now (01 PRE-02), a second by M5 for CI and G1; no Chromium host (D26). About USD 250-400/month rented each, or about 6k bought. CI: self-hosted ephemeral runners, no keys.
+- Build host: one now (01 PRE-02), a second by Z5 for CI and G1; no Chromium host (D26). About USD 250-400/month rented each, or about 6k bought. CI: self-hosted ephemeral runners, no keys.
 - Artifacts: S3 plus CDN, full OTAs of about 2 GB x 200 devices a month, under USD 20/month [INFERRED]. Lab: 5 units per model (3 RC, 1 dev, 1 sacrificial; 01 PRE-04), Indian data SIMs (INR price unverified). Signing: two HSM-class devices, air-gapped laptop, about USD 2.5k once.
 
 ### 4.12 Support, EOL and a second device
@@ -221,13 +221,13 @@ Nothing below was read from Google's `android-17.0.0_r1` tree (sources: mirrors,
 | V1 | Tag is CP2A.260605.016, SPL 2026-06-05; `android17-security-release`, `android-security-17.*`, a Q4 branch exist and are timely [R01, R10] | Google hosts blocked; lag about 125 days | `git ls-remote`; release config after sync | Pin plus cross-checks only; SLA wording (REL-27); tell the founder |
 | V2 | adevtool output for both models boots with `zune_base` on Google's tag without GrapheneOS's forked repos [R02 F1] | GrapheneOS carries many forks | Build on the vanilla tag; read adevtool `docs/usage.md` | Carry the needed patches (ADR raising 02's fork cap), else escalate |
 | V3 | Indian SKUs have factory images and adevtool support (configs list US SKUs) [R17] | Unchecked | Run adevtool and flash an India-SKU unit | Add the SKU config, or drop the SKU at intake |
-| V4 | Both models relock with our key; attestation then shows our key hash and `SELF_SIGNED` [R02 F4, R17 F6] | AVB README via mirror; schema from a fork | Sacrificial-unit test in M2 | Stop; founder picks another device, or adopt the observed value in REL-08 |
+| V4 | Both models relock with our key; attestation then shows our key hash and `SELF_SIGNED` [R02 F4, R17 F6] | AVB README via mirror; schema from a fork | Sacrificial-unit test in Z2 | Stop; founder picks another device, or adopt the observed value in REL-08 |
 | V5 | QPR1 skew: date (GrapheneOS 2026-09-06 vs stock 2026-09-15), anti-rollback bump per model, variable name (`anti` or `ap-ar-s`) [R02, R17, R18 F9] | Search summaries; 10a reportedly outside the May 2026 bump | Compare factory builds; `fastboot getvar` per unit; boot r1 on the newest vendor | Option A: hold the pin, refuse newer phones |
 | V6 | Google's licence allows company flashing, blob-derived vendor images and OTAs [R17 F1]; Google publishes kernel source matching the 6.1 prebuilts | Never read; inferred | Read image, OTA and driver pages with counsel; compare tarball IDs with kernel tags | FW-1 stays open, 100-device cap; get or build kernel source before G2 |
 | V7 | Release tools behave as in R10: `make_key` RSA-4096, `--partial`, `--signing_helper`, `--payload_signer`, 44-key APEX map | Read in forks | `--help`; dry run on dev keys | `openssl` keys; encrypted-file signing; edit the partition list |
 | V8 | The bootloader enforces our rollback index with a custom key [R10 F5] | README only | Flash an older signed image on a sacrificial unit | Client SPL check is the only barrier; document |
-| V9 | `rkpd` works; Google's service serves non-GMS OSes; default `remote_provisioning.hostname` [R05 F8, R10 F12] | Empty by default; terms unknown | M2 attestation test | Station identity plus mTLS; own proxy |
-| V10 | Virtual A/B allows a Guardian gate before slot success; `--partial` yields a valid full OTA | Unread | M2 lab test | Skip the gate; roll forward; hold vendor OTAs |
+| V9 | `rkpd` works; Google's service serves non-GMS OSes; default `remote_provisioning.hostname` [R05 F8, R10 F12] | Empty by default; terms unknown | Z2 attestation test | Station identity plus mTLS; own proxy |
+| V10 | Virtual A/B allows a Guardian gate before slot success; `--partial` yields a valid full OTA | Unread | Z2 lab test | Skip the gate; roll forward; hold vendor OTAs |
 | V11 | Vanadium is redistributable, has a stable cert and installs over a system-app copy (02 V9) | Unread | Lab install | Ship only inside full OTAs, or self-build |
 | V12 | OEM-unlock service order [R18 F8] | GrapheneOS fork of upstream | Rehearsal (AT-R11) | Redesign; OEM unlock on for lab units only |
 | V13 | Support ends: 10a March 2033, 9a April 2032 [R02 F6]; costs [R10] | Secondary, memory | Google's update policy; quotes | Change `support_end` or do not list the model |
@@ -245,7 +245,7 @@ Risks:
 6. Attestation can be relayed or its service withdrawn: it is a signal only. Full OTAs of about 2 GB cost mobile data (REL-18).
 
 Gates:
-- [GATE: before build] V1, V2, V4 run on the first Pixels (M2); QPR1 ADR (REL-04).
+- [GATE: before build] V1, V2, V4 run on the first Pixels (Z2); QPR1 ADR (REL-04).
 - [GATE: before staff pilot] HSM proof and pilot key ceremony (REL-10); OTA, slot-fallback and service-unlock rehearsals on two sacrificial units per model (SP-6); G1-G6 evidence for the pilot build.
 - [GATE: before external family] EXT-4 production key ceremony, three named custodians; EXT-6 support promise (3 years, per-model end date); counsel review of SLA wording; partner-access request sent with the FW-1 letter.
 - [GATE: before charging] FW-1 closed, covering firmware in OTAs and blob-derived images beyond device 100.

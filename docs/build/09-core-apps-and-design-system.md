@@ -4,7 +4,7 @@
 
 Specifies the child-facing shell and first-party apps: build modes and stack, ZuneLauncher (gesture navigation, D31), ZuneSetup (first boot, QR pairing), MVPs for Camera, Photos, Journal, Notebook, utilities and the Reader and Settings entries, the ZuneKit design system, accessibility, crash reporting, tests, effort.
 
-**Stage 1** = every MUST, simplest form: Tier A apps proven at M3, Tier B apps at M5 (`01-prerequisites-and-phases.md`). **Stage 2** = the items under "Out of scope".
+**Stage 1** = every MUST, simplest form: Tier A apps proven at Z3, Tier B apps at Z5 (`01-prerequisites-and-phases.md`). **Stage 2** = the items under "Out of scope".
 
 Not covered here:
 - Guardian, PIN, policy engine, Emergency screen: `03-lockdown-and-guardian.md`. Image, overlays, ZuneSettings rows, navigation Paths A/B: `02-os-image-and-product.md`. Keys, signing, ZuneUpdater: `04-device-signing-ota-release.md`. Backend, portal, channel, vault: `05-backend-and-parent-portal.md`.
@@ -186,14 +186,14 @@ On next start the app reads its own `ApplicationExitInfo` and calls `IZuneDiag.c
 
 JUnit4 with Robolectric (sdk 37), Compose `ui-test`, Roborazzi goldens per band at font scale 1.0 and 2.0 in light and dark, ATF checks, Macrobenchmark with baseline profiles on dev Pixels (userdebug), Cuttlefish `connectedAndroidTest` on `zune_kids_cf-aosp_current-userdebug` per merge, and a rack of 6-10 phones [R09 §4.4].
 
-### 4.10 Effort and order (person-weeks [INFERRED]; re-baseline at M1 exit, 01 PRE-16 and Verify 13)
+### 4.10 Effort and order (person-weeks [INFERRED]; re-baseline at Z1 exit, 01 PRE-16 and Verify 13)
 
 | Wave | Weeks (01) | Work | pw |
 |---|---|---|---|
-| 0 | W1-W5 (M1) | Gradle, `libs/core`, ZuneKit v0, lint, APK-to-PINS-to-Cuttlefish CI, VP-1 and VP-3 spikes | 8 |
-| 1 | W8-W20 (M3) | ZuneLauncher 5, ZuneSetup 4 (mock pairing, real at M4) | 9 |
+| 0 | W1-W5 (Z1) | Gradle, `libs/core`, ZuneKit v0, lint, APK-to-PINS-to-Cuttlefish CI, VP-1 and VP-3 spikes | 8 |
+| 1 | W8-W20 (Z3) | ZuneLauncher 5, ZuneSetup 4 (mock pairing, real at Z4) | 9 |
 | 2 | W10-W24 | Photos with Camera 8, Journal 6, Notebook 6, Clock 2, Calculator and Recorder 2.5 | 24.5 |
-| 3 | W14-W30 (M5) | Sharing client 1.5, crash and diag 1, entries 0.5, hardening, accessibility, panels 12 | 15 |
+| 3 | W14-W30 (Z5) | Sharing client 1.5, crash and diag 1, entries 0.5, hardening, accessibility, panels 12 | 15 |
 
 Total 56.5 (Wave 0's 8 covers ZuneKit v0 and v1). Assistant UI, Walkie UI, Videos UI and Reader (about 20) are costed in 06, 07, 08.
 
@@ -212,16 +212,16 @@ Total 56.5 (Wave 0's 8 covers ZuneKit v0 and v1). Assistant UI, Walkie UI, Video
 - **APT-11** Goldens show no clipped text; target-size, contrast, copy-lint and ATF checks pass.
 - **APT-12** An exception with message `SECRET-123` yields a report without it; no consent uploads counts only; with consent one grouped row appears; the 21st upload that day is dropped.
 - **APT-13** Panels meet APP-36 for: open chat, take and find a photo, set an alarm, ask for time, find Emergency (`zune/docs/lab/usability-<wave>.md`).
-- **APT-14** [default] Home cold start p90 at most 800 ms, warm 300 ms; Camera preview within 1.2 s; shutter to saved 1.5 s p95; at most 5% janky frames; final numbers set at M1.
+- **APT-14** [default] Home cold start p90 at most 800 ms, warm 300 ms; Camera preview within 1.2 s; shutter to saved 1.5 s p95; at most 5% janky frames; final numbers set at Z1.
 - **APT-15** `MigrationTestHelper` N-1 to N passes for every database with seeded Journal, Notebook and Photos data; a failing migration keeps the old file and reports a health event (APP-37).
 
 ## Verify first
 
 | ID | Claim | Why uncertain | How to verify | If false |
 |---|---|---|---|---|
-| VP-1 | Gradle APKs imported with `certificate: "platform"` or `"zune-apps"`, `privileged`, `overrides` are re-signed by `sign_target_files_apks`; an `apk` update signed with the prod `zune-apps` key replaces the system copy (03 VG-7); Guardian and Setup need only system-API stubs, not hidden `setDeviceOwner` [R09 F3, 02 V12] | GrapheneOS tree only | M1 stub APK on Cuttlefish: key-map run, `pm install -r`, compile Setup against stubs | `presigned: true` with offline signing; Soong-native or framework-jar build for that app by ADR |
-| VP-2 | A `signature` permission does not reach `zune-apps` apps; `knownSigner` with `knownCerts` may [M] | Memory | M3 stub client | APP-06 caller check alone |
-| VP-3 | Stock Quickstep with ZuneLauncher gives working gestures (02 V5); Setup detects Back and Home as in §4.3 | Memory | Stub in M1, real in M3 (AT-06) | Path B (Launcher3-derived), about 5-8 pw more [INFERRED], escalate; tutorial uses taps |
+| VP-1 | Gradle APKs imported with `certificate: "platform"` or `"zune-apps"`, `privileged`, `overrides` are re-signed by `sign_target_files_apks`; an `apk` update signed with the prod `zune-apps` key replaces the system copy (03 VG-7); Guardian and Setup need only system-API stubs, not hidden `setDeviceOwner` [R09 F3, 02 V12] | GrapheneOS tree only | Z1 stub APK on Cuttlefish: key-map run, `pm install -r`, compile Setup against stubs | `presigned: true` with offline signing; Soong-native or framework-jar build for that app by ADR |
+| VP-2 | A `signature` permission does not reach `zune-apps` apps; `knownSigner` with `knownCerts` may [M] | Memory | Z3 stub client | APP-06 caller check alone |
+| VP-3 | Stock Quickstep with ZuneLauncher gives working gestures (02 V5); Setup detects Back and Home as in §4.3 | Memory | Stub in Z1, real in Z3 (AT-06) | Path B (Launcher3-derived), about 5-8 pw more [INFERRED], escalate; tutorial uses taps |
 | VP-4 | Ink 1.0.0, CameraX 1.6.2, Media3 1.11.1, Room 2.8.5, Readium 3.4.0 are current, GMS-free, 16 KB-aligned; Robolectric and Roborazzi run on sdk 37 [R09 F4-F6] | Doc summaries | `./gradlew dependencies`, grep, `check_elf_alignment.sh`, an sdk-37 test | Pin newest working; Ink to Compose Canvas (about 2 pw) |
 | VP-5 | SQLCipher works with Room 2.8.x on API 37, 16 KB aligned, redistribution allowed [R09 F5, M] | Licence unread | Sample DB; read licence | Plain Room plus Tink field encryption |
 | VP-6 | `default-permissions-zune.xml` grants CAMERA, RECORD_AUDIO, POST_NOTIFICATIONS to product system apps without dialogs; Guardian can revoke [R03 F8, M] | Unproven | Cuttlefish `dumpsys package`; toggle caps | `GRANT_RUNTIME_PERMISSIONS` from Guardian; DO limits on sensors [M] |

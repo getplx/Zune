@@ -178,7 +178,7 @@ Nothing below was read from Google's tree. Log results in `zune/docs/verified-fa
 | VL-6 | POCSO ss.19-21 and Rule 11 bind us as an intermediary; channel; s.21(2) exposure [R19 §2.4; judgment P] | Statute text unread | Counsel (R19 Q7) | Change RB-2 owner and clock; keep hold |
 | VL-7 | 2026 DoT authorisation, radio-equipment possession, user-identification and 2024 interception rules do not reach the messenger, calls or custody of customers' phones [R19 Q11] | Texts unread | Counsel | Authorisation, or staff phones only (10 VO-12) |
 | VL-8 | Panic Button and GPS Rules 2016 require a triple-press panic call and cover a voice-off handset [R19 §2.2, M] | Scope unread | Counsel; 03 VG-11 | Keep SOS (LOCK-35); disclose |
-| VL-9 | The station can show EFS, persist, IMEI untouched; Google's radio image counts as unmodified [R19 §4.1, I] | Pixel mechanics from mirrors | M2 fastboot transcripts, sacrificial unit | Rely on the command-allowlist log; tell counsel |
+| VL-9 | The station can show EFS, persist, IMEI untouched; Google's radio image counts as unmodified [R19 §4.1, I] | Pixel mechanics from mirrors | Z2 fastboot transcripts, sacrificial unit | Rely on the command-allowlist log; tell counsel |
 | VL-10 | Reported: 28 Sep 2026 Supreme Court statement, Karnataka under-16 ban, MeitY draft IT Rules, SIM-binding date, username notices [R19 §2.2, §2.4, S] | Sources blocked | Read order, notices, circulars | Stop external families (EXT-1); re-scope under-16 messaging |
 | VL-11 | TTS audio is outside synthetic-media labelling; RBI e-mandate (21 Apr 2026: Rs 15,000, 24 h issuer notice), aggregator, GST threshold, DLT [R19 §2.4, §2.5, S; M] | Secondary | Counsel; read at PAY-1 | Audible TTS disclosure; PAY-1 stays open |
 | VL-12 | The [default] clocks (24 h erasure, 12 h Board target, 24 h acknowledgement, 7-day resolution, 24 h POCSO decision) satisfy the law; only a parent can contract (Contract Act s.11 [M]) [I] | Chosen here | Counsel | Tighten the config |
@@ -204,7 +204,7 @@ Risks:
 | EXT-2 | Name clearance | Codename, neutral domain |
 | LEG-2, LEG-3, EXT-7 | Indian entity and resident officer (A11); Rule 10 and Rule 8(3) readings (VL-2, VL-3); Hindi parent notices [R19 Q10] | Staff-ID flow, `seal`, `lang` field ready |
 
-- **[GATE: before build]** None legal. The counsel brief and R19 questions go out by W2 (01 PRE-18); the inventory and `compliance-lint` skeleton exist by M1.
+- **[GATE: before build]** None legal. The counsel brief and R19 questions go out by W2 (01 PRE-18); the inventory and `compliance-lint` skeleton exist by Z1.
 - **[GATE: before staff pilot]** SP-1 (data map, vendor register, retention), SP-2 (CMP-16 to CMP-18), SP-3 (CMT-09, 11, 12 drills), SP-4 (CMP-26), SP-7; CMT-01 to CMT-10 and CMT-13 to CMT-15 pass; reporting officer, T&S lead and grievance mailbox named.
 - **[GATE: before external family]** LEG-1 to LEG-10, EXT-1, EXT-2, EXT-3, EXT-7, FW-1 or counsel's written view on the 100-device footing (01 PRE-20); VL-1 to VL-4 and VL-7 closed or a founder exception recorded in `gates.md`.
 - **[GATE: before charging]** PAY-1 (CMP-31 built, VL-11 read), FW-1, consumer terms from counsel.

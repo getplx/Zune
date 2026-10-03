@@ -135,7 +135,7 @@ rtc:  {tcp_port: 7881, port_range_start: 50000, port_range_end: 50999, use_exter
 turn: {enabled: true, tls_port: 5349, udp_port: 3478}
 room: {auto_create: false, max_participants: 2, empty_timeout: 20}
 ```
-Keys: Secrets Manager (PRE-08). Pin the newest stable server and Android SDK at M5 start (`verified-facts.md`). A signed webhook fills the call log.
+Keys: Secrets Manager (PRE-08). Pin the newest stable server and Android SDK at Z5 start (`verified-facts.md`). A signed webhook fills the call log.
 
 Sequence: `call.invite` -> `Allowed(voice or video)` -> create room, mint caller token -> `call.ringing` to caller, `call.incoming` to callee -> Guardian launches `app.zune.calls/.IncomingCallActivity` (show-when-locked, turn-screen-on) -> `call.accept` -> callee token -> both join. Audio: Opus 24 kbps speech preset, DTX on, RED off [R08 F7]. Voice reuses the video stack (design confirmed): one SDK, minter and enforcement path outweigh the SFU hop. Persist deadlines across restarts.
 
@@ -205,7 +205,7 @@ Risks:
 2. **Moderation gaps.** Rules miss coded grooming; live voice, video and PTT are unmoderated. Do not market detection.
 3. **Vault and disclosure.** Server-readable children's chats are a high-value target (05, 11); a guardian reading another family's child rests on dual consent and counsel (s.9(3), interception law).
 4. **Hostile guardian.** The main threat; in v1 every guardian is verified at the company flash visit (D16, Rule 10).
-5. **Unmeasured:** relay stutter, battery, SFU operations. If CT-01 to CT-07 are not green by M5 week 8 [default], record an ADR to swap `MessageStore` for Prosody.
+5. **Unmeasured:** relay stutter, battery, SFU operations. If CT-01 to CT-07 are not green by Z5 week 8 [default], record an ADR to swap `MessageStore` for Prosody.
 
 Gates:
 - **[GATE: before build]** VC-1 and VC-2 recorded in `verified-facts.md` before building the Walkie and Calls wake paths; if either fails, redesign with 03.

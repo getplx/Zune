@@ -1,6 +1,6 @@
 # Zune build progress (append-only)
 
-## 2026-10-03: M0 start
+## 2026-10-03: Z0 start
 - PRE-01 PASS from the founder's Mac: `git ls-remote` on android.googlesource.com/platform/manifest returns refs; source.android.com, dl.google.com, developers.google.com reachable. Re-run on the build host.
 - Branch `build/m0-foundation` created off `research/android-kids-foundation`; 01 §4.3 skeleton created; `os/tools/pre-check.sh` added (PRE-01, PRE-08; PRE-02 with `--host`).
 - `docs/gates.md` and `docs/verified-facts.md` created from 01's register and Verify-first table.
@@ -25,3 +25,6 @@
 - Decision (founder): Mumbai (ap-south-1), on-demand `m6a.8xlarge`, started only for build/test sessions; est. USD 33/month at 20 h, 52 at 40 h incl. ~USD 15 fixed (150 GB persistent source volume + S3 ccache). m8i.8xlarge only for a KVM/Cuttlefish trial.
 - Added `os/tools/aws-build-session.sh` (init, init-volume, up, ssh, status, down). Terminate-on-shutdown, 4 h hard max runtime, 15 min idle shutdown. `init` run (SSH key pair `zune-build`, SG `zune-build-ssh`; both free; key at ~/.ssh, not in repo). Dry-run launch passed. Source volume NOT created yet (billing starts then). S3 ccache not wired (needs an instance profile).
 - EC2 Standard vCPU quota is now 16; the increase to 32 is under AWS review (case opened). `m6a.8xlarge` needs 32 vCPU, so the full-size host cannot launch yet; `m6a.4xlarge` (16 vCPU, 64 GB) would fit.
+
+## 2026-10-03: milestone naming (founder)
+- Milestones renamed Z0-Z8 (was M0-M8; `Mn` -> `Zn`) across docs/build, gates, verified-facts and tooling. `docs/research/*` and `docs/investor/*` are unchanged and still use M<n> (R21's M<n> means months, kept as such in 01). Git branch `build/m0-foundation` keeps its name.

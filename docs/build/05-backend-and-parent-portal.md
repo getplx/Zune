@@ -4,7 +4,7 @@
 
 This section specifies the cloud side: service boundaries, stack and AWS India topology, the one device channel owned by ZuneGuardian, enrolment with Rule-10 verification, authentication, the data model, the 12-month retention vault, tamper-evident audit, the Stage-1 Zune Portal and the staff console.
 
-**Stage 1** = every MUST, working end to end at M4 exit (`01-prerequisites-and-phases.md`); message and AI review pages complete at M5 when 06 and 07 land. **Stage 2** = Caregiver role, DigiLocker as default path, parent-side calling (D8), parent-key E2EE, billing, multi-device UI.
+**Stage 1** = every MUST, working end to end at Z4 exit (`01-prerequisites-and-phases.md`); message and AI review pages complete at Z5 when 06 and 07 land. **Stage 2** = Caregiver role, DigiLocker as default path, parent-side calling (D8), parent-key E2EE, billing, multi-device UI.
 
 Not covered here:
 - Guardian internals, enforcement, PIN, bypass tests: `03-lockdown-and-guardian.md`. Keys, OTA client, rings: `04-device-signing-ota-release.md`.
@@ -12,7 +12,7 @@ Not covered here:
 - ZuneSetup screens, on-device crash reporting: `09-core-apps-and-design-system.md`. Station, intake, kill-level semantics, support: `10-delivery-operations-and-pilot.md`.
 - Legal analysis, runbooks: `11-compliance-and-privacy-engineering.md`. Test execution: `12-testing-qa-and-acceptance.md`. AWS accounts, SCP: `01`.
 
-`<zone>` is the neutral domain fixed in the M0 ADR (name clearance pending, A5). 
+`<zone>` is the neutral domain fixed in the Z0 ADR (name clearance pending, A5). 
 
 ## Decisions applied and reconciliations
 
@@ -67,11 +67,11 @@ Not covered here:
 - **BE-23 MUST** `unenroll` needs step-up. `service_unlock` needs step-up, staff co-approval and a `zune-service-ca` KMS signature (03 LOCK-20). Both notify every guardian.
 
 **Authentication and roles**
-- **BE-24 MUST** Passkeys (`go-webauthn`, discoverable, user verification required, attestation `none`); the RP ID is the neutral domain from the M0 ADR and never changes.
+- **BE-24 MUST** Passkeys (`go-webauthn`, discoverable, user verification required, attestation `none`); the RP ID is the neutral domain from the Z0 ADR and never changes.
 - **BE-25 MUST** Server-side sessions, `__Host-` cookie, HttpOnly, Secure, SameSite=Lax, idle 2 h, absolute 12 h. Step-up (passkey assertion under 5 min old) is required to add or remove a guardian, release, service-unlock, PIN-reset, withdraw, erase, export, and to read vault content after 30 min without one.
 - **BE-26 MUST** Email OTP (6 digits, hashed, 10 min, 5 attempts) only registers a passkey from an invite or starts recovery, which waits 48 h with notice to all guardians unless staff re-inspect the ID. SMS OTP only after DLT registration.
 - **BE-27 MUST** Roles `owner`, `guardian`; `caregiver` in the enum without UI. At most 4 guardians; unverified guardians have no data powers; Stage 1 co-guardians need a staff-inspected ID; support may set a family `frozen`.
-- **BE-28 MUST** Staff use SSO with hardware keys (IdP: AWS IAM Identity Center or an equivalent India-region IdP, chosen in the M0 ADR, V11), roles `support|tns|verifier|station|release|sec|content|content_lead` (the last two per 08 CNT-22), no standing vault access; break-glass needs two approvers, lasts at most 4 h, is written to `staff_audit` and notified to the family unless counsel directs otherwise. Staff laptops are company-managed (disk encryption, screen lock, patching); offboarding revokes SSO, hardware keys, station access and break-glass eligibility within 1 h.
+- **BE-28 MUST** Staff use SSO with hardware keys (IdP: AWS IAM Identity Center or an equivalent India-region IdP, chosen in the Z0 ADR, V11), roles `support|tns|verifier|station|release|sec|content|content_lead` (the last two per 08 CNT-22), no standing vault access; break-glass needs two approvers, lasts at most 4 h, is written to `staff_audit` and notified to the family unless counsel directs otherwise. Staff laptops are company-managed (disk encryption, screen lock, patching); offboarding revokes SSO, hardware keys, station access and break-glass eligibility within 1 h.
 
 **Data, vault, audit**
 - **BE-29 MUST** Row-level security on every table with `family_id`, set only from the session.
@@ -82,7 +82,7 @@ Not covered here:
 - **BE-34 MUST** Withdrawal and erasure follow §4.6; `erasure_mode` defaults to `seal`, `delete_now` destroys DEKs at once; legal holds block deletion and need the `tns` lead plus a second approver. Export (step-up) is the family's own data as JSON in a ZIP, presigned URL 7 days, ready within 24 h [INFERRED].
 - **BE-35 MUST** Per-family audit hash chain (`SHA-256(prev || canonical entry)`), UPDATE and DELETE revoked; hourly KMS-signed Merkle root in an S3 Object Lock (compliance) bucket replicated to ap-south-2; daily verifier; failure is Sev-1.
 - **BE-36 MUST** Logs via a field-allowlist logger (no bodies, names, free text, tokens), kept 12 months with 180 days searchable, in India; servers sync via `chrony` to Indian NTP (hostnames per V8, also 02's `config_ntpServers`); incidents carry 6 h (CERT-In) and 72 h (DPDP Rule 7) clocks.
-- **BE-37 MUST** RDS backups at most 35 days with PITR plus cross-region replicas; the M4 drill records RPO and RTO (targets 15 min, 4 h [INFERRED]); a restored row with a destroyed DEK is unreadable.
+- **BE-37 MUST** RDS backups at most 35 days with PITR plus cross-region replicas; the Z4 drill records RPO and RTO (targets 15 min, 4 h [INFERRED]); a restored row with a destroyed DEK is unreadable.
 
 **Portal, notification, edge**
 - **BE-38 MUST** Portal pages of §4.7 with OpenAPI at `backend/gateway/openapi.yaml`, `If-Match` concurrency, audited writes, 360 px mobile-first, keyboard operable.
@@ -97,8 +97,8 @@ Not covered here:
 **Operations: endpoints, secrets, domain, paging, migration**
 - **BE-46 MUST** Every endpoint other sections call is declared in `backend/gateway/openapi.yaml` with owner, auth mode (session, mTLS, token-plus-attestation, station SSO), rate limit and body limit, and the gateway refuses an undeclared route. Cross-section routes owed here: `POST /v1/station/jobs` (issues the `factory_qa` token, 10 §4.5), `POST /v1/device/factory/qa` (authenticated by that token and the attested key, usable only before a claim), `POST /v1/device/shares` (09 §4.5, vault class `share`), `POST /v1/device/diag` (09 §4.8, 20 a day per device), `/v1/device/ai/*` (07 §4.2), `GET /v1/content/tier2/state` and content manifests (08), `/v1/weather/*` (08 §4.8), the Guardian-minted short-lived device token for Tier B REST calls (08 §4.10), and the portal routes `/children/{c}/home` and `/children/{c}/shared` (09).
 - **BE-47 MUST** All secrets (vendor API keys, LiveKit keys, VAPID keys, database credentials, HMAC keys for claim codes, `serial_hmac`, `doc_hmac` and `safety_identifier`) live in Secrets Manager or KMS (01 PRE-08), are named in `backend/infra/secrets.yaml` with an owner and rotation period (90 days, or at once on staff departure or suspected leak) and are rotated in a drill before C0. HMAC keys are versioned (`kid` stored beside each value) so rotation re-computes in the background and verifies against old and new; `serial_hmac` and `doc_hmac` uniqueness constraints are rebuilt per `kid`, never dropped. No secret appears in Terraform state, container images, logs or the repository (CI secret scan, PRE-08).
-- **BE-48 MUST** One registrar-locked domain `<zone>` (M0 ADR; devices bake hostnames into overlays and ZuneUpdater, so a rename after devices ship is an OTA event). `backend/infra/hostnames.yaml` lists every hostname (`device.`, `dns.`, `connectivity.`, `player.`, `dl.`, `weather.`, the portal host, SFU and TURN hosts from 06, `status.`) with its certificate source (ACM for ALB, NLB and CloudFront, a public CA for the Unbound DoT and TURN/TLS endpoints where ACM cannot be exported), automatic renewal and an alert 21 days before expiry. CAA records, DNSSEC and HSTS on the portal; the device CA and its chain follow BE-21. Outbound e-mail (OTP, notices) uses the same domain from an India-region sender (SES ap-south-1 [INFERRED, V11]) with SPF, DKIM and an enforced DMARC policy; role mailboxes (security, privacy, grievance, legal, safety) are monitored.
-- **BE-49 MUST** BE-45 alerts page a named engineering on-call (rota in `zune/docs/ops/oncall.md`; two people from M6) through a paging service whose payloads carry no personal data; severities follow 11 §4.3; a Sev-1 or Sev-2 outage lasting over 30 minutes shows a portal banner and a notice e-mail to guardians; each alert has a runbook in `zune/docs/ops/runbooks/`.
+- **BE-48 MUST** One registrar-locked domain `<zone>` (Z0 ADR; devices bake hostnames into overlays and ZuneUpdater, so a rename after devices ship is an OTA event). `backend/infra/hostnames.yaml` lists every hostname (`device.`, `dns.`, `connectivity.`, `player.`, `dl.`, `weather.`, the portal host, SFU and TURN hosts from 06, `status.`) with its certificate source (ACM for ALB, NLB and CloudFront, a public CA for the Unbound DoT and TURN/TLS endpoints where ACM cannot be exported), automatic renewal and an alert 21 days before expiry. CAA records, DNSSEC and HSTS on the portal; the device CA and its chain follow BE-21. Outbound e-mail (OTP, notices) uses the same domain from an India-region sender (SES ap-south-1 [INFERRED, V11]) with SPF, DKIM and an enforced DMARC policy; role mailboxes (security, privacy, grievance, legal, safety) are monitored.
+- **BE-49 MUST** BE-45 alerts page a named engineering on-call (rota in `zune/docs/ops/oncall.md`; two people from Z6) through a paging service whose payloads carry no personal data; severities follow 11 §4.3; a Sev-1 or Sev-2 outage lasting over 30 minutes shows a portal banner and a notice e-mail to guardians; each alert has a runbook in `zune/docs/ops/runbooks/`.
 - **BE-50 MUST** Versioning and migration: PostgreSQL schema changes are versioned SQL migrations (`golang-migrate` or equivalent, `sqlc` regenerated in CI), expand-then-contract across two releases, each rehearsed in staging on a restored copy of the latest snapshot with timing recorded; vault re-encryption and DEK rotation are background jobs, not migrations. The server keeps accepting a device client (channel `zune.channel.v1`, `/v1/device/*`, `policy-v1`) until no device on that build has reported in 30 days and the next ring has reached 100%; a breaking change ships as a new subprotocol or `/v2` beside the old one, and policy-schema changes are additive until Guardian understands both. The portal's OpenAPI changes are backward compatible within a release train.
 
 ## Design and build instructions
@@ -221,7 +221,7 @@ Erasure: `requested` (step-up), `applied` (views removed, processing stopped, de
 
 ### 4.8 Staff console, observability, cost
 
-Console: family lookup (no content), device lifecycle, verification, kill switches, break-glass requests, T&S flag queue, incidents, OTA publish, entitlements. Observability: OpenTelemetry with PII scrubbing to CloudWatch. Cost [INFERRED, about 2x either way, no quote]: Stage 1 fixed infrastructure with DR about USD 700-1,400 per month, USD 2-5 per device at about 300 devices (R05: USD 250-500 for 1,000 devices, no DR); vendors, SMS, staff excluded. Record actuals at M4 exit.
+Console: family lookup (no content), device lifecycle, verification, kill switches, break-glass requests, T&S flag queue, incidents, OTA publish, entitlements. Observability: OpenTelemetry with PII scrubbing to CloudWatch. Cost [INFERRED, about 2x either way, no quote]: Stage 1 fixed infrastructure with DR about USD 700-1,400 per month, USD 2-5 per device at about 300 devices (R05: USD 250-500 for 1,000 devices, no DR); vendors, SMS, staff excluded. Record actuals at Z4 exit.
 
 ## Acceptance criteria and tests
 
@@ -238,7 +238,7 @@ Console: family lookup (no content), device lifecycle, verification, kill switch
 - **BT-11** SOS reaches every guardian in 10 s; unacknowledged for 5 min pages `tns`.
 - **BT-12** A non-allowlisted name is refused over DoT, allowed names are not logged; `generate_204` returns 204 on both schemes.
 - **BT-13** OTA metadata needs two approvals; ZuneUpdater refuses a bad signature (04 G3).
-- **BT-14** DR drill: promote ap-south-2, devices reconnect; RPO and RTO recorded in `milestones/M4.md`.
+- **BT-14** DR drill: promote ap-south-2, devices reconnect; RPO and RTO recorded in `milestones/Z4.md`.
 - **BT-15** From the prod account an us-east-1 call is denied; a `policy` task cannot reach the internet; `ai-gateway` reaches only allowlisted hosts.
 - **BT-16** Playwright at 360 px passes each §4.7 acceptance cell.
 - **BT-17** A route absent from `openapi.yaml` is refused; every §BE-46 route exists with its auth mode; a pre-claim `factory/qa` call with a replayed token fails.
@@ -255,13 +255,13 @@ Nothing here was run on AWS; log results in `zune/docs/verified-facts.md`.
 | V1 | Both Indian regions offer Fargate, cross-region RDS replicas with multi-Region KMS, ElastiCache, NLB TLS, S3 Object Lock replication; RDS backups cap at 35 days [01 V12, MEMORY] | Unchecked | `terraform plan` in both | ECS on EC2 or reduced DR; founder re-approves spend |
 | V2 | KMS signs ES256 and Ed25519 (`channel`, 04 REL-12) in ap-south-1 [MEMORY] | Ed25519 unclear | Create keys; sign and verify in Go and Kotlin | `channel` becomes ECDSA P-256 (edit 04 REL-12, REL-16) |
 | V3 | DoT via NLB TLS with an ACM certificate satisfies strict Private DNS [03 VG-8] | Untested | Pixel with `setGlobalPrivateDnsModeSpecifiedHost` | Unbound terminates TLS with a public-CA certificate |
-| V4 | Privileged Guardian gets the serial in key attestation on 10a and 9a; `android/keyattestation` accepts Android 17 and P-384 chains [R05 F8, R10 F12] | RKP without GMS unverified | M2 attestation test | Parent confirms the last 4 serial characters ZuneSetup shows |
+| V4 | Privileged Guardian gets the serial in key attestation on 10a and 9a; `android/keyattestation` accepts Android 17 and P-384 chains [R05 F8, R10 F12] | RKP without GMS unverified | Z2 attestation test | Parent confirms the last 4 serial characters ZuneSetup shows |
 | V5 | One WebSocket survives Doze and carrier NAT at 180 s with acceptable battery [R13 F3, R05 §4.5] | Unmeasured; short pings hurt (R13) | Pixels, four carriers, Wi-Fi, 72 h | Longer keepalive, `JobScheduler` poll, tell 06 |
 | V6 | Staff-inspected ID plus OTP plus stored record meets Rule 10 without DigiLocker [R19 Q2] | Mirrors; corrigendum unread | Counsel (LEG-1, LEG-3) | DigiLocker mandatory; external families wait |
 | V7 | Rule 8(3) covers message content, and sealing satisfies s.6(4) and s.8(7) [R19 Q4; s.8(7) content MEMORY] | Scope ambiguous | Counsel | `erasure_mode=delete_now`; shorter content retention |
 | V8 | CERT-In: 180-day in-India logs, NIC or NPL time; DPDP Rule 7 72-hour breach report (11 VL-1, VL-5); no hostnames verified [R19, secondary] | Direction unread | Read the 28 Apr 2022 direction; set `config_ntpServers` (02) only from NIC or NPL pages | Own `chrony`; devices use signed server time |
 | V9 | Passkeys, DLT SMS, email and Web Push (iOS needs Home Screen install) work for Indian parents [R05 P, R19 MEMORY, R05 S] | Untested | Six phone and browser pairs; register DLT; send tests | Email OTP plus TOTP; email plus Web Push; `tns` phones for SOS |
-| V10 | Cost ranges (§4.8): USD 700-1,400 a month fixed with DR, about INR 340-670 per child-month at 200 children | No quotes; 01 Verify 12 and 10 §4.12 once quoted other figures | AWS calculator at M4 | Re-approve budget; PAY-1 re-prices |
+| V10 | Cost ranges (§4.8): USD 700-1,400 a month fixed with DR, about INR 340-670 per child-month at 200 children | No quotes; 01 Verify 12 and 10 §4.12 once quoted other figures | AWS calculator at Z4 | Re-approve budget; PAY-1 re-prices |
 | V11 | Staff IdP (AWS IAM Identity Center or equivalent in an India region), SES in ap-south-1 with DKIM and DMARC, Secrets Manager rotation, ACM export limits for DoT and TURN [MEMORY] | Unchecked | Create each in staging; send test mail; rotate a test secret | Self-hosted IdP; another India-region mail sender; public-CA certificates on the endpoints |
 
 ## Risks, open gates and out of scope

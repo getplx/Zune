@@ -29,7 +29,7 @@
 | EXT-7 | before external family | Hindi parent-notice exception to D20 if counsel requires | founder | - | open | |
 | FW-1 | before charging / device 101 | Written Google firmware answer, or counsel view on the 100-device footing | founder/counsel | - | open | |
 | PAY-1 | before charging | Aggregator, e-mandate notice, GST, DLT, validated INR price | founder | - | open | |
-| HW-1..4 | not v1 | Evaluated in M8 | - | - | n/a | |
+| HW-1..4 | not v1 | Evaluated in Z8 | - | - | n/a | |
 
 Per PRE-18 every gate needs a request sent by W2 (week of 2026-10-19). Owners are TBD until the founder names them.
 Other `[GATE: ...]` tags in sections 02-12 still have to be reconciled into this table (PRE-11).

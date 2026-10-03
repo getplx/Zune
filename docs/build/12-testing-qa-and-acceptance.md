@@ -4,7 +4,7 @@
 
 How the building session proves the v1 baseline works: CI, device and network matrices, bypass coverage, red-teaming, load, security, privacy, accessibility and usability tests, gate evidence, and the Definition of Done (DoD) for validating with about 200 families (D21; cohorts C0-C3 in `10-delivery-operations-and-pilot.md`).
 
-**Stage 1** = every MUST below, running from M1 and complete before the gate it names; the DoD gates M7. **Stage 2** = device farm, gesture robot, child-voice corpora, Indic sets (D20), continuous external red-team, HW-1..4.
+**Stage 1** = every MUST below, running from Z1 and complete before the gate it names; the DoD gates Z7. **Stage 2** = device farm, gesture robot, child-voice corpora, Indic sets (D20), continuous external red-team, HW-1..4.
 
 Owned here: pipelines, gate evidence, matrices, test governance, DoD. Test content stays in its home section: AT-nn (`02`), LT-nn and the bypass suite (`03`), AT-Rnn (`04`), BT-nn (`05`), CT-nn (`06`), AIT-nn (`07`), CNT-Tnn (`08`), APT-nn (`09`), AT-Onn (`10`), CMT-nn (`11`); new tests here are `QT-nn`. Not covered: milestones, gate register (`01-prerequisites-and-phases.md`); release-gate definitions, keys (`04-device-signing-ota-release.md`); legal gates (`11-compliance-and-privacy-engineering.md`); station operations (`10`). "MR" = push to a working branch (no pull request, 01 PRE-12). Never write a bare "G5": G1-G6 are 04's release gates; others are SP-, LEG-, EXT-, FW-1, PAY-1.
 
@@ -44,7 +44,7 @@ Owned here: pipelines, gate evidence, matrices, test governance, DoD. Test conte
 - **QA-13 MUST** Drills leave evidence in `zune/docs/qa/drills/`: key custody (absent custodian; REL-09, 10), `releasekey` rotation and AVB recall (AT-R11), bad-OTA drill (downgrade refused, roll-forward in 72 h), kill levels (AT-O08), signer renewal (05 §4.5), DR (BT-14), breach, S4 and outage tabletops (CMT-09, 12, 19), secrets rotation (BT-18). Before C0, then quarterly.
 
 **Devices, networks, quality**
-- **QA-14 MUST** Run the §4.5 matrix per model at M5 exit, before C0 and C1; later releases sample one data SIM and home Wi-Fi.
+- **QA-14 MUST** Run the §4.5 matrix per model at Z5 exit, before C0 and C1; later releases sample one data SIM and home Wi-Fi.
 - **QA-15 MUST** Per model: 3 RC units (locked, candidate's key set; re-flash by service-unlock when it changes), 1 dev unit (automation), 1 sacrificial unit (unlock, AVB rotation, bad OTA); key sets cannot share a phone (REL-05). `docs/lab/devices.md` records bootloader, baseband, anti-rollback, SPL (REL-03).
 - **QA-16 MUST** 112 evidence per LOCK-36 for Jio, Airtel, Vi, BSNL on both models. A live 112 call needs prior written agreement with the carrier or state emergency centre; otherwise use `cmd phone emergency-number-test-mode` and record live behaviour as untested (LOCK-37). Archive for counsel.
 - **QA-17 MUST** QT-03 and QT-05 meet bars Q6 and Q8 on both models; C0 data replaces [default] thresholds by ADR.
@@ -64,7 +64,7 @@ Owned here: pipelines, gate evidence, matrices, test governance, DoD. Test conte
 - **QA-27 SHOULD** QT-14: at least 6 guardians on a phone browser complete claim, two-family contact approval, bedtime, reading a thread, remote lock, consent withdrawal; 80% unaided, median under 3 minutes per task [default].
 
 **Gates and DoD**
-- **QA-28 MUST** `zune/docs/qa/DOD.md` is generated from the DoD tables with the latest run IDs; the founder acknowledges it at M7 entry. `limitations.md` feeds the parent pack, hand-over script (10 §4.6) and agreement, claims within LOCK-37 (CMP-35).
+- **QA-28 MUST** `zune/docs/qa/DOD.md` is generated from the DoD tables with the latest run IDs; the founder acknowledges it at Z7 entry. `limitations.md` feeds the parent pack, hand-over script (10 §4.6) and agreement, claims within LOCK-37 (CMP-35).
 - **QA-29 MUST** During cohorts a weekly report compares measurements with bars Q1-Q13 (`ev.health` crash and ANR counts, OTA, latency); a breached stop-ship trigger freezes new flashes (OPS-21).
 
 ## Design and build instructions
@@ -167,7 +167,7 @@ The baseline is done for validation with about 200 customers when **DOD-1 to DOD
 - **DOD-5** The 13 limitations below are disclosed in the agreement, hand-over script and portal.
 - **DOD-6** OTA reached every C0 device; one real monthly patch train ran (REL-25) with ship-lag measured; the station processed C0; QA-13 drills done.
 
-"Validated" = Q10, Q11 and the other 10 §4.9 thresholds for C1-C3 met, including OTA from the first external device (00-START-HERE §7), and the M8 review done.
+"Validated" = Q10, Q11 and the other 10 §4.9 thresholds for C1-C3 met, including OTA from the first external device (00-START-HERE §7), and the Z8 review done.
 
 **Features (done when):** F1 Messenger 1:1, parent-visible: CT-01..07. F2 Voice and video 1:1: CT-08..10, QT-05. F3 Walkie-talkie: CT-12, 13, LP3. F4 Assistant text, voice, image: AIT-01..11, QT-11. F5 Videos, Tier 2 dark: CNT-T01..07. F6 Weather: CNT-T08..10. F7 Camera, Photos, Journal, Notebook, Reader, utilities: APT-06..10, CNT-T11, QT-13. F8 Settings, D31 defaults, gestures: AT-04..06, 08, LT-05, 06. F9 No browser, no YouTube route, no calls or SMS, 112 only: LT-01..19, QT-06, 07, 16. F10 Portal, consent, vault, erasure: BT-01..20, CMT-01..19, QT-14. F11 Provisioning, hand-over, return-to-stock: AT-O01..09. F12 OTA, patch pipeline: AT-R05..12.
 
@@ -185,15 +185,15 @@ Log results in `zune/docs/verified-facts.md`. None of this was read from Google'
 
 | ID | Claim | Why uncertain | How to verify | If false |
 |---|---|---|---|---|
-| VQ-1 | `zune_kids_cf` boots on a CI runner with `/dev/kvm`; `sdk_phone16k_x86_64` exists [R01 F7] | Names from GrapheneOS trees; nested virtualisation varies | M1 build and boot | Listed `aosp_cf_*` or goldfish names; bare metal |
+| VQ-1 | `zune_kids_cf` boots on a CI runner with `/dev/kvm`; `sdk_phone16k_x86_64` exists [R01 F7] | Names from GrapheneOS trees; nested virtualisation varies | Z1 build and boot | Listed `aosp_cf_*` or goldfish names; bare metal |
 | VQ-2 | Vanilla `aosp_cf_x86_64_only_phone` ships a browser and fails IG-1, 2, 3 [R01 F5, R04 F1] | Stock 17 `handheld_product.mk` unread | QT-02 on the vanilla build | If it passes, read the makefiles; fix gate or claim |
-| VQ-3 | `adb shell input` swipes drive Quickstep gestures on Cuttlefish; `cmd package query-activities` takes `-c`, `-d` [R04 F5] | Untested; GrapheneOS tree | M1 with a stub launcher (02 V5) | NAV suite manual on Pixels; scan manifests only |
+| VQ-3 | `adb shell input` swipes drive Quickstep gestures on Cuttlefish; `cmd package query-activities` takes `-c`, `-d` [R04 F5] | Untested; GrapheneOS tree | Z1 with a stub launcher (02 V5) | NAV suite manual on Pixels; scan manifests only |
 | VQ-4 | Userdebug differs from `user` only by the allowlisted diff [R18 §6] | `userdebug_or_eng` SELinux rules differ | Policy and file diff of the first `zune_kids_cf` pair | Move tests to RC; disclose |
-| VQ-5 | Posture, factory QA and in-process audits give enough RC evidence without adb (03 LOCK-06, 10 §4.5) | Assumption | M3, locked dev unit | Extend posture; never add a QA shell to `user` |
+| VQ-5 | Posture, factory QA and in-process audits give enough RC evidence without adb (03 LOCK-06, 10 §4.5) | Assumption | Z3, locked dev unit | Extend posture; never add a QA shell to `user` |
 | VQ-6 | `cmd phone emergency-number-test-mode` and `cmd audio set-enable-hardening enable` work on the Pixels [R10 F14, R13 F3] | GrapheneOS trees | Run on both | Agreed live 112 test; 06 VC-1 redesign |
 | VQ-7 | The vendor tolerates adversarial eval prompts [07 VA-5]; LiveKit ships a load-test tool [MEMORY] | Unread | Ask OpenAI in writing; check the release | Pause eval runs; write `loadgen` |
 | VQ-8 | Counsel accepts minors in panels under the QA-26 form | Indian texts unread | Counsel (LEG-1) | Staff children only; adults role-play |
-| VQ-9 | Data-active SIMs for four Indian carriers can be bought and used with 112; IPv6 or CGNAT behaviour per carrier | Terms, KYC unread | Procure at M2; LOCK-36 | Fewer carriers; disclose |
+| VQ-9 | Data-active SIMs for four Indian carriers can be bought and used with 112; IPv6 or CGNAT behaviour per carrier | Terms, KYC unread | Procure at Z2; LOCK-36 | Fewer carriers; disclose |
 
 ## Risks, open gates and out of scope
 

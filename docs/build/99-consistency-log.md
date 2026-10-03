@@ -10,13 +10,13 @@ Conventions:
 ## 1. What changed (file: before -> after)
 
 ### 01 prerequisites
-- PRE-04: 3 Pixels per model before M6 -> 5 per model (3 release-candidate, 1 dev, 1 sacrificial), matching 12 QA-15 and 04 G5.
+- PRE-04: 3 Pixels per model before Z6 -> 5 per model (3 release-candidate, 1 dev, 1 sacrificial), matching 12 QA-15 and 04 G5.
 - PRE-09 and §4.3 placement: monorepo checked out at `vendor/zune` (01) vs checked out at `<aosp>/zune` with linkfiles (02) -> one design: `<aosp>/zune` plus directory linkfiles, root `.find-ignore`, `vendor/zune` checkout as fallback (a); Verify 6 reworded to match.
 - §4.3 layout: Tier A "Soong, platform key" -> Gradle-built and imported by Soong (09 Mode G); `eval/` and more `docs/` subfolders listed.
 - PRE-12: "no model names in commits or artifacts" -> no model names in commit messages, trailers or authorship lines (07's vendor model IDs are product config).
 - PRE-20, FW-1 row, §4.6: "100 devices before FW-1" with 04, 10, 11 disagreeing on whether external families fall inside it -> staff-owned phones only until the licence is read and counsel gives a written footing view; first external family needs FW-1 or that view.
-- §4.4 roles and M4 deliverables: no engineering on-call, secrets or domain owner -> added (05 BE-47..50).
-- Verify 12 (cloud cost USD 0.5-0.9k/month) -> USD 0.7-1.4k with DR to match 05; rows 14 (Pixel codenames, platform, India SKU), 15 (DPDP date) and 16 (price and cost conflict) added; M0 and M2 exit criteria cite them.
+- §4.4 roles and Z4 deliverables: no engineering on-call, secrets or domain owner -> added (05 BE-47..50).
+- Verify 12 (cloud cost USD 0.5-0.9k/month) -> USD 0.7-1.4k with DR to match 05; rows 14 (Pixel codenames, platform, India SKU), 15 (DPDP date) and 16 (price and cost conflict) added; Z0 and Z2 exit criteria cite them.
 - `RB-1` -> `REBASE-1` (3 places; also 04).
 
 ### 02 OS image
@@ -63,7 +63,7 @@ Conventions:
 - `ContentStoreProvider` in "app.zune.content" vs "provider in app.zune.updater [assumed]" -> one provider inside `app.zune.updater` with authority `app.zune.content`. 04 interface note updated. New CNT-36 for the weather tile provider that 09 APP-11 depends on.
 
 ### 09 core apps
-- APP-13 allows `ZUNE1S:`; APP-24 note "03 must add both" -> added in 03; Wave 0 `W1-W6` -> `W1-W5` (01 M1). Mode G risk text updated (01-03 adopt it). New APP-37 and APT-15: Room, SQLCipher and DataStore migrations.
+- APP-13 allows `ZUNE1S:`; APP-24 note "03 must add both" -> added in 03; Wave 0 `W1-W6` -> `W1-W5` (01 Z1). Mode G risk text updated (01-03 adopt it). New APP-37 and APT-15: Room, SQLCipher and DataStore migrations.
 
 ### 10 delivery and pilot
 - L1 kill features list lacked `assistant_images`, `assistant_voice`, `videos_tier2` -> added. §4.12 cloud cost "INR 4.3-4.8 lakh a year" vs 05's USD 700-1,400 a month -> INR 8.1-16.1 lakh with DR plus AI per child. Consent checklist gains `third_party_video`. Added helpdesk tooling rule and survey rule (no third-party tools).
@@ -86,7 +86,7 @@ Each shows the conflict and the default applied in the text.
 2. **Parent reading of messages and AI chats (D27) against DPDP s.9(3).** Every section builds the strict reading with full parent access, child notice, audit and seal; counsel decides at LEG-1. Decide whether the pilot proceeds on that exposure (up to Rs 200 crore per R19) and which fallback you pre-approve (shorter retention, summaries at 13-14).
 3. **Unit economics and spend.** Prices conflict (INR 199 founding, INR 399 in 07, INR 1,850 per-device floor, 10 §4.12 ceiling INR 8,200-12,000). Fixed cloud with DR is about INR 340-670 per child-month at 200 children (05), plus AI about INR 138 (07): above every price in the reports. The pilot is free, so the company carries about INR 8-16 lakh a year of cloud plus 3.7-24 lakh of flashing, counsel and insurance (10 §4.12). Decide B-1 spend and whether to re-price before PAY-1.
 4. **OpenAI default and data residency (D29).** OpenAI direct processes outside India (07); R19 wanted in-country inference. Applied: disclosed cross-border transfer. If counsel or you require India processing, the Anthropic-via-Bedrock path becomes default and D29 must be amended.
-5. **Gesture navigation fallback (D31).** If Path A and Path B both fail at M3 exit, 02 and 09 say stop and escalate. Decide now whether three-button is an acceptable fallback or the pilot waits.
+5. **Gesture navigation fallback (D31).** If Path A and Path B both fail at Z3 exit, 02 and 09 say stop and escalate. Decide now whether three-button is an acceptable fallback or the pilot waits.
 6. **SOS location and auto-dial (D31, D28).** D31 limits Stage-1 location to parent-set places; 03/05/11 add a location fix on SOS and 03 dials 112 by default after a 5-second countdown. Confirm both.
 7. **YouTube Tier 2 and D2.** YouTube's rules say do not disable player links; Zune refuses navigation (08 §4.5 YQ2). Applied: D2 wins, Tier 2 dropped on refusal or silence at Y0+56 (2026-12-14 if filed 2026-10-19). Confirm D2 wins and that launch never depends on Tier 2.
 8. **Journal, Notebook and Photos are private (09) while D24 gives the parent full control.** D27 covers messages and AI chats only; shares are per item. Confirm the parent may not read these.
@@ -107,11 +107,11 @@ Each shows the conflict and the default applied in the text.
 - Support visibility on `user` builds: only posture, health counts and consented crash reports exist; no remote log pull.
 - Penetration-test vendor choice and cadence beyond the one pre-launch test (12 QA-12).
 - Customer-data export for Journal, Notebook and Photos (wiped on reflash; backup is Stage 2).
-- Cyber and product-liability insurance scope (01 only names a broker at M6).
+- Cyber and product-liability insurance scope (01 only names a broker at Z6).
 
 ## 4. All [GATE: ...] items by gate type
 
-Gate IDs are canonical in 01 (B-1, SP-1..7, LEG-1..10, EXT-1..7, FW-1, PAY-1; HW-1..4 are M8 evidence, not a gate). Section items are in addition.
+Gate IDs are canonical in 01 (B-1, SP-1..7, LEG-1..10, EXT-1..7, FW-1, PAY-1; HW-1..4 are Z8 evidence, not a gate). Section items are in addition.
 
 ### [GATE: before build]
 | Gate | Source |
@@ -122,18 +122,18 @@ Gate IDs are canonical in 01 (B-1, SP-1..7, LEG-1..10, EXT-1..7, FW-1, PAY-1; HW
 | V1, V2, V4 on first Pixels; QPR1 ADR (REL-04) | 04 |
 | V1, V2 recorded; neutral domain and RP-ID ADR; AWS spend approved | 05 |
 | VC-1, VC-2 recorded before building Walkie and Calls wake paths | 06 |
-| M0 vendor accounts with spend limits; VA-1, VA-2 sent; model pins at M5 start | 07 |
-| Pin Readium, Media3, `androidx.webkit` at M5 start; VN-2, VN-6 spikes | 08 |
+| Z0 vendor accounts with spend limits; VA-1, VA-2 sent; model pins at Z5 start | 07 |
+| Pin Readium, Media3, `androidx.webkit` at Z5 start; VN-2, VN-6 spikes | 08 |
 | VP-1, VP-2 recorded (Mode G) | 09 |
 | VO-1, VO-2, VO-5 on first Pixels | 10 |
-| No legal gate; counsel brief out by W2; data inventory and `compliance-lint` skeleton by M1 | 11 |
+| No legal gate; counsel brief out by W2; data inventory and `compliance-lint` skeleton by Z1 | 11 |
 | VQ-1, VQ-2 recorded; CI runner with `/dev/kvm` | 12 |
 
 ### [GATE: before staff pilot]
 | Gate | Source |
 |---|---|
 | SP-1 data map, vendor register, retention; SP-2 security baseline; SP-3 incident plan and drill; SP-4 112 field test and triple-press SOS; SP-5 kill switches L1-L4; SP-6 service-unlock built or exception; SP-7 staff consent terms | 01 |
-| Gesture navigation Path A or B passes AT-06 (else founder accepts three-button); named WebView owner and off-OTA update shown; 112 test on both Pixels; name settled; stop and escalate if A fails and B is not passing at M3 exit | 02 |
+| Gesture navigation Path A or B passes AT-06 (else founder accepts three-button); named WebView owner and off-OTA update shown; 112 test on both Pixels; name settled; stop and escalate if A fails and B is not passing at Z3 exit | 02 |
 | Zero P0 bypass; LT-13, LT-14 pass or SP-6 exception; real Private DNS resolver; 112 field test and SOS shipped | 03 |
 | HSM proof and pilot key ceremony (REL-10); OTA, slot-fallback, service-unlock rehearsals on two sacrificial units per model; G1-G6 for the pilot build | 04 |
 | SP-1..3; BT-08, BT-14, BT-17..20; named on-call rota; signer-renewal rehearsal; independent portal and device-API test | 05 |
@@ -181,15 +181,15 @@ All rows stay in their own section's table; this is the order across sections. C
 1. **Day 0, access and tag.** 01#1, 01#2, 02/V1, 04/V1: AOSP reachable, `android-17.0.0_r1` is CP2A.260605.016 with SPL 2026-06-05, security branches exist and are timely. Everything else assumes this.
 2. **Send in week 1-2, answered last (long lead).** Google licence 01#3, 04/V6, 10/VO-9; vendor terms 07/VA-1, 07/VA-2; YouTube request 08/VN-1 (file by 2026-10-19); counsel brief 01#15, 11/VL-1, VL-2, VL-3, VL-4, VL-5, VL-6, VL-7, VL-10, VL-11, VL-12, 05/V6, 05/V7, 05/V8, 06/VC-9, 08/VN-5, 12/VQ-8.
 3. **Days 1-5, build environment.** 01#5, 02/V2, 02/V15, 12/VQ-1: Ubuntu 24.04, host size, `/dev/kvm`, `aosp_current`, product names.
-4. **M1, read the stock tree.** 01#4, 02/V3, 02/V4, 02/V10, 12/VQ-2, 03/VG-2: `base_product.mk`, REMOVE rows, RRO overrides, supervision framework, Settings counts.
-5. **M1 and M3 week 1, existential spikes.** 03/VG-1, 03/VG-3 (Device Owner route, wipe with sole restriction setter); 01#6, 02/V11, 09/VP-1, 09/VP-2, 02/V12 (placement, Mode G, signing); 02/V5, 02/V6, 09/VP-3, 12/VQ-3 (gestures with a non-Quickstep home).
-6. **M1, WebView.** 01#7, 02/V8, 02/V9, 04/V11: Vanadium obtainable, redistributable, gated by P-FWK-1.
-7. **M2, first Pixels.** 01#14, 04/V15, 04/V2, 04/V3, 01#8, 04/V5 (codenames, India SKU, adevtool, QPR1 skew); 01#9, 04/V4, 04/V8 (relock with our key, rollback); 01#10, 04/V9, 04/V14, 05/V4 (attestation); 01#11 (adevtool on Indian SKUs).
-8. **M2, locked-state and unlock.** 03/VG-4, 03/VG-5, 04/V12, 04/V10, 04/V7, 04/V13; station 10/VO-1, VO-2, VO-3, VO-4, VO-5, VO-6; 11/VL-9.
-9. **M2-M3, emergency path.** 02/V7, 03/VG-9, 03/VG-10, 03/VG-11, 11/VL-8, 12/VQ-6, 12/VQ-9: in-call UI, inbound rejection, panic button, 112 on SIM, no-SIM and data-SIM.
-10. **M3, bypass surface.** 03/VG-6, VG-7, VG-8; 02/V13, V14; 05/V3 (Private DNS over DoT).
-11. **M4, cloud.** 01#12, 05/V1, V2, V5, V9, V10, V11; 05/V5 is also a comms battery check (item 12).
-12. **M4-M5 start, comms Android behaviour.** 06/VC-1, VC-2, VC-3 (before the wake paths), VC-4, VC-5, VC-6, VC-7, VC-8; 12/VQ-7.
-13. **M5 start, AI.** 07/VA-3, VA-4, VA-5, VA-6, VA-7, VA-8, VA-9, VA-10 (VA-1, VA-2 are item 2).
-14. **M5 start, content and apps.** 08/VN-2, VN-3, VN-4, VN-6, VN-7, VN-8, VN-9, VN-10; 09/VP-4 to VP-11.
-15. **M5 and C0, validation numbers.** 10/VO-7, VO-8, VO-10, VO-11, VO-12; 01#13, 01#16; 12/VQ-4, VQ-5.
+4. **Z1, read the stock tree.** 01#4, 02/V3, 02/V4, 02/V10, 12/VQ-2, 03/VG-2: `base_product.mk`, REMOVE rows, RRO overrides, supervision framework, Settings counts.
+5. **Z1 and Z3 week 1, existential spikes.** 03/VG-1, 03/VG-3 (Device Owner route, wipe with sole restriction setter); 01#6, 02/V11, 09/VP-1, 09/VP-2, 02/V12 (placement, Mode G, signing); 02/V5, 02/V6, 09/VP-3, 12/VQ-3 (gestures with a non-Quickstep home).
+6. **Z1, WebView.** 01#7, 02/V8, 02/V9, 04/V11: Vanadium obtainable, redistributable, gated by P-FWK-1.
+7. **Z2, first Pixels.** 01#14, 04/V15, 04/V2, 04/V3, 01#8, 04/V5 (codenames, India SKU, adevtool, QPR1 skew); 01#9, 04/V4, 04/V8 (relock with our key, rollback); 01#10, 04/V9, 04/V14, 05/V4 (attestation); 01#11 (adevtool on Indian SKUs).
+8. **Z2, locked-state and unlock.** 03/VG-4, 03/VG-5, 04/V12, 04/V10, 04/V7, 04/V13; station 10/VO-1, VO-2, VO-3, VO-4, VO-5, VO-6; 11/VL-9.
+9. **Z2-Z3, emergency path.** 02/V7, 03/VG-9, 03/VG-10, 03/VG-11, 11/VL-8, 12/VQ-6, 12/VQ-9: in-call UI, inbound rejection, panic button, 112 on SIM, no-SIM and data-SIM.
+10. **Z3, bypass surface.** 03/VG-6, VG-7, VG-8; 02/V13, V14; 05/V3 (Private DNS over DoT).
+11. **Z4, cloud.** 01#12, 05/V1, V2, V5, V9, V10, V11; 05/V5 is also a comms battery check (item 12).
+12. **Z4-Z5 start, comms Android behaviour.** 06/VC-1, VC-2, VC-3 (before the wake paths), VC-4, VC-5, VC-6, VC-7, VC-8; 12/VQ-7.
+13. **Z5 start, AI.** 07/VA-3, VA-4, VA-5, VA-6, VA-7, VA-8, VA-9, VA-10 (VA-1, VA-2 are item 2).
+14. **Z5 start, content and apps.** 08/VN-2, VN-3, VN-4, VN-6, VN-7, VN-8, VN-9, VN-10; 09/VP-4 to VP-11.
+15. **Z5 and C0, validation numbers.** 10/VO-7, VO-8, VO-10, VO-11, VO-12; 01#13, 01#16; 12/VQ-4, VQ-5.

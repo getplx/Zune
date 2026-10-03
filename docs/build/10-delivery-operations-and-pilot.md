@@ -26,7 +26,7 @@ Not covered (`docs/build/`): image (`02-os-image-and-product.md`); Guardian, `se
 ## Requirements
 
 **Eligibility and intake**
-- **OPS-01 MUST** Service only `stallion` and `tegu` units whose model number is in `station/config/skus.yml` (India SKUs from the M2 dev units); refuse all others.
+- **OPS-01 MUST** Service only `stallion` and `tegu` units whose model number is in `station/config/skus.yml` (India SKUs from the Z2 dev units); refuse all others.
 - **OPS-02 MUST** Run the §4.1 hard checks on every phone, record pass or fail, return a failing phone unflashed. Never bypass FRP, accounts, MDM or carrier locks [R18 F11].
 - **OPS-03 MUST** Never store or log an IMEI, serial, number, screen content or PIN: KYM is a boolean plus timestamp; the backend keeps `serial_hmac` only. Staff never unlock a customer phone: the parent removes accounts and screen lock, then resets it in front of staff.
 - **OPS-04 MUST** Intake modes: in person (C0, C1); new-in-box phone shipped to us from the retailer (from C2); used-phone courier only in C3 and after EXT-5; returns by insured courier.
@@ -218,7 +218,7 @@ Nothing here was read from Google's `android-17.0.0_r1` tree. Log results in `zu
 | VO-2 | `-s` stays pinned across `reboot-bootloader` with four phones, no hangs [R18 F5, F6] | Upstream never pins | AT-O02 | Host-wide lock; replan |
 | VO-3 | Anti-rollback variable `anti` or `ap-ar-s`; 10a outside the May 2026 bump [R18 F9; 04 V5] | Search summaries | `getvar` per unit | Order by `version-bootloader`; hold units |
 | VO-4 | OEM-unlock toggle works on India SKUs with no carrier-ID lock; units have a nano-SIM tray [R20 §2.1] | No Indian unit tested | First India units; every intake | Refuse the SKU; Wi-Fi-only if no tray |
-| VO-5 | First-boot attestation works; a Guardian not yet Device Owner can turn OEM unlocking off [R18 F5, F8; 04 V4, V9, V12] | Forks and docs | M2 lab; read `OemLockService` at the tag | Seal at claim; no courier intake |
+| VO-5 | First-boot attestation works; a Guardian not yet Device Owner can turn OEM unlocking off [R18 F5, F8; 04 V4, V9, V12] | Forks and docs | Z2 lab; read `OemLockService` at the tag | Seal at claim; no courier intake |
 | VO-6 | Token plus server check is one-way: no FACTORY re-entry after claim or wipe | New design | Red-team: intents, boot reasons, USB, replay | Strip FACTORY from the image; hold C1 |
 | VO-7 | KYM by SMS to 14422 works for an unactivated phone [R20 §2.1] | DoT post only | Try dev units; else CEIR portal | Portal; else invoice only, tell counsel |
 | VO-8 | Battery health readable (`BATTERY_PROPERTY_STATE_OF_HEALTH`) [MEMORY] | Memory | Query dev units | Cycle count, or new-in-box only |
@@ -239,7 +239,7 @@ Risks:
 7. SIM in another phone, parent-assisted unlock, recovery wipe: disclosed limits (03).
 
 Gates (IDs per 01):
-- **[GATE: before build]** VO-1, VO-2, VO-5 run on the first Pixels (M2).
+- **[GATE: before build]** VO-1, VO-2, VO-5 run on the first Pixels (Z2).
 - **[GATE: before staff pilot]** SP-1..7 including SP-5 kill drill and SP-6 service-unlock; AT-O02 and AT-O07 passed; unbrick ladder rehearsed.
 - **[GATE: before external family]** §4.13 signed; LEG-1..10; EXT-1..7 including EXT-5 spare phones and EXT-7 notices; VO-6 and VO-11 closed.
 - **[GATE: before charging]** PAY-1 and FW-1; FW-1 is also needed before device 101.
