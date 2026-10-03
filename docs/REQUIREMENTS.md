@@ -42,6 +42,15 @@ Delivery is staged:
 | D20 | **English only** for version 1: no Hindi or other Indian languages (Stage 2 at the earliest). | 2026-10-02 |
 | D21 | **First phase: about 200 users on Pixel phones; eventually the company builds its own hardware.** Own hardware is a later roadmap phase, not v1. The 10/25/100 cohort sizes in report 18 are replaced by a staged ~200-user first phase. | 2026-10-02 |
 | D22 | **No "skin" product.** We will not ship a launcher or Device-Owner layer on stock Android. The product is the full custom OS image. **Goal: build a solid baseline and validate it with an initial group of customers before investing in dedicated hardware.** | 2026-10-03 |
+| D23 | **Target age range: 7 to 14.** (Resolves A8.) Design youngest-age UX (target sizes, voice-first, reading level) for 7, and moderation/AI/content for 7-9, 10-12, 13-14 bands. India's DPDP Act still treats all under-18 as children. | 2026-10-03 |
+| D24 | **The Zune Guardian has full control of allowing and disabling anything** on the device (apps, features, settings, network, contacts, time, content). Approved: ZuneGuardian is the Device Owner and holds the Android 17 supervision role (a one-way door set at provisioning). | 2026-10-03 |
+| D25 | **Videos follow the research recommendation (conditional go).** Tier 1 = licensed/open offline content plus paid partners, which is the launch base. Tier 2 = YouTube, made-for-kids-only, in one isolated embedded player, behind a remote kill switch; drop it if YouTube refuses or is silent after 8 weeks. Launch must not depend on YouTube. Amends D2/D3: there is still no YouTube app or route to youtube.com. | 2026-10-03 |
+| D26 | **Web engine:** ship a hardened WebView (Vanadium prebuilt) with a named owner and an update SLA at Chromium cadence; WebView only in the two apps that need it (Reader, Videos). | 2026-10-03 |
+| D27 | **Parent visibility and retention:** parents can read their child's messages and AI chats; the child is told; content retained in a restricted vault for 12 months (final period subject to counsel's reading of DPDP Rule 8(3)). | 2026-10-03 |
+| D28 | **Emergency calling: 112 only.** No dialer; the platform emergency path stays; no other cellular calling. (Resolves A9; the "remove emergency calling" override is not used.) | 2026-10-03 |
+| D29 | **AI vendor: OpenAI is the default; Anthropic is the fallback.** Supersedes report 07's Anthropic-first design. OpenAI's terms for products used by children, India data residency, zero retention and moderation endpoints must be verified before build. | 2026-10-03 |
+| D30 | **Wi-Fi sign-in (captive portal) pages are unsupported in version 1;** parent-hotspot workaround documented. | 2026-10-03 |
+| D31 | **Device defaults:** Bluetooth on; NFC off; USB file transfer off; **gesture ("iOS-style") navigation with no on-screen buttons** (needs a Quickstep-compatible launcher; flagged as a risk in report 03); English only; Stage-1 location from parent-set places only. | 2026-10-03 |
 
 ## Child-device feature list (Stage 1 scope)
 
@@ -83,13 +92,9 @@ controls, screen-time rules, device pairing. Parent-side video/voice calling is 
   a customer intake process replace the customer installer in v1 (report 18); (c) because we flash
   and return the device, OEM-blob handling, warranty, customer-data wipe and handling-of-customer-
   property questions arise. **Still open:** exact number of users in the first batch.
-- A8. **Target age range of children: UNCONFIRMED.** Reports assumed roughly 6-13; India's DPDP Act
+- A8. ~~Target age range~~ **Resolved: D23 (7-14).** Original note: Reports assumed roughly 6-13; India's DPDP Act
   treats everyone under 18 as a child.
-- A9. **Emergency calling: engineering default, founder may override.** The founder said (twice) "No cell
-  calling, only WhatsApp-type calling" (D19). Read as: **no cellular dialer, no calling UI, no SMS.** Default
-  until told otherwise: the **platform's built-in emergency-call path stays** (lock-screen Emergency button;
-  emergency numbers only, e.g. 112 in India; no general dialer), because removing it is a safety and
-  legal question (report 19). To override, the founder says "remove emergency calling"; counsel should be
-  consulted first.
+- A9. ~~Emergency calling~~ **Resolved: D28 (112 only).**
 - A10. **Connectivity:** Wi-Fi plus mobile data (D14). Assumed a data-only SIM/eSIM is supported;
   Wi-Fi-only use must also work.
+- A11. **UNCONFIRMED (defaults applied; founder did not answer):** the company operates through an Indian private limited with India-region hosting (AWS Mumbai primary, Hyderabad DR). Outside-customer gates (counsel opinion on DPDP s.9(3), Google firmware-licence answer, T&S and security staffing, key custodians, first city, spare-phone exception, support promise, name clearance) remain OPEN and block the first external family, not the build.

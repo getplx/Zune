@@ -10,7 +10,7 @@ plus a browser-based parent portal. A previous conversation did the research pha
 that could NOT reach AOSP; this container should be able to.
 
 1. Repo: getplx/Zune, branch research/android-kids-foundation. Read docs/HANDOFF.md first, then
-   docs/REQUIREMENTS.md (my authoritative decisions, D1-D22), then the reports in docs/research/.
+   docs/REQUIREMENTS.md (my authoritative decisions, D1-D31), then the reports in docs/research/.
 2. Before anything else, check AOSP access:
    git ls-remote https://android.googlesource.com/platform/manifest | head -3
    If it is blocked, stop and tell me exactly which host is denied.
