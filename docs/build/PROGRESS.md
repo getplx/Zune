@@ -43,3 +43,6 @@
 
 ## 2026-10-03: video plan updated (D32)
 - Founder idea (per-child curated YouTube feed in a list-only Videos app, DNS-limited to one video, YouTube sign-in with a Premium recommendation) reviewed and written into the plan as D32 and spec 08 §4.11-4.12. Adopted: list-only app, per-child feed from researched topics (shared pool, topic ids, human review). Corrected: DNS cannot filter per video, so the lock is in-app. Not in v1: account sign-in and Premium (experiments VN-12 to VN-14, dev builds only). Follow-ups in 03, 05, 07, 11, 12 listed in 99-consistency-log.
+
+## 2026-10-03: Tier 2 player decisions
+- Founder decisions on the Tier 2 player (2026-10-03): 180 s pause timeout, tightenable later (CNT-46); whole-channel vetting (CNT-47); immersive full screen with native controls outside the player (CNT-48); per-app reach (CNT-49, SHOULD); band gate by test (CNT-50). 03 is asked to pull per-UID chains forward if cheap; VN-15, VN-16 and YQ10 added.
