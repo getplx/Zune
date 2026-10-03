@@ -22,7 +22,7 @@ Delivery is staged:
 |---|----------|------|
 | D1 | No web browser on the device. | 2026-10-02 |
 | D2 | No way for the end user to reach YouTube (no app, site, link-out, or deep link). Videos appear only inside the Zune **Videos** section. | 2026-10-02 |
-| D3 | Videos are curated YouTube content, shown only if relevant to the child's **age group** or to a **topic the child asked about** (research). Fully controlled experience. | 2026-10-02 |
+| D3 | (amended by D32) Videos are curated YouTube content, shown only if relevant to the child's **age group** or to a **topic the child asked about** (research). Fully controlled experience. | 2026-10-02 |
 | D4 | **SUPERSEDED by D19 (2026-10-02).** (was: **Cellular voice calls and SMS are IN scope.**) | 2026-10-02 |
 | D5 | **SUPERSEDED by D19 (2026-10-02).** (was: Parent controls an **allowlist of numbers that can call the device** (inbound) and **which numbers the child can call/communicate with** (outbound).) | 2026-10-02 |
 | D6 | **SUPERSEDED by D19 (2026-10-02).** (was: **SMS is not readable on the device**; it is readable in the parental-control interface.) | 2026-10-02 |
@@ -51,6 +51,7 @@ Delivery is staged:
 | D29 | **AI vendor: OpenAI is the default; Anthropic is the fallback.** Supersedes report 07's Anthropic-first design. OpenAI's terms for products used by children, India data residency, zero retention and moderation endpoints must be verified before build. | 2026-10-03 |
 | D30 | **Wi-Fi sign-in (captive portal) pages are unsupported in version 1;** parent-hotspot workaround documented. | 2026-10-03 |
 | D31 | **Device defaults:** Bluetooth on; NFC off; USB file transfer off; **gesture ("iOS-style") navigation with no on-screen buttons** (needs a Quickstep-compatible launcher; flagged as a risk in report 03); English only; Stage-1 location from parent-set places only. | 2026-10-03 |
+| D32 | **Per-child research feed for Tier 2 (founder idea, adopted with changes).** Videos is a native list of tiles chosen per child from the age band and the topics the child researched (Assistant, topic requests); tapping a tile opens only that video in the isolated player; no search box, address bar or URL entry. Enforcement is in the app (single-video navigation lock) with a host-level DNS allowlist as defence in depth, because DNS cannot filter by video or URL path. **Not adopted in v1:** signing the device in to a YouTube/Google account (child's or parent's) and recommending YouTube Premium; kept as experiments VN-12 to VN-14, default off, never in release builds. Amends D3 and D25; D1 and D2 stand. | 2026-10-03 |
 
 ## Child-device feature list (Stage 1 scope)
 

@@ -40,3 +40,6 @@
 - The idle watchdog terminated the host 15 min after the failed build (working as designed); the scratch disk was lost, the source volume was kept.
 - To fix in aws-build-session.sh: use the `out` symlink instead of OUT_DIR=/mnt/out in the profile script, and put CCACHE_DIR under /mnt/out (the /mnt directory is root-owned).
 - Second attempt failed on `ccache: error: Permission denied` (CCACHE_DIR under root-owned /mnt), a config mistake, not a hardware limit. Third attempt (CCACHE_DIR=/mnt/out/ccache) is compiling at 13:57 UTC. `aws-build-session.sh` now creates the `/aosp/out` symlink and a writable ccache dir.
+
+## 2026-10-03: video plan updated (D32)
+- Founder idea (per-child curated YouTube feed in a list-only Videos app, DNS-limited to one video, YouTube sign-in with a Premium recommendation) reviewed and written into the plan as D32 and spec 08 §4.11-4.12. Adopted: list-only app, per-child feed from researched topics (shared pool, topic ids, human review). Corrected: DNS cannot filter per video, so the lock is in-app. Not in v1: account sign-in and Premium (experiments VN-12 to VN-14, dev builds only). Follow-ups in 03, 05, 07, 11, 12 listed in 99-consistency-log.

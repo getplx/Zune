@@ -50,6 +50,7 @@ hardware investment.**
 | D29 | **AI vendor: OpenAI is the default; Anthropic is the fallback.** Supersedes report 07's Anthropic-first design. OpenAI's terms for products used by children, India data residency, zero retention and moderation endpoints must be verified before build. | 2026-10-03 |
 | D30 | **Wi-Fi sign-in (captive portal) pages are unsupported in version 1;** parent-hotspot workaround documented. | 2026-10-03 |
 | D31 | **Device defaults:** Bluetooth on; NFC off; USB file transfer off; **gesture ("iOS-style") navigation with no on-screen buttons** (needs a Quickstep-compatible launcher; flagged as a risk in report 03); English only; Stage-1 location from parent-set places only. | 2026-10-03 |
+| D32 | **Per-child research feed for Tier 2 (founder idea, adopted with changes).** Videos is a native list of tiles chosen per child from the age band and the topics the child researched (Assistant, topic requests); tapping a tile opens only that video in the isolated player; no search box, address bar or URL entry. Enforcement is in the app (single-video navigation lock) with a host-level DNS allowlist as defence in depth, because DNS cannot filter by video or URL path. **Not adopted in v1:** signing the device in to a YouTube/Google account (child's or parent's) and recommending YouTube Premium; kept as experiments VN-12 to VN-14, default off, never in release builds. Amends D3 and D25; D1 and D2 stand. | 2026-10-03 |
 
 Assumptions still open are listed at the bottom of `docs/REQUIREMENTS.md` (A-numbers). **D4-D6 are superseded by D19.**
 

@@ -22,6 +22,7 @@ Evidence is mostly search summaries and GrapheneOS/LineageOS mirrors, not Google
 | D18, D20, D31 vs R06 (CCSS), R14 (NWS, WEA, °F, device location) | NCERT-style tags; SACHET, CPCB, IMD (pending); metric, IST; places from the portal only, no location permission. |
 | D22, D24 vs R09 (ZuneComms) | ZuneUpdater downloads packs for Reader and Videos; Reader keeps no INTERNET; progress sync dropped. |
 | R14, R20 corrections adopted | AQI from CPCB only (not Open-Meteo's 45 km model); dew point drives "sticky"; UV card at 3, escalate at 6; `place_id` authorisation; 8 explainers x 3 bands (not R14's 20); ISRO text verbatim only; StoryWeaver needs Pratham's written yes; IMD from a fixed IP only. |
+| D32 (founder idea 2026-10-03) | Per-child feed adopted (CNT-37 to CNT-44, §4.11). DNS cannot filter per video, so the lock is in-app and DNS is host-level. Account sign-in and Premium not adopted in v1 (CNT-45, §4.12, VN-12 to VN-14). CNT-08 stands: free text never leaves the device, only topic ids. |
 | 05 BE-04, 15, 16, 41 | Egress hosts in `egress.yaml`; Tier 2 kill = `kill_state` level 1, `features=["videos_tier2"]`; `topic` approval for unmatched topics; Tier 2 hosts in `dns/allowlist.yaml`. |
 
 ## Requirements
@@ -55,6 +56,17 @@ Evidence is mostly search summaries and GrapheneOS/LineageOS mirrors, not Google
 
 **Curation**
 - **CNT-22 MUST** Curation runs in the staff console (05 §4.8), roles `content` (editor) and `content_lead` (approver), different people, audited. Editors view Tier 2 items only in the official embed; no download, scraping or extraction tools [R06 §2.3]. `ytcheck` runs nightly; 10% of items are re-reviewed quarterly; licence evidence is re-fetched yearly and on terms changes.
+
+**Per-child feed (D32)**
+- **CNT-37 MUST** The Videos home is a native list of tiles (our title, topic icon, duration; thumbnails per CNT-40). No search field, address bar, URL entry, share or "open in" exists anywhere in the app. The player WebView of CNT-13 is its only web surface; Videos is a player plus a list, not a browser (D1, D26).
+- **CNT-38 MUST** A child's "For you" shelf = Tier 1 items plus Tier 2 items whose band matches and whose topic id is in the child's researched topics. Topic ids come from a fixed taxonomy and are derived on the device from (i) topic requests (CNT-08) and (ii) Assistant session tags (07). Free text never leaves the device and never reaches YouTube.
+- **CNT-39 MUST** Tier 2 discovery runs only on the server: for a topic id with no live items, `research` calls `search.list` (`type=video`, `videoEmbeddable=true`, `safeSearch=strict`), then `ytcheck` (CNT-12), automated screening and human review with CNT-02 labels (CNT-22). Nothing reaches a child before a reviewer publishes it. No child, family or device identifier and no raw query goes to Google; one search per topic id per 30 days; results join a shared pool, so the feed is a per-child view of that pool, not a per-child query. Searches use at most 60 of the 100 a day (§4.7); overflow queues.
+- **CNT-40 MUST** Thumbnails load at display time from the URL the API returned (`i.ytimg.com` in `tier2-hosts.yaml`), are not stored beyond 30 days and carry no tracking. If YouTube refuses (YQ8), tiles use our icon (CNT-17).
+- **CNT-41 MUST** The portal shows each child's topics and feed. Parent control stays block-only (`content.deny`) plus one switch, `content.feed.tier2_suggest`; the `topic` and `video` approval kinds remain.
+- **CNT-42 MUST** A tap runs CNT-11, then loads the player page with that id only (CNT-13 to CNT-15). DNS filtering is host-level defence in depth (05 BE-41). No document or UI may claim per-video DNS filtering. A script or navigation to another id fails inside the app although the host is allowed.
+- **CNT-43 MUST** The feed is a signed delta from `content` every 6 h on Wi-Fi, older than 24 h hides Tier 2, and revoked items vanish as in CNT-06.
+- **CNT-44 MUST** The parent notice (consent `third_party_video`) says Tier 2 videos may carry advertising that Zune cannot control or filter, and how to turn Tier 2 off; Tier 1 never shows ads.
+- **CNT-45 MUST NOT** Release builds contain no Google or YouTube sign-in, credential field, account chooser or persisted player cookie (CNT-16 stands). Experiments VN-12 to VN-14 run only in dev builds behind the compile flag `YT_SIGNIN_EXPERIMENT`, which CI refuses in a release.
 
 **Weather**
 - **CNT-23 MUST** Weather has no location permission and talks only to `weather.<zone>`. Places come from the portal's GeoNames India picker; coordinates snap to 0.05 degrees before any vendor call; no device, family or child id goes upstream; one company `User-Agent` with a contact address.
@@ -132,11 +144,11 @@ fun end() { loadUrl("about:blank"); clearCache(true); WebStorage.getInstance().d
 | No charging, gating, download, offline or background play; derived metrics need amendment | PIN, time locks, paid product, offline mode, age labels | Tier 2 unpriced, online only, human labels | YQ3, YQ4 |
 | MFK per video; tracking off; child-privacy duties | Disclosure to Google | CNT-10, CNT-12 | Counsel (DPDP); designation at Y0 |
 
-Filed at Y0 with the YouTube API Services form [R06 §4.4]: **YQ1** may a child-directed commercial OS embed MFK-only videos; **YQ2** may we refuse navigation out of the player; **YQ3** are playback-control overlays, PIN and time locks acceptable; **YQ4** do human labels count as derived metrics; **YQ5** is there a device-partner route without GMS; **YQ6** is the audit form needed at default quota. Planned filing 2026-10-19 (W2, nothing filed yet), so Y0+56 days is 2026-12-14.
+Filed at Y0 with the YouTube API Services form [R06 §4.4]: **YQ1** may a child-directed commercial OS embed MFK-only videos; **YQ2** may we refuse navigation out of the player; **YQ3** are playback-control overlays, PIN and time locks acceptable; **YQ4** do human labels count as derived metrics; **YQ5** is there a device-partner route without GMS; **YQ6** is the audit form needed at default quota. Planned filing 2026-10-19 (W2, nothing filed yet), so Y0+56 days is 2026-12-14. D32 adds **YQ7** is there a sanctioned ad-free or reduced-ad route for a child-directed OS (Premium or a partner programme); **YQ8** may titles and thumbnails returned by the API be shown in our own list at display time; **YQ9** may our server run `search.list` for shared topic discovery with no user identifiers.
 
 ### 4.6 What the child sees
 
-Tier 2 off: Videos shows Tier 1 shelves (topic icons, then band) and search over Tier 1, nothing greyed or hinting at online videos; a search matching only Tier 2 gives "Not here yet". Switched off mid-playback: the player goes in 10 s with "That video isn't available right now". Tier 2 on: its tiles join the shelves; Report sits below the player.
+Tier 2 off: Videos shows Tier 1 shelves (topic icons, then band) and search over Tier 1, nothing greyed or hinting at online videos; a search matching only Tier 2 gives "Not here yet". Switched off mid-playback: the player goes in 10 s with "That video isn't available right now". Tier 2 on: its tiles join the shelves and a "For you" shelf appears (§4.11); Report sits below the player.
 
 ### 4.7 Curation, quota, cost
 
@@ -165,7 +177,31 @@ Compose hosts the legacy `EpubNavigatorFragment` (the Compose navigators are exp
 - 05: host `player.<zone>`; role `content`; purpose `third_party_video`; signed `GET /v1/content/tier2/state`; `egress.yaml` for `sachet.ndma.gov.in`, `api.met.no`, Open-Meteo, `data.gov.in`, IMD, `www.googleapis.com` [MEMORY]; a Guardian-minted short-lived device token for REST calls by Tier B apps and ZuneUpdater.
 - 04: content-pack artifact class (`type: content`, REL-23) and the `content` key (§4.4 inventory), both added; the provider lives in `app.zune.updater` (§4.3).
 - 02: `internet-holders.txt` gains `app.zune.videos`, `app.zune.weather`; CellBroadcastReceiver stays (OS-09) with RRO `link_method=none`, `enable_text_copy=false`, toggles hidden, MCC 404/405 kept.
-- 07: "ask why" intent. 09: shelves, Weather tile.
+- 07: "ask why" intent; Assistant emits `topic_ids` per session (no text). 09: shelves, Weather tile.
+- 05 (D32): routes `GET /v1/content/feed` (device, mTLS, signed delta) and `POST /v1/device/topics` (topic ids only), added to BE-46's list; `content.feed{tier2_suggest}` added to the `policy-v1` requests (03 §4.4); `i.ytimg.com` in `egress.yaml` and `dns/allowlist.yaml` once measured.
+
+### 4.11 Per-child feed (D32)
+
+```
+child asks (Assistant / Ask for a topic) -> device maps to topic ids (FTS over taxonomy)    [text stays on device]
+  -> POST /v1/device/topics {ids}  -> content: topic_demand(topic_id, count)               [no child id kept]
+  -> research job (server): topic has no live Tier 2 items? -> search.list (1 per topic / 30 d)
+  -> ytcheck (MFK, embeddable, public) -> auto-screen -> human review -> publish to shared pool
+device: GET /v1/content/feed (signed delta, 6 h, Wi-Fi) -> "For you" = pool items in band AND child's topic ids (+ Tier 1)
+tap -> CNT-11 -> player page #<id> only -> navigation lock + off-script guard (CNT-13 to CNT-15)
+```
+The pool is shared, so ten children asking about volcanoes cost one search. A new topic shows "Not here yet" and Ask a grown-up until a reviewer has published items, usually after a day or more [INFERRED]; that delay is the price of human review for ages 7 to 9. Quota: `search.list` is 100 units in its own 10,000 a day bucket, so about 100 searches a day; 200 families at a few new topics each fit.
+
+### 4.12 Review of the founder idea (2026-10-03)
+
+| Idea | Verdict | Reason and change |
+|---|---|---|
+| Videos app is a list of thumbnails with no search or address bar | Adopt | Native list; the player is the only web surface (CNT-37) |
+| A curated list per child from what the child researched | Adopt, changed | Shared pool of reviewed items; topic ids not text; async review; search quota (CNT-38, CNT-39) |
+| Only that video's link passes the DNS filter | Not possible as stated | DNS sees hostnames, not video ids or paths, and YouTube serves every video from the same hosts. The per-video lock is in the app; DNS is a host allowlist (CNT-42) |
+| Sign in to the child's or the parent's YouTube account during setup | Not in v1 (VN-12 to VN-14) | Google blocks sign-in inside embedded WebViews and the device has no GMS or browser [MEMORY, unverified]. A parent's Google session cookies on the child's device would reach their Gmail and Drive. Signed-in playback adds watch history and personalisation, against the MFK and no-tracking design (CNT-12, CNT-16) and DPDP s.9. A child account needs Family Link. It adds a persistent identity that reaches D2 |
+| Recommend YouTube Premium to avoid unsuitable ads | Not in v1 | Unknown whether Premium removes ads in third-party embeds, and consumer Premium used inside a commercial product may breach its terms [MEMORY, unverified]. Meanwhile: ad notice (CNT-44), kill switch (CNT-18), Tier 1 has no ads, YQ7 asks YouTube for a sanctioned route |
+
 
 ## Acceptance criteria and tests
 
@@ -180,6 +216,9 @@ Compose hosts the legacy `EpubNavigatorFragment` (the Compose navigators are exp
 - **CNT-T09** A replayed SACHET fixture gives one notification per identifier, no URL in any string and an alarm on an unmapped event; Cancel clears the banner.
 - **CNT-T10** CI rejects a weather pack missing a sign-off or failing reading-level lint; children 7-9 finish the check questions unaided at 80% or more [R09 §4.4].
 - **CNT-T11** Reader APK has no `INTERNET`; a hostile EPUB (script, iframe, remote image, external link) renders inert and is counted; an unapproved title is invisible.
+- **CNT-T12** Videos has no text input, address bar or URL entry (UI test and layout lint); `aapt` shows no sign-in activity; a release build with `YT_SIGNIN_EXPERIMENT` fails CI.
+- **CNT-T13** A topic request sends ids only (proxy capture shows no free text, name or child id); a new topic stays "Not here yet" until a reviewer publishes; two children asking one topic cause one `search.list`.
+- **CNT-T14** With the player's host allowed, a script that sets another video id, or a tap on a related video, fails and is counted (CNT-15); the tile set equals band AND topics.
 
 ## Verify first
 
@@ -194,6 +233,10 @@ Compose hosts the legacy `EpubNavigatorFragment` (the Compose navigators are exp
 | VN-7 | SACHET feed URL, ETag, area format, events, languages, licence; CPCB data on `data.gov.in` (registration, licence, coverage, bands); IMD terms, charges, fixed-IP rule [R20 S, MEMORY] | Unread | Sample the feed 30 days; register; read terms; write to IMD | District-name matching; hide AQI; SACHET only |
 | VN-8 | Open-Meteo Standard price, call weighting, commercial host, attribution rule; MET Norway terms [R14, R20 S] | Pages blocked | Read terms; subscribe; test | Professional plan or self-host [R14] |
 | VN-9 | Cell broadcast in Google's tree: `always_on`, `link_method`, `enable_text_copy`, toggle flags, `DISALLOW_CONFIG_CELL_BROADCASTS`, MCC 404/405, carrier acceptance of non-tappable text [R14, R20] | Mirrors only | Read `packages/modules/CellBroadcast` at the tag; SACHET test alert | Patch the APEX; tell 02 |
+| VN-11 | `search.list` with `videoEmbeddable`, `safeSearch=strict` plus `videos.list` MFK checks yields enough relevant, age-fit results for 7-14 topics; billing of 100 units per call [R06, summaries] | Unmeasured | 20 topic searches on a test key; count MFK, embeddable, relevant, reviewer-accepted | More editor-curated items; fewer live topics |
+| VN-12 | Google or YouTube sign-in cannot complete inside an embedded WebView without GMS (disallowed user agent) [MEMORY] | Unread, untested | Dev build with `YT_SIGNIN_EXPERIMENT` on a Pixel, test account only | If it works, still needs VN-13, VN-14 and counsel before any release |
+| VN-13 | Premium ad-free applies to embedded playback in a signed-in WebView [MEMORY] | Unknown | Same dev build, test account with Premium | If no, Premium has no value here; close the idea |
+| VN-14 | A consumer or family Premium account may be used inside a commercial child OS, and signed-in data flows meet DPDP [MEMORY] | Terms unread | YQ7 and counsel | If no, close; Tier 1 is the ad-free path |
 | VN-10 | NCERT class-to-age (about class 2 to 9 for ages 7-14), theme titles, UV 3 and 6, CPCB bands [MEMORY]; a 40 h pack is about 16 GB over hand-over Wi-Fi; every other [INFERRED] value | Memory, estimates | Education lead and meteorologist; measure at Z5 | Tag by theme; reviewer sets values; smaller essentials subset |
 
 ## Risks, open gates and out of scope
@@ -204,11 +247,13 @@ Compose hosts the legacy `EpubNavigatorFragment` (the Compose navigators are exp
 4. **Weather safety-text errors**: authored, two reviewers, no LLM.
 5. **Public-domain misjudgement** (India versus US); **WebView update burden** (02 OS-28).
 6. **Heavy first download** on Indian mobile data (CNT-05, VN-10).
+7. **Feed relevance and review throughput** (D32): human review before display can leave a new topic empty for days; the pool and Tier 1 floors cushion this (CNT-09, VN-11).
+8. **Privacy shift**: topic-derived discovery sends topic-level demand to a server and a topic keyword to Google; ids only, no identifiers, counsel to confirm (11).
 
 Gates:
 - **[GATE: before build]** Pin Readium, Media3, `androidx.webkit` at Z5 start; VN-2 and VN-6 spikes recorded.
 - **[GATE: before staff pilot]** YouTube request filed by W2; licence register `cleared` for the pilot pack; weather pack signed by both reviewers; VN-9 passed.
-- **[GATE: before external family]** Counsel on Tier 2 third-party consent (DPDP), IT Rules ratings, public-domain method; written confirmations (Pratham, ISRO, Oak if used); Tier 2 approved in writing or dropped (CNT-19).
+- **[GATE: before external family]** Counsel on Tier 2 third-party consent (DPDP), IT Rules ratings, public-domain method; written confirmations (Pratham, ISRO, Oak if used); Tier 2 approved in writing or dropped (CNT-19); YQ7 to YQ9 answered; counsel on topic-derived discovery (CNT-39) and the ad notice (CNT-44).
 - **[GATE: before charging]** Paid partner licences signed; Tier 2 in no price (CNT-21); IMD agreement only if IMD data is promised.
 
-Out of scope: Hindi (D20), PhET, Wikipedia, NCERT text, parent-added channels, watch history, GNSS, sensors, weather maps, music, coding, on-device LLM.
+Out of scope: Hindi (D20), PhET, Wikipedia, NCERT text, parent-added channels, Google or YouTube sign-in and Premium (D32, experiments only), watch history, GNSS, sensors, weather maps, music, coding, on-device LLM.

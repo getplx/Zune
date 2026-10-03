@@ -193,3 +193,11 @@ All rows stay in their own section's table; this is the order across sections. C
 13. **Z5 start, AI.** 07/VA-3, VA-4, VA-5, VA-6, VA-7, VA-8, VA-9, VA-10 (VA-1, VA-2 are item 2).
 14. **Z5 start, content and apps.** 08/VN-2, VN-3, VN-4, VN-6, VN-7, VN-8, VN-9, VN-10; 09/VP-4 to VP-11.
 15. **Z5 and C0, validation numbers.** 10/VO-7, VO-8, VO-10, VO-11, VO-12; 01#13, 01#16; 12/VQ-4, VQ-5.
+
+
+## 2026-10-03 addendum: D32 per-child research feed (founder idea)
+
+- Added D32 to REQUIREMENTS, 00-START-HERE and 08 (CNT-37 to CNT-45, §4.11, §4.12, CNT-T12 to T14, VN-11 to VN-14, YQ7 to YQ9, risks 7 and 8). D3 marked amended; D25 and D2 stand.
+- Needs follow-up in other sections (not yet edited): 03 §4.4 `policy-v1` add `content.feed{tier2_suggest}`; 05 routes `GET /v1/content/feed`, `POST /v1/device/topics` (BE-46 list updated) and portal feed/topic view; 07 Assistant emits `topic_ids` per session; 11 data inventory rows for `topic_demand` and a counsel question on topic-derived discovery; 12 tests CNT-T12 to T14.
+- Correction recorded: DNS filtering cannot restrict one video (hostnames only); the per-video lock is in the app (CNT-42).
+- Not adopted in v1: Google or YouTube sign-in and a Premium recommendation (CNT-45; experiments VN-12 to VN-14, dev builds only).
