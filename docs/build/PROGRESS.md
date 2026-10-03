@@ -39,3 +39,4 @@
 - Finding: with an absolute `OUT_DIR` outside the source tree (`/mnt/out`), Soong's siso bootstrap fails with `failed to load @config//main.star: open main.star: no such file or directory`. Workaround: leave `OUT_DIR` unset and symlink `/aosp/out -> /mnt/out`. Bootstrap then passes.
 - The idle watchdog terminated the host 15 min after the failed build (working as designed); the scratch disk was lost, the source volume was kept.
 - To fix in aws-build-session.sh: use the `out` symlink instead of OUT_DIR=/mnt/out in the profile script, and put CCACHE_DIR under /mnt/out (the /mnt directory is root-owned).
+- Second attempt failed on `ccache: error: Permission denied` (CCACHE_DIR under root-owned /mnt), a config mistake, not a hardware limit. Third attempt (CCACHE_DIR=/mnt/out/ccache) is compiling at 13:57 UTC. `aws-build-session.sh` now creates the `/aosp/out` symlink and a writable ccache dir.

@@ -10,7 +10,7 @@
 #
 # Cost controls: instance-initiated shutdown = terminate (root + scratch disks vanish with it);
 # hard maximum runtime (MAX_HOURS, default 4); idle watchdog stops it after 15 idle minutes.
-# Source tree lives on the persistent volume mounted at /aosp; out/ goes to the throwaway scratch disk (OUT_DIR=/mnt/out).
+# Source tree lives on the persistent volume mounted at /aosp; out/ is a symlink to the throwaway scratch disk (do NOT set OUT_DIR, siso breaks).
 set -euo pipefail
 
 REGION="${AWS_REGION:-ap-south-1}"; export AWS_DEFAULT_REGION="$REGION"
@@ -84,7 +84,9 @@ mkdir -p /aosp /mnt/out; mount "\$SRC" /aosp
 SCR=\$(lsblk -dnpo NAME,TYPE,MOUNTPOINT | awk '\$2=="disk" && \$3==""{print \$1}' | grep -vx "\$SRC" | while read d; do lsblk -no MOUNTPOINT "\$d" | grep -q . || echo "\$d"; done | head -1)
 [ -n "\$SCR" ] && { mkfs.ext4 -q "\$SCR"; mount "\$SCR" /mnt/out; }
 chown -R ubuntu:ubuntu /aosp /mnt/out
-echo 'export OUT_DIR=/mnt/out PATH=/usr/local/bin:\$PATH USE_CCACHE=1 CCACHE_EXEC=/usr/bin/ccache' >/etc/profile.d/zune-build.sh
+# siso fails with an absolute OUT_DIR outside the tree: keep OUT_DIR unset and symlink /aosp/out to the scratch disk
+ln -sfn /mnt/out /aosp/out; chown -h ubuntu:ubuntu /aosp/out; mkdir -p /mnt/out/ccache; chown ubuntu:ubuntu /mnt/out/ccache
+echo 'export PATH=/usr/local/bin:\$PATH USE_CCACHE=1 CCACHE_EXEC=/usr/bin/ccache CCACHE_DIR=/mnt/out/ccache' >/etc/profile.d/zune-build.sh
 touch /run/zune-ready
 EOF
 }
