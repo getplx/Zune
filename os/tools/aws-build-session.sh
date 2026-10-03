@@ -16,7 +16,7 @@ set -euo pipefail
 REGION="${AWS_REGION:-ap-south-1}"; export AWS_DEFAULT_REGION="$REGION"
 TYPE="${TYPE:-m6a.8xlarge}"          # 32 vCPU / 128 GB; use m8i.8xlarge only for a Cuttlefish/KVM trial
 AZ="${AZ:-ap-south-1a}"
-SRC_GB="${SRC_GB:-150}"; SCRATCH_GB="${SCRATCH_GB:-300}"; MAX_HOURS="${MAX_HOURS:-4}"
+SRC_GB="${SRC_GB:-200}"; SCRATCH_GB="${SCRATCH_GB:-300}"; MAX_HOURS="${MAX_HOURS:-4}"
 KEY="zune-build"; SG="zune-build-ssh"; PEM="$HOME/.ssh/zune-build.pem"
 TAG="zune-build"
 AMI_PARAM="/aws/service/canonical/ubuntu/server/24.04/stable/current/amd64/hvm/ebs-gp3/ami-id"

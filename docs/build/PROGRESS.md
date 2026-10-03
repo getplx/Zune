@@ -28,3 +28,8 @@
 
 ## 2026-10-03: milestone naming (founder)
 - Milestones renamed Z0-Z8 (was M0-M8; `Mn` -> `Zn`) across docs/build, gates, verified-facts and tooling. `docs/research/*` and `docs/investor/*` are unchanged and still use M<n> (R21's M<n> means months, kept as such in 01). Git branch `build/m0-foundation` keeps its name.
+
+## 2026-10-03: AOSP synced on AWS build host
+- `android-17.0.0_r1` synced (partial clone, depth 1): 1,084 projects, 139 GB on disk (105 GB files + 34 GB .repo). First attempt filled the 150 GB volume; grew to 250, then replaced with a 200 GB volume (rsync copy verified identical, old volume deleted). Source volume `zune-aosp-src` is 200 GB (about USD 18/month); `aws-build-session.sh` default SRC_GB is now 200.
+- Build host for now: m6a.4xlarge (16 vCPU / 64 GB) because the vCPU quota is 16 until the 32 request (case open) is approved.
+- Verify-first rows 1 and 4 pass at source level; row 5 partial (see docs/verified-facts.md). Browser2, CaptivePortalLogin, HTMLViewer confirmed in stock product makefiles.
