@@ -51,7 +51,7 @@ Evidence is mostly search summaries and GrapheneOS/LineageOS mirrors, not Google
 - **CNT-17 MUST** Tier 2 tiles show our title, topic icon and duration; no YouTube thumbnail, title or channel name is stored; API-derived fields purge at 30 days [R06 §2.3].
 - **CNT-18 MUST** Kill: `kill_state` `videos_tier2` (global scope needs two approvals, BE-15) removes the player on a connected device in 10 s and Tier 2 hosts from `dns/allowlist.yaml` within 1 h; decision-to-effect target 15 min [INFERRED].
 - **CNT-19 MUST** Drop rule: Y0 is the day the YouTube request is filed (by W2, PRE-18). At Y0+56 days without a written yes to YQ1-YQ3 (§4.5), or on any refusal: flag false for good, `TIER2=false` at compile time, Videos out of `webview_callers.xml`, hosts removed, portal toggle hidden, ADR written.
-- **CNT-20 MUST** A child Report button outside the player quarantines the item fleet-wide until a 24 h review (5 per device per day [R06 §4.2]). Parent control is block-only (`content.deny`: `video:`, `topic:`, `src:yt`); no parent-added channels or URLs.
+- **CNT-20 MUST** A child Report button outside the player quarantines the item fleet-wide until a 24 h review (5 per device per day [R06 §4.2]). Parent control is block-only (`content.deny`: `video:`, `topic:`, `src:yt`) plus approving single videos (D35, 13 LNK-15 to LNK-19); no parent-added channels, playlists or free URLs.
 - **CNT-21 MUST** Tier 2 is never a paid or tiered feature [R06 §2.2].
 
 **Curation**

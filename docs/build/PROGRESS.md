@@ -63,3 +63,12 @@
 - D34 added (REQUIREMENTS, 00-START-HERE); new section `13-link-investigator-and-web-viewer.md`; ZunePortalViewer renamed ZuneWebViewer (modes portal | link).
 - Needs follow-up edits elsewhere: 08 CNT-32/CNT-33/CNT-26 (links become request chips, not inert), 07 (Assistant link chips; moderation of links), 03 (`policy-v1` `links{...}`, per-UID reach for `app.zune.webviewer`), 05 (routes `/v1/device/links`, approval kind `link`, vault class `link`, `lg.<zone>` host, BE-41 note), 11 (data inventory rows, DPDP note on fetch and vendor), 12 (LNK-T01 to T08), 02 (webviewer in `internet-holders.txt` and `webview_callers.xml`).
 - Phasing decided in the spec: Stage 1 every link needs a parent; AI informs only; auto-allow after the LNK-G red-team gate.
+
+## 2026-10-03: D35 parent-approved YouTube videos
+
+## 2026-10-03 addendum: D35 parent-approved YouTube videos (founder)
+
+- D35 added; 13 gains LNK-15 to LNK-19, LNK-T09, LNK-T10, VL-7, VL-8; 08 CNT-20 amended (parents may approve single videos).
+- Decisions in the spec: YouTube URLs are never opened as pages; v1 approves only made-for-kids embeddable public videos; non-MFK waits for YQ11 and counsel (`tier2_parent_nonmfk=false`); parent approval always required; pause timeout, band gate and kill switch apply.
+- OPEN (founder): chat links. COM-10 still blocks URLs in Messenger, so a YouTube link received in chat cannot arrive today. Enabling inert link chips from approved contacts needs a decision (LNK-19c).
+- Follow-ups: 05 approval kind `video_link`, portal "Add a video", vault class `link`; 06 only if COM-10 is relaxed; 12 tests; YQ11 to be added to the YouTube filing (08 §4.5).
