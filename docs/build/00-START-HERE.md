@@ -93,7 +93,10 @@ Then follow the milestones M3-M8 in `01-prerequisites-and-phases.md`.
 
 ## 6. Spec sections (read the one you are building)
 
-
+1. [`docs/build/01-prerequisites-and-phases.md`](01-prerequisites-and-phases.md)
+2. [`docs/build/02-os-image-and-product.md`](02-os-image-and-product.md)
+3. [`docs/build/03-lockdown-and-guardian.md`](03-lockdown-and-guardian.md)
+4. [`docs/build/04-device-signing-ota-release.md`](04-device-signing-ota-release.md)
 
 `ZUNE_BUILD_SPEC_FULL.md` is the same content concatenated into one file for tools that want a single document.
 
