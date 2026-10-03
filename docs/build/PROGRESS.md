@@ -76,3 +76,9 @@
 ## 2026-10-03: baseline build attempt 3 (failed at 84%, resumed)
 - Attempt 3 compiled for 3h54m (16 vCPU / 64 GB, no memory problems) and failed at 84% in `trusty_security_vm_x86_64.elf generate`: `nsjail ... mount('/', '/', MS_REC|MS_PRIVATE): Permission denied`. Cause: Ubuntu 24.04 `kernel.apparmor_restrict_unprivileged_userns=1` blocks the AOSP nsjail sandbox. Not a hardware limit.
 - Fix: `sysctl kernel.apparmor_restrict_unprivileged_userns=0` (persisted in /etc/sysctl.d, and added to aws-build-session.sh user-data). Build resumed with 29,511 steps left. Verify-first 5 note: Ubuntu 24.04 needs this setting.
+
+## 2026-10-03: Z1 baseline build SUCCEEDED
+- `aosp_cf_x86_64_only_phone-aosp_current-userdebug` built on AWS m6a.4xlarge (16 vCPU / 64 GB): exit 0. Compile time about 234 min to the 84% failure (nsjail/AppArmor), then 46 min to finish; total about 280 min on 16 vCPU. Memory peaked about 40 GB (Soong analysis); `out/` about 110 GB. A clean build on 32 vCPU should take roughly half [INFERRED].
+- Runtime properties (build.prop): ro.build.id=CP2A.260605.016, security_patch=2026-06-05, release 17, userdebug. Verify-first 1 now confirmed on built output; `ro.build.id` on a booted device still to read.
+- Artifacts kept on the persistent source volume: /aosp/artifacts/z1-baseline (images zip 2.3 GB, cvd-host_package.tar.gz 0.9 GB, logs, build-props). Build host terminated; scratch disk (out/, ccache) discarded.
+- Next: boot the images on a KVM host (m8i.8xlarge trial) and read `ro.build.id` over adb (Z1 exit).
