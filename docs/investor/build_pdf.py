@@ -17,7 +17,7 @@ import datetime
 ROOT = os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 INV = os.path.join(ROOT, "docs", "investor")
 CONTENT = os.path.join(INV, "content", "extracted.json")
-AS_OF = "2 Oct 2026"
+AS_OF = "3 Oct 2026"
 
 # ---------------------------------------------------------------- tokens
 INK, MUTED, LINE, BG = "#0f172a", "#5b6475", "#e3e6ec", "#ffffff"
@@ -97,7 +97,12 @@ body {{ font-family: 'Liberation Sans', 'DejaVu Sans', Arial, sans-serif; color:
 .hdr .sec {{ display: flex; align-items: center; gap: 2mm; font-weight: 700; color: {BRAND} }}
 .hdr .dot {{ width: 2.2mm; height: 2.2mm; border-radius: 50%; background: {BRAND} }}
 .ftr {{ position: absolute; bottom: 5.5mm; left: 16mm; right: 16mm; display: flex; justify-content: space-between; font-size: 6.8pt; color: {MUTED} }}
-.body {{ position: absolute; top: 14mm; bottom: 12mm; left: 16mm; right: 16mm; display: flex; flex-direction: column; gap: 4mm; overflow: hidden }}
+.body {{ position: absolute; top: 14mm; bottom: 12mm; left: 16mm; right: 16mm; overflow: hidden }}
+.fit {{ display: flex; flex-direction: column; gap: 4mm; width: calc(100% / var(--z, 1)); height: calc(100% / var(--z, 1)); transform: scale(var(--z, 1)); transform-origin: 0 0; overflow: hidden }}
+.flowwin {{ flex: 1; min-height: 0; position: relative; overflow: hidden }}
+.flowcols {{ position: absolute; top: 0; left: 0; width: 100%; height: 100%; column-count: 3; column-gap: 5mm; column-fill: auto; font-size: 7.6pt }}
+.flowcols .blk {{ break-inside: avoid; margin-bottom: 2.6mm }}
+.flowcols h3 {{ margin-top: 0 }}
 h1 {{ font-size: 21pt; line-height: 1.12; margin: 0; letter-spacing: -.01em; font-weight: 700 }}
 h2 {{ font-size: 11pt; margin: 0 0 1.6mm; font-weight: 700 }}
 h3 {{ font-size: 8.6pt; margin: 0 0 1.2mm; font-weight: 700; text-transform: uppercase; letter-spacing: .06em; color: {MUTED} }}
@@ -131,7 +136,8 @@ ul.pts.sm li::before {{ top: 1.4mm; width: 1.4mm; height: 1.4mm }}
 .chip.bad {{ background: {RED_SOFT}; color: {RED} }}
 .chip.mute {{ background: {SLATE_SOFT}; color: {MUTED} }}
 .chip.brand {{ background: {BRAND_SOFT}; color: {BRAND} }}
-table.t {{ width: 100%; border-collapse: collapse; font-size: 7.7pt; line-height: 1.3 }}
+table.t {{ width: 100%; border-collapse: collapse; font-size: 7.7pt; line-height: 1.3; align-self: start }}
+.g2 > table.t, .row > table.t {{ height: auto }}
 table.t th {{ text-align: left; background: {SLATE_SOFT}; color: #334155; font-weight: 700; padding: 1.3mm 2mm; font-size: 7.2pt }}
 table.t td {{ padding: 1.2mm 2mm; border-top: 1px solid {LINE}; vertical-align: top }}
 table.t.dense {{ font-size: 7pt }}
@@ -168,8 +174,8 @@ class Doc:
             out.append(
                 f'<section class="page {cls}"><div class="hdr"><div class="sec"><span class="dot"></span>{esc(sec)}</div>'
                 f'<div>Zune &middot; Investor brief &middot; Draft {AS_OF}</div></div>'
-                f'<div class="body">{body}</div>'
-                f'<div class="ftr"><div>Confidential. Figures are labelled sourced / reported / estimate; see Evidence status.</div><div>{i} / {total}</div></div></section>'
+                f'<div class="body"><div class="fit">{body}</div></div>'
+                f'<div class="ftr"><div>Confidential. Figures are labelled sourced / reported / estimate; see Evidence status.</div><div><span class="pgn">{i}</span> / <span class="pgt">{total}</span></div></div></section>'
             )
         return f'<!doctype html><html><head><meta charset="utf-8"><title>Zune investor brief</title><style>{CSS}</style></head><body>{"".join(out)}</body></html>'
 
@@ -196,7 +202,7 @@ def table(cols, rows, cls="", widths=None):
     for r in rows:
         tds = []
         for c in r:
-            tds.append(f"<td>{c if isinstance(c, str) and c.startswith('<') else esc(c)}</td>")
+            tds.append(f"<td>{c if isinstance(c, str) and c.startswith('<') else esc(html.unescape(str(c)))}</td>")
         trs.append("<tr>" + "".join(tds) + "</tr>")
     cg = ""
     if widths:
@@ -209,7 +215,9 @@ def tile(v, l, n="", basis=None):
     if basis and basis in BASIS:
         b = f' {chip(BASIS[basis][0], BASIS[basis][1])}'
     nn = f'<div class="n">{esc(n)}</div>' if n else ""
-    return f'<div class="tile"><div class="v">{esc(v)}</div><div class="l">{esc(l)}{b}</div>{nn}</div>'
+    n_ = len(str(v))
+    fs = "15pt" if n_ <= 14 else ("12pt" if n_ <= 24 else ("10pt" if n_ <= 40 else "8.6pt"))
+    return f'<div class="tile"><div class="v" style="font-size:{fs}">{esc(v)}</div><div class="l">{esc(l)}{b}</div>{nn}</div>'
 
 
 def card(inner, cls=""):
