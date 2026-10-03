@@ -72,3 +72,7 @@
 - Decisions in the spec: YouTube URLs are never opened as pages; v1 approves only made-for-kids embeddable public videos; non-MFK waits for YQ11 and counsel (`tier2_parent_nonmfk=false`); parent approval always required; pause timeout, band gate and kill switch apply.
 - OPEN (founder): chat links. COM-10 still blocks URLs in Messenger, so a YouTube link received in chat cannot arrive today. Enabling inert link chips from approved contacts needs a decision (LNK-19c).
 - Follow-ups: 05 approval kind `video_link`, portal "Add a video", vault class `link`; 06 only if COM-10 is relaxed; 12 tests; YQ11 to be added to the YouTube filing (08 §4.5).
+
+## 2026-10-03: baseline build attempt 3 (failed at 84%, resumed)
+- Attempt 3 compiled for 3h54m (16 vCPU / 64 GB, no memory problems) and failed at 84% in `trusty_security_vm_x86_64.elf generate`: `nsjail ... mount('/', '/', MS_REC|MS_PRIVATE): Permission denied`. Cause: Ubuntu 24.04 `kernel.apparmor_restrict_unprivileged_userns=1` blocks the AOSP nsjail sandbox. Not a hardware limit.
+- Fix: `sysctl kernel.apparmor_restrict_unprivileged_userns=0` (persisted in /etc/sysctl.d, and added to aws-build-session.sh user-data). Build resumed with 29,511 steps left. Verify-first 5 note: Ubuntu 24.04 needs this setting.
