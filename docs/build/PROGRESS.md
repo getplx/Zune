@@ -20,3 +20,8 @@
 - Budget `zune-monthly-50usd` created (us-east-1 API): USD 50/month, credits excluded so it tracks gross usage; email alerts to abhishek@getplex.in at 25/50/80/100% actual and 100% forecast. Definition in `backend/infra/aws/`. A budget alerts; it does not hard-stop spend. Stop/deny budget action still to add once an instance exists.
 - EC2 Standard on-demand vCPU quota in ap-south-1 is 5; increase to 32 requested (build host needs 32 vCPU / 128 GB, PRE-02).
 - Cost note: a permanent 1-2 TB EBS disk exceeds USD 50/month alone; plan is start-on-demand instance plus source kept as a snapshot.
+
+## 2026-10-03: on-demand AWS build host
+- Decision (founder): Mumbai (ap-south-1), on-demand `m6a.8xlarge`, started only for build/test sessions; est. USD 33/month at 20 h, 52 at 40 h incl. ~USD 15 fixed (150 GB persistent source volume + S3 ccache). m8i.8xlarge only for a KVM/Cuttlefish trial.
+- Added `os/tools/aws-build-session.sh` (init, init-volume, up, ssh, status, down). Terminate-on-shutdown, 4 h hard max runtime, 15 min idle shutdown. `init` run (SSH key pair `zune-build`, SG `zune-build-ssh`; both free; key at ~/.ssh, not in repo). Dry-run launch passed. Source volume NOT created yet (billing starts then). S3 ccache not wired (needs an instance profile).
+- EC2 Standard vCPU quota is now 16; the increase to 32 is under AWS review (case opened). `m6a.8xlarge` needs 32 vCPU, so the full-size host cannot launch yet; `m6a.4xlarge` (16 vCPU, 64 GB) would fit.
