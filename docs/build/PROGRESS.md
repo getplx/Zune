@@ -6,3 +6,7 @@
 - `docs/gates.md` and `docs/verified-facts.md` created from 01's register and Verify-first table.
 - Not done (needs founder or a build host): build host (PRE-02), Pixel dev units (PRE-04), cloud/GitHub accounts (§4.2), spend approval (B-1).
 - Note: `ZUNE_BUILD_SPEC_FULL.md` contains `99-consistency-log.md` twice; the section file has one copy.
+
+## 2026-10-03: AOSP download requested
+- Founder asked to download AOSP and start building. The founder's Mac (macOS arm64, 16 GB RAM, ~13 GB free) cannot hold or build AOSP; no sync was started. Blocked on B-1: a Linux x86_64 build host (PRE-02).
+- Added `os/tools/bootstrap-build-host.sh` (pins `android-17.0.0_r1`, partial-clone sync, baseline `aosp_cf_x86_64_only_phone-aosp_current-userdebug`, writes timings to `m1-baseline.log`). Syntax-checked only; not run.
