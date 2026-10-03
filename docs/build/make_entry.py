@@ -41,7 +41,7 @@ Assumptions still open are listed at the bottom of `docs/REQUIREMENTS.md` (A-num
 
 1. **Verify access first:** `git ls-remote https://android.googlesource.com/platform/manifest | head -3`. If blocked, stop and tell the founder
    which host is denied. Do not work around the egress policy. A full AOSP **build** needs a separate build host
-   (about 32 vCPU / 128 GB RAM / 1 TB NVMe, Ubuntu 24.04); a chat container can only inspect AOSP.
+   (about 32 vCPU / 128 GB RAM / 1 TB NVMe minimum, 2 TB recommended, Ubuntu 24.04); a chat container can only inspect AOSP.
 2. **Read in this order:** this file; `docs/REQUIREMENTS.md`; `99-consistency-log.md` (conflicts, gates, verify-first list); the section you
    are about to build; then the research reports it cites in `docs/research/` for background (they pre-date many decisions; where they
    disagree with `docs/REQUIREMENTS.md` or the spec sections, the decisions and spec win).
@@ -52,10 +52,10 @@ Assumptions still open are listed at the bottom of `docs/REQUIREMENTS.md` (A-num
    redistributing Pixel firmware; trust-and-safety and security staffing; key custodians; customer agreement; name clearance).
 5. **Ask the founder one question at a time**, only for genuine decisions; otherwise apply the recommended default and record it.
 6. **Git:** work on a branch off `research/android-kids-foundation`; commit and push to a branch; **do not open pull requests unless asked**;
-   commit trailer `Co-Authored-By: Claude <noreply@anthropic.com>` plus the session link; **no model names in commits or any pushed artifact.**
+   commit trailer `Co-Authored-By: Claude <noreply@anthropic.com>` plus the session link; **no model names in commit messages, trailers or authorship lines** (vendor model IDs in product configuration, such as 07's `config/models.yaml`, are not attribution).
 7. **Record decisions** in `docs/REQUIREMENTS.md` with a date; keep spec sections in sync when a decision changes.
 8. **Multi-agent runs** (the `Workflow` tool) need the founder's explicit opt-in ("use a workflow"). Reusable scripts: `docs/handoff/research-workflow.js`
-   (research / verify / reconcile / critic) and `docs/build/build-spec-workflow.js` (regenerates the spec sections).
+   (research / verify / reconcile / critic) and `docs/build/build-spec-workflow.js` (regenerates the spec sections and would overwrite the consistency fixes recorded in `99-consistency-log.md`; do not rerun it without reapplying them).
 9. **Be honest in claims and docs:** the defensible claim is "no browser app and no way to type a URL", never "unbypassable". Label estimates.
 
 ## 4. Repository layout to create (monorepo `zune/`)

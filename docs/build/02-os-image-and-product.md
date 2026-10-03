@@ -13,7 +13,7 @@ Not covered here:
 - App internals, ZuneLauncher UI, ZuneSetup flow: `09-core-apps-and-design-system.md`; Reader and Videos: `08-content-videos-weather-reader.md`.
 - Station: `10-delivery-operations-and-pilot.md`; legal: `11-compliance-and-privacy-engineering.md`; tests: `12-testing-qa-and-acceptance.md`; milestones and repo layout: `01-prerequisites-and-phases.md`.
 
-Package namespace (provisional, name clearance): `app.zune.{guardian,launcher,settings,setup,updater,reader,videos,assistant,photos}`. Report evidence came from GrapheneOS and LineageOS trees, not Google's tag (see "Verify first").
+Package namespace (provisional, name clearance): `app.zune.<module>` for every app module in 01 §4.3 (for example `app.zune.guardian`, `.launcher`, `.settings`, `.setup`, `.updater`, `.messenger`, `.calls`, `.walkie`, `.assistant`, `.videos`, `.weather`, `.photos`, `.reader`). Report evidence came from GrapheneOS and LineageOS trees, not Google's tag (see "Verify first").
 
 ## Decisions applied and reconciliations
 
@@ -26,7 +26,8 @@ Package namespace (provisional, name clearance): `app.zune.{guardian,launcher,se
 | D24 | ZuneGuardian is Device Owner and supervision-role holder: stock Supervision page hidden; sole setter of `DISALLOW_FACTORY_RESET`. |
 | D26 | Vanadium only (stock `external/chromium-webview` not shipped); only Reader and Videos may create a WebView (resolves R03 Q2, R01 Decision 7). |
 | D30 | CaptivePortalLogin removed; Settings buttons patched out; explainer screen. |
-| D17, D21 | Pixel 10a (`stallion`), 9a (`tegu`) plus Cuttlefish CI; device layers: `04`. |
+| D17, D21 | Pixel 10a (`stallion`), 9a (`tegu`) plus Cuttlefish CI; device layers: `04`. Codenames unverified (01 Verify 14). |
+| 09 Mode G (adopted; resolves 02 V12) | Tier A apps are built by Gradle and imported by Soong as `android_app_import` prebuilts with the platform key; the in-tree `packages/apps/Zune*` build is a fallback by ADR. |
 
 **Reconciliations applied**
 
@@ -77,7 +78,7 @@ Package namespace (provisional, name clearance): `app.zune.{guardian,launcher,se
 - **OS-26 MUST** Vanadium is the only entry in `config_webview_packages.xml`; the Vanadium browser APK never ships.
 - **OS-27 MUST** P-FWK-1: only `app.zune.reader` and `app.zune.videos` (package plus cert digest, from a verified `/system_ext` file) can create a WebView.
 - **OS-28 MUST** WebView updates ship independent of full OTA, owned by a named `WebView owner` (`zune/os/OWNERS`); SLA: each Vanadium stable within 30 days, High/Critical within 14.
-- **OS-29 SHOULD** Signed policy carries `webview_min_version`; Guardian disables Videos Tier 2 below it (03, 08).
+- **OS-29 SHOULD** Signed policy carries `min.webview` (03 §4.4); Guardian disables Videos Tier 2 below it (03, 08).
 
 **Radios, USB, native code, build**
 - **OS-30 MUST** Bluetooth on at first boot, pairing allowed, OPP sharing blocked.
@@ -96,10 +97,10 @@ zune/os/manifest/  upstream-android-17.0.0_r1.xml (Google default.xml at the tag
 zune/os/patches/   REGISTER.md  <repo>/*.patch (format-patch backup of each stack)
 zune/os/device/zune/products/  AndroidProducts.mk zune_kids_cf.mk   (stallion, tegu: 04)
 zune/os/vendor/zune/  config/ allowlist/ overlay/ sysconfig/ sepolicy/ release/ webview/ apps/prebuilt/
-zune/apps/{guardian,launcher,settings,setup,updater} -> <aosp>/packages/apps/Zune*
+zune/apps/{guardian,launcher,settings,setup,updater}  Gradle-built (09 Mode G); only the prebuilt APKs enter vendor/zune/apps/prebuilt/
 zune/os/tools/  image_diff.py settings_gen.py check_elf_alignment.sh nav_suite/   zune/os/ci/  Dockerfile
 ```
-`zune.xml` includes the upstream file, then per fork `<remove-project name="platform/frameworks/base"/>` plus `<project path="frameworks/base" name="platform_frameworks_base" remote="zune" revision="refs/heads/zune/android-17.0.0_r1"/>`. Forks live under org `getplx` (names are proposals). The monorepo checks out at `<aosp>/zune`; `<linkfile>` exposes `device/zune`, `vendor/zune`, `packages/apps/Zune*` (V11).
+`zune.xml` includes the upstream file, then per fork `<remove-project name="platform/frameworks/base"/>` plus `<project path="frameworks/base" name="platform_frameworks_base" remote="zune" revision="refs/heads/zune/android-17.0.0_r1"/>`. Forks live under org `getplx` (names are proposals). The monorepo checks out at `<aosp>/zune`; directory `<linkfile>`s expose `device/zune` and `vendor/zune` and a root `.find-ignore` hides the checkout from Soong (01 §4.3, V11; fallback: check out at `vendor/zune`). Paths such as `vendor/zune/allowlist/` in this section mean `zune/os/vendor/zune/allowlist/`.
 
 | ID | Repo | Change | Lines |
 |---|---|---|---|
@@ -111,8 +112,10 @@ zune/os/tools/  image_diff.py settings_gen.py check_elf_alignment.sh nav_suite/ 
 | P-WIFI-1 | `packages/modules/Wifi` | Drop OsuLogin from APEX (conditional, V4) | 5 |
 | P-LAU-1 | `packages/apps/Launcher3` | Strip overview actions/search if RRO cannot (conditional) | 100 |
 | P-REL-1 | `build/release` | Flag overrides if a vendor map cannot (conditional, V2) | 20 |
+| P-FWK-3 | `frameworks/base` | Re-point the power-key multi-press to Guardian SOS (conditional, owner 03, VG-11) | 40 |
+| P-TEL-1 | telephony or Telecomm module repo | Deny-all in `GsmCdmaPhone.dial`, `SmsController`, Telecom (conditional, owner 03, VG-9) | 60 |
 
-Budgets are planning limits. Start with two forks (`frameworks/base`, `Settings`). Rebase once onto the Q4-2026 drop (about December 2026, unverified), freeze before the staff pilot; monthly ingest: `04`.
+Budgets are planning limits. If every conditional row fires there are six forked repos (`frameworks/base`, `Settings`, `Wifi`, `Launcher3`, `build/release`, telephony), one above the OS-03 cap: raising it needs an ADR (04 V2 says the same). Start with two forks (`frameworks/base`, `Settings`). Rebase once onto the Q4-2026 drop (about December 2026, unverified), freeze before the staff pilot; monthly ingest: `04`.
 
 ### 2. Default-deny product
 
@@ -128,7 +131,7 @@ PRODUCT_PACKAGES += $(shell cat vendor/zune/allowlist/product-packages.txt)
 # diff against upstream on every rebase
 PRODUCT_RELEASE_CONFIG_MAPS += $(wildcard vendor/zune/release/release_config_map.textproto)
 ```
-`zune_base.mk` sets `ZUNE_BRAND` (one variable; name clearance pending) and `PRODUCT_SOONG_NAMESPACES += vendor/zune`. Products: `zune_kids_cf` (x86_64; mirror `aosp_cf_x86_64_only_phone` without its `generic_system`/`handheld`/`telephony` inherits), `zune_kids_stallion`, `zune_kids_tegu`. `product-packages.txt` (seeded from the KEEP and ADD rows of §3) is the input; `allowlist/image-apps.txt` is the reviewed output that `image_diff.py` compares with `installed-files.txt`, `apex_info.xml` and `aapt2 dump badging`, catching transitive additions. Ordinary apps ship as pinned `android_app_import` prebuilts (SHA-256 in `apps/prebuilt/PINS`; `arm64-v8a` on devices, `x86_64` for Cuttlefish); the five OS-coupled apps build in-tree (V12).
+`zune_base.mk` sets `ZUNE_BRAND` (one variable; name clearance pending) and `PRODUCT_SOONG_NAMESPACES += vendor/zune`. Products: `zune_kids_cf` (x86_64; mirror `aosp_cf_x86_64_only_phone` without its `generic_system`/`handheld`/`telephony` inherits), `zune_kids_stallion`, `zune_kids_tegu`. `product-packages.txt` (seeded from the KEEP and ADD rows of §3) is the input; `allowlist/image-apps.txt` is the reviewed output that `image_diff.py` compares with `installed-files.txt`, `apex_info.xml` and `aapt2 dump badging`, catching transitive additions. Ordinary apps ship as pinned `android_app_import` prebuilts (SHA-256 in `apps/prebuilt/PINS`; `arm64-v8a` on devices, `x86_64` for Cuttlefish); the five Tier A apps are also Gradle-built prebuilts (09 Mode G, V12).
 
 ### 3. Package keep/remove table
 
@@ -152,12 +155,12 @@ PRODUCT_RELEASE_CONFIG_MAPS += $(wildcard vendor/zune/release/release_config_map
 
 | Overlay (target) | Values |
 |---|---|
-| `ZuneFrameworkOverlay` (`android`) | `config_navBarInteractionMode=2`; `config_defaultBrowser=""`; `config_defaultAssistant=app.zune.assistant`; `config_systemGallery=app.zune.photos`; `config_enableSafetyCenter=false`; supervision keys `config_systemSupervision`, `config_allowedSupervisionRolePackages`, `config_defaultSupervisionProfileOwnerComponent` = `app.zune.guardian` (03; V3); `config_ntpServers` per 05 (never guess hostnames); `xml/config_webview_packages.xml`. Never blank `config_recentsComponent`. |
+| `ZuneFrameworkOverlay` (`android`) | `config_navBarInteractionMode=2`; `config_defaultBrowser=""`; `config_defaultAssistant=app.zune.assistant`; `config_systemGallery=app.zune.photos`; `config_enableSafetyCenter=false`; supervision keys `config_systemSupervision`, `config_allowedSupervisionRolePackages`, `config_defaultSupervisionProfileOwnerComponent`, `config_persistentDataPackageName`, `config_emergency_dialer_package` and the dialer-role holder = `app.zune.guardian` (03 §4.1; V3, V7); `config_defaultSms` stays empty; `config_ntpServers` per 05 (never guess hostnames); `xml/config_webview_packages.xml`. Never blank `config_recentsComponent`. |
 | `ZuneSystemUIOverlay` (`com.android.systemui`) | `quick_settings_tiles_default` and `_stock` = `internet,bt,airplane,flashlight,rotation,saver` (child cannot edit); `config_globalActionsList` = `emergency,power,restart`; keyguard flashlight and camera (ids: V10). Shade gear reaches ZuneSettings via the router. |
 | `ZuneSettingsOverlay` (`com.android.settings`) | Every `config_show_*` knob in [R16 F2, §5] false; `help_url_*` empty (CI check). |
 | `ZuneProviderOverlay` (`com.android.providers.settings`) | `def_device_provisioned=false`, `def_user_setup_complete=false`, Bluetooth on, NFC off (V13). |
 | `ZuneLauncher3Overlay` (`com.android.launcher3`) | Overview actions, search, widgets, wallpaper entry points off. |
-| `ZuneNetworkStackOverlay` | Captive-portal probe URLs to Zune endpoints (05). |
+| `ZuneNetworkStackOverlay` | Captive-portal probe URLs to `connectivity.<zone>` (05 BE-42). Detection stays on so a sign-in network is recognised and the explainer shows (OS-20); the only sign-in UI is the explainer. |
 
 ### 5. Telephony residue (D28)
 
@@ -211,7 +214,7 @@ if (!ZuneWebViewCallers.allows(Binder.getCallingUid())) {  // /system_ext/etc/zu
     return new WebViewProviderResponse(null, WebViewFactory.LIBLOAD_FAILED_LISTING_WEBVIEW_PACKAGES);
 }
 ```
-Updates: ZuneUpdater (04) delivers signature-matched Vanadium APKs independent of OTA, staged (policy floor: OS-29). Owner weekly: watch upstream, re-verify cert, run AT-07, ship within SLA. Reader declares no `INTERNET`; Videos is proxied (08, 03).
+Updates: ZuneUpdater (04) delivers signature-matched Vanadium APKs independent of OTA, staged (policy floor: OS-29). Owner weekly: watch upstream, re-verify cert, run AT-07, ship within SLA. Reader declares no `INTERNET`; Videos holds `INTERNET` (09 lists the five holders) and reaches only the Tier 2 hosts through the DNS allowlist and its request filter (08 CNT-14).
 
 ### 9. Radios, USB, 16 KB
 
@@ -231,7 +234,7 @@ repo sync -c -j8 --no-tags
 source build/envsetup.sh && lunch zune_kids_cf-aosp_current-userdebug && m -j"$(nproc)"
 # M1 vanilla: repo init -u https://android.googlesource.com/platform/manifest -b refs/tags/android-17.0.0_r1
 ```
-Release config is `aosp_current` (alias of `cp2a`, V2); flag overrides live in `vendor/zune/release/`; SPL bumps only via 04's pipeline. Use the working branch until `main` exists [HANDOFF §2]. Host: 32 vCPU, 128 GB RAM, 1 TB NVMe, Ubuntu 24.04 container, `/dev/kvm` [R01 F4].
+Release config is `aosp_current` (alias of `cp2a`, V2); flag overrides live in `vendor/zune/release/`; SPL bumps only via 04's pipeline. Use the working branch until `main` exists [HANDOFF §2]. Host: 32 vCPU, 128 GB RAM, 1 TB NVMe minimum (2 TB recommended, 01 PRE-02), Ubuntu 24.04 container, `/dev/kvm` [R01 F4].
 
 | Lunch target | Use |
 |---|---|
@@ -273,7 +276,7 @@ Do V1 to V3 before anything else.
 | V9 | Vanadium binaries obtainable, redistributable (GPL-2.0-only patches), arm64, 16 KB-aligned, Android 17-compatible | Licence and distribution unread [R04 F2] | Read repo, licence, releases; ask GrapheneOS; alignment scan | Build Vanadium (or LineageOS WebView patches) on a dedicated host [GATE: before build]. |
 | V10 | Settings counts, `config_show_*` effects, Catalyst behaviour, disabled-host behaviour; SystemUI ids | GrapheneOS/LineageOS only [R16] | Read the tag; tap-every-row crawl | Widen allowlist or patches. |
 | V11 | `repo init -m <subdir>` and directory `<linkfile>` work with Soong, Kati, `AndroidProducts.mk` discovery | Unverified | M1: link stub `device/zune`, run `lunch` | Separate repos split by CI. |
-| V12 | Compose builds under Soong | Unverified | M1 spike | Gradle build, `android_app_import` re-signed with platform key (`09`). |
+| V12 | Mode G works: Gradle-built Tier A APKs imported as `android_app_import` with the platform key are re-signed at release and run as privileged system apps (09 VP-1); in-tree Compose under Soong is only the fallback | Unverified | M1 stub APK (09 Wave 0) | In-tree Soong build by ADR, Compose under Soong unproven (`09`). |
 | V13 | NFC mask, restriction constants, Bluetooth profile properties, provider default keys, USB default work on the Pixel vendor image | Inferred [R03 F7, R16 row 13] | AT-08 on both Pixels | Guardian assertions. |
 | V14 | `android.net.conn.CAPTIVE_PORTAL` is the sign-in action; no crash loop without CaptivePortalLogin | Memory | Fake captive network on Cuttlefish | Set `captive_portal_mode`; keep explainer. |
 | V15 | Host sizing, Ubuntu 24.04, 1.5-3 h clean build, Cuttlefish product names | Estimates [R01 F4] | M1 baseline build | Resize; keep a 22.04 image. |

@@ -50,7 +50,7 @@ Gate naming: "release gates G1-G6" are defined here [R10]. R17's OEM-redistribut
 - **REL-13 MUST** `BOARD_AVB_ROLLBACK_INDEX := $(PLATFORM_SECURITY_PATCH_TIMESTAMP)` per model; a build with a lower SPL than installed is refused by ZuneUpdater and, per model, by the bootloader (V8).
 
 **Attestation**
-- **REL-14 MUST** The image sets `remote_provisioning.hostname` (V9). The verifier (05; Google's `android/keyattestation` library [R05 F8]) trusts the legacy and ECDSA P-384 roots (signing since 2026-02-01 [R17 F6]), checks revocation, and reads `verifiedBootKey`, `deviceLocked`, state and patch level. A mismatch (unlocked, other key, SPL below `min_spl`) warns the parent and suspends cloud features; an unreachable service only retries. A seat binds to the station-recorded serial hash plus a per-device mTLS certificate; attestation alone never grants one (relay and leaked-key bypass [R17 F6]).
+- **REL-14 MUST** The image sets `remote_provisioning.hostname` (V9). The verifier (05; Google's `android/keyattestation` library [R05 F8]) trusts the legacy and ECDSA P-384 roots (the P-384 switch is unverified, V14), checks revocation, and reads `verifiedBootKey`, `deviceLocked`, state and patch level. A mismatch (unlocked, other key, SPL below `min_spl`) warns the parent and suspends cloud features; an unreachable service only retries. A seat binds to the station-recorded serial hash plus a per-device mTLS certificate; attestation alone never grants one (relay and leaked-key bypass [R17 F6]).
 
 **OTA**
 - **REL-15 MUST** ZuneUpdater forks GrapheneOS's MIT Updater at `zune/apps/updater` (`app.zune.updater`), keeps licence and copyright notices, replaces all GrapheneOS branding and URLs, and exposes no child controls beyond update status [R17 verification 13].
@@ -61,7 +61,7 @@ Gate naming: "release gates G1-G6" are defined here [R10]. R17's OEM-redistribut
 - **REL-20 MUST** Full OTAs only in Stage 1. **SHOULD** gate artifact URLs behind a short-lived token from Policy Service via Guardian; metadata stays public.
 - **REL-21 MUST** Before FW-1 closes, no OTA payload contains Google firmware (bootloader, radio, other non-Android partitions). Firmware changes only by station re-flash, from Google's factory zip downloaded from Google at flash time, hash-pinned; Zune never hosts it. After FW-1 closes with terms that cover it, firmware may ship in the full OTA.
 - **REL-22 MUST** `release/gates.yml` has `fw1_closed: false`. While false, the signing tool refuses firmware in an OTA and bundles carry a 100-device job cap (PRE-20), which also bounds blob-derived vendor images (risk 1).
-- **REL-23 MUST** Vanadium updates use the same metadata with `type: apk`, a package-and-certificate allowlist in `/system_ext/etc/zune/apk_update_allowlist.xml` and the rings; SLA per OS-28 (V11).
+- **REL-23 MUST** Vanadium and Tier B app updates (signed offline with the `zune-apps` key, 09 §4.1) use the same metadata with `type: apk`, a package-and-certificate allowlist in `/system_ext/etc/zune/apk_update_allowlist.xml` (it MUST list every Tier B package) and the rings; SLA per OS-28 (V11). Content packs (08 §4.3) travel the same way as `type: content`, verified against the `content` key before install.
 
 **Patch pipeline**
 - **REL-24 MUST** A weekly CI watcher (`zune/os/tools/watcher`) records changes to `android17-security-release`, `android-security-17.*` tags and any Q4-2026 branch on googlesource, Google stock builds, GrapheneOS `17` tags, LineageOS `lineage-24.0` and Vanadium tags. It opens an issue, never merges (V1).
@@ -70,6 +70,9 @@ Gate naming: "release gates G1-G6" are defined here [R10]. R17's OEM-redistribut
 - **REL-27 MUST** Public wording measures lag from publication in sources Zune can reach, not from Google's bulletin date, until partner access exists.
 - **REL-28 MUST** Kernel is the pin's Google prebuilt, no Stage-1 patches; GPL source (Google's matching kernel tag, Vanadium patches) is published per release. Mainline modules are built from source and ship in the full OTA.
 - **REL-29 MUST** No candidate is signed without G1-G4 evidence, and nothing above the `lab` ring is published without G5 and G6 evidence, each bound to the target-files SHA-256.
+
+**Versioning**
+- **REL-31 MUST** Image: `ro.build.display.id` = `zune-<model>-<YYYYMMDD>.<n>`, unique per build, equal to the metadata `build`; the SPL rolls only with Google's patch level. Apps: `versionCode` = integer `YYMMDDNN` (for example 26100301, strictly rising, under 2^31) and `versionName` = `<year>.<n>`, set by CI; a lower `versionCode` is never offered. API, channel, policy and pack schemas carry their own integers (05 BE-50).
 
 **Support**
 - **REL-30 MUST** `release/support.yml` lists per model `oem_end`, `listing_date`, `support_end = min(oem_end, listing_date + 5 years)`. A model is listed or provisioned only while `support_end - today >= 3 years` (contractual floor). Shortening needs 12 months' notice [R17 §4.2, INFERRED; V13].
@@ -113,7 +116,7 @@ adevtool configs are `config/device/{stallion,tegu}.yml` including `common/gen9p
 
 1. Intake: the station reads `version-bootloader`, `version-baseband` and the anti-rollback variable and blocks phones above the bundle (10); never flash an older bootloader after a bump [R18 F9].
 2. Option B (default): pin the newest stock and make the r1 system boot on that vendor with device-layer backports only (modem firmware, CarrierSettings, Pixel HAL clients, as GrapheneOS did [R02 F1]), each a registered `Zune-Patch`.
-3. RB-1 (01 PRE-17) rebases onto the Q4 drop and removes the QPR1 skew; each later QPR repeats this.
+3. REBASE-1 (01 PRE-17) rebases onto the Q4 drop and removes the QPR1 skew; each later QPR repeats this.
 4. Option A if B cannot boot: hold the last booting pin, refuse newer phones, tell the founder.
 
 ### 4.4 Key inventory
@@ -124,6 +127,7 @@ adevtool configs are `config/device/{stallion,tegu}.yml` including `common/gen9p
 | `releasekey` (OTA) | offline | DoS; takeover only with AVB | OTA, two-release overlap |
 | platform, shared, media, networkstack, bluetooth, nfc, sdk_sandbox, APEX, `zune-apps` | offline | privileged APK via update | permanent |
 | `bundle` | offline | stations flash attacker bundles | new key; stations trust two during overlap |
+| `content` (pack signer, 08 §4.3) | online KMS, two staff approvals per pack (08 CNT-05) | hostile EPUB or video served to Reader and Videos (the two WebView apps) | new public key shipped by OTA in `content_pub_*.pem`; devices trust two during overlap |
 | `channel` | online KMS | freeze or halt only (payload still needs `otacerts` and AVB) | new key shipped in ZuneUpdater, overlap |
 
 Each key set (dev, pilot, prod) has its own copy of every key. Pilot-key phones are reflashed or stay on the `pilot` channel; pilot keys never sign for external devices.
@@ -169,7 +173,7 @@ build host (no keys): lunch zune_kids_<model>-aosp_current-user; m target-files-
  -> G1-G4 -> read-only USB (sha256 checked) -> offline host: sign candidate OTA, images, bundle -> staging
  -> lab ring (G5) -> G6 approval -> channel.json signed by `channel` -> rings (REL-17)
 ```
-Monthly train. T0 = first of: Google stock build for a model, public security patches, Vanadium release (starts the lag clock for that class). T0+3 d: triage CVEs against image components (Android and Pixel bulletins, Mainline, kernel, Vanadium). T0+5 d: `vendorgen`, build, G1-G4. T0+7 d: sign candidate, lab ring and G5 (48 h), then G6. T0+9 to 13 d: staff 48 h, then 10%, 50%, 100%. Critical must finish by T0+14; compress only with release-owner approval or the emergency lane. GrapheneOS `17` and LineageOS `lineage-24.0` show which fixes exist; cherry-pick only from public repos, after counsel clears partner-programme limits.
+Monthly train. PD0 = first of: Google stock build for a model, public security patches, Vanadium release (starts the lag clock for that class). PD0+3 d: triage CVEs against image components (Android and Pixel bulletins, Mainline, kernel, Vanadium). PD0+5 d: `vendorgen`, build, G1-G4. PD0+7 d: sign candidate, lab ring and G5 (48 h), then G6. PD0+9 to 13 d: staff 48 h, then 10%, 50%, 100%. Critical must finish by PD0+14; compress only with release-owner approval or the emergency lane. GrapheneOS `17` and LineageOS `lineage-24.0` show which fixes exist; cherry-pick only from public repos, after counsel clears partner-programme limits.
 
 ### 4.10 Release gates G1-G6 (evidence `zune/docs/releases/<model>/<build>/G<n>.json`)
 
@@ -185,7 +189,7 @@ Monthly train. T0 = first of: Google stock build for a model, public security pa
 ### 4.11 Build infrastructure and cost (estimates [R10, memory]; get quotes)
 
 - Build host: one now (01 PRE-02), a second by M5 for CI and G1; no Chromium host (D26). About USD 250-400/month rented each, or about 6k bought. CI: self-hosted ephemeral runners, no keys.
-- Artifacts: S3 plus CDN, full OTAs of about 2 GB x 200 devices a month, under USD 20/month [INFERRED]. Lab: 3 units per model plus a sacrificial spare, Indian data SIMs (INR price unverified). Signing: two HSM-class devices, air-gapped laptop, about USD 2.5k once.
+- Artifacts: S3 plus CDN, full OTAs of about 2 GB x 200 devices a month, under USD 20/month [INFERRED]. Lab: 5 units per model (3 RC, 1 dev, 1 sacrificial; 01 PRE-04), Indian data SIMs (INR price unverified). Signing: two HSM-class devices, air-gapped laptop, about USD 2.5k once.
 
 ### 4.12 Support, EOL and a second device
 
@@ -227,6 +231,8 @@ Nothing below was read from Google's `android-17.0.0_r1` tree (sources: mirrors,
 | V11 | Vanadium is redistributable, has a stable cert and installs over a system-app copy (02 V9) | Unread | Lab install | Ship only inside full OTAs, or self-build |
 | V12 | OEM-unlock service order [R18 F8] | GrapheneOS fork of upstream | Rehearsal (AT-R11) | Redesign; OEM unlock on for lab units only |
 | V13 | Support ends: 10a March 2033, 9a April 2032 [R02 F6]; costs [R10] | Secondary, memory | Google's update policy; quotes | Change `support_end` or do not list the model |
+| V14 | Google's attestation roots include an ECDSA P-384 chain signing since 2026-02-01 [R17 F6]; `android/keyattestation` handles it on Android 17 (05 V4) | Search summary; chain format unread | Read a real attestation from each Pixel; library test | Trust only the chains observed; update REL-14 |
+| V15 | `stallion` and `tegu` codenames, `zumapro` platform and 6.1 kernel prebuilts for both (01 Verify 14) | Mirrors, summaries | `fastboot getvar product`; Google kernel and factory pages | Rename the device layer; escalate if platforms differ (two shared layers become two) |
 
 ## Risks, open gates and out of scope
 

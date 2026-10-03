@@ -40,10 +40,10 @@ Evidence came from GrapheneOS and LineageOS trees, not Google's `android-17.0.0_
 - **LOCK-07 MUST** Accept a bundle only if it passes the §4.4 checks (ES256 JWS over RFC 8785 JSON, offline root `/system_ext/etc/zune/policy_root.pem`, signer cert of at most 90 days, device, epoch, `rev`, `iat`, no unknown keys); re-verify at every load; a rejected bundle leaves the last good one in force and raises an event.
 - **LOCK-08 MUST** With no valid bundle Guardian applies the fail-closed profile (§4.4); app `PolicyClient` treats Binder failure or a 500 ms timeout as deny.
 - **LOCK-09 MUST** MINIMAL mode (Emergency, Parent area, Wi-Fi and mobile-data settings, pairing only) starts when `now > not_after`, when no signed sync arrived for `grace.offline_days` (default 14, server bound 3-30), or when `kill.level` is 2 or more (L2 [R18]; within 10 s while connected). `kill.level` 1 disables named features. Never expire into unrestricted.
-- **LOCK-10 MUST** Commands (`lock`, `ring`, `pin_reset`, `kill`, `unenroll`, `service_unlock`, `policy_refresh`) carry `cmd_id`, `nonce`, `exp` and obey LOCK-07 signing; replay or expiry is rejected and logged.
+- **LOCK-10 MUST** Commands (`lock`, `ring`, `pin_reset`, `kill`, `unenroll`, `service_unlock`, `policy_refresh`, `factory_qa`) carry `cmd_id`, `nonce`, `exp` and obey LOCK-07 signing; replay or expiry is rejected and logged.
 - **LOCK-11 MUST** Schedules and budgets use `effective_now` (§4.5); unexplained wall-clock jumps of 5 minutes or more are ignored and reported. Auto time and zone are forced; zone comes from policy `tz` (default `Asia/Kolkata`).
-- **LOCK-12 MUST** Time controls: daily budgets per app and total; bedtime by lock-task with Emergency reachable; "ask a parent" request; no extension without a signed grant or PIN.
-- **LOCK-13 MUST** Every capability is an entry in `capabilities.json` with its mechanism (§4.3); unknown capabilities in a bundle are rejected; absent ones default off, except `emergency`, `parent_area`, `setup`, `settings_wifi`. Apps call `PolicyClient.check(capability, subject)` before send, connect or play; the server enforces again; Zune calls never rely on `DISALLOW_OUTGOING_CALLS`.
+- **LOCK-12 MUST** Time controls: daily budgets per app and total; bedtime by lock-task with Emergency reachable; "ask a parent" request; no extension without a signed grant or PIN. Exemptions (09 APP-24): `app.zune.clock` is never suspended by a budget, its alarm activity is in the lock-task allowlist, and alarm volume is not capped by `vol_max`.
+- **LOCK-13 MUST** Every capability is an entry in `capabilities.json` with its mechanism (§4.3), seeded with the union of the capabilities and policy sections that 06 to 09 request (§4.4 table); unknown capabilities in a bundle are rejected; absent ones default off, except `emergency`, `parent_area`, `setup`, `settings_wifi`. Apps call `PolicyClient.check(capability, subject)` before send, connect or play; the server enforces again; Zune calls never rely on `DISALLOW_OUTGOING_CALLS`.
 
 **Parent PIN**
 - **LOCK-14 MUST** PIN: 6 or more digits, set on the device at pairing, never transmitted; verifier = HMAC-SHA256 under a non-exportable Keystore key (StrongBox if present) with a 16-byte salt; 5 attempts, then 30 s lockout doubling to 24 h, surviving reboot; `FLAG_SECURE`; trivial PINs refused.
@@ -54,38 +54,39 @@ Evidence came from GrapheneOS and LineageOS trees, not Google's `android-17.0.0_
 - **LOCK-17 MUST** The only in-device reset is Parent area, `ParentGate.confirm`, then Guardian wipe, working while Guardian is sole setter of `DISALLOW_FACTORY_RESET` (VG-3).
 - **LOCK-18 MUST** After any wipe the device boots to unpaired ZuneSetup: only Wi-Fi and mobile-data setup, pairing and Emergency are reachable. Setup completes only with a code from a guardian of the family bound to this serial and attestation key (server-checked, 05). The portal shows "device was reset" within 60 s of reconnect.
 - **LOCK-19 SHOULD** A claim blob (family hash) in the persistent data block survives recovery wipes; only signed `unenroll` or `service_unlock` clears it (VG-4).
-- **LOCK-20 MUST** OEM unlock stays off. `service_unlock` needs two signatures: parent step-up in the portal and the company `zune-service-ca` key (04). Guardian then clears its own `DISALLOW_FACTORY_RESET`, permits OEM unlock, logs it and reverts after 72 h (default [INFERRED]).
+- **LOCK-20 MUST** OEM unlock stays off. `service_unlock` needs two signatures: parent step-up in the portal and the company `zune-service-ca` key (04). Guardian then clears its own `DISALLOW_FACTORY_RESET`, permits OEM unlock, logs it and reverts after 72 h (default [INFERRED]). The only standing exception is the C0 staff phones left with OEM unlocking on (10 OPS-17), flagged `oem_unlock_exception` in the posture report.
 
 **Bypass controls (image and policy)**
 - **LOCK-21 MUST** No `VIEW` + `http`/`https`/`ftp` handler, `WEB_SEARCH` handler, `CustomTabsService` or `CATEGORY_APP_BROWSER` handler exists in any partition (extends 02 OS-07).
 - **LOCK-22 MUST** P-FWK-2: IntentFirewall also reads `/system_ext/etc/ifw` and blocks activity starts with scheme http, https, ftp or action `WEB_SEARCH` from any sender, logging each; `/data/system/ifw` cannot loosen it.
 - **LOCK-23 MUST** Only Reader and Videos create a WebView (02 OS-27); Reader has no `INTERNET`; `INTERNET` holders equal `vendor/zune/allowlist/internet-holders.txt` (02 OS-05); a no-`INTERNET` app cannot reach the network by socket, `DownloadManager`, `MediaPlayer` or intent (kernel eBPF check [R04 F6]).
-- **LOCK-24 MUST** Strict Private DNS to the Zune resolver (05) through `setGlobalPrivateDnsModeSpecifiedHost` plus `DISALLOW_CONFIG_PRIVATE_DNS` (placeholder resolver allowed until M4); captive-portal detection and UI stay off and Guardian re-asserts them (D30; 02 OS-20).
+- **LOCK-24 MUST** Strict Private DNS to the Zune resolver (05) through `setGlobalPrivateDnsModeSpecifiedHost` plus `DISALLOW_CONFIG_PRIVATE_DNS` (placeholder resolver allowed until M4); captive-portal detection stays on against the Zune probe (05 BE-42) so a sign-in network is recognised, the only sign-in UI is the ZuneSettings explainer, and Guardian re-asserts `captive_portal_mode` at its default (D30; 02 OS-20).
 - **LOCK-25 MUST** `user` build, `ro.adb.secure=1`, `adb_enabled=0`, `development_settings_enabled=0`, `DISALLOW_DEBUGGING_FEATURES`, `persist.adb.tradeinmode` unset, no RadioInfo or `*#*#` handler; `DISALLOW_SAFE_BOOT`, and a safe-mode boot still runs Guardian with every restriction.
 - **LOCK-26 MUST** USB file transfer, physical media, Bluetooth sharing and NFC are off; no USB gadget function except charging (no MTP, PTP, ACM, DIAG, ADB); USB host stays for USB-C audio (02).
 - **LOCK-27 MUST** Tethering, VPN, credentials, accounts, user and profile creation, install, unknown sources, uninstall and app control are restricted; `fw.max_users=1`; no `VpnService` package ships.
 - **LOCK-28 MUST** Nothing leaves Zune by share sheet or keyboard: Zune apps never call `createChooser`, `ACTION_SEND` handlers equal an allowlist, every `CATEGORY_APP_*` shortcut resolves to nothing or a Zune app.
-- **LOCK-29 MUST** Zune notifications carry no URL; the lock screen offers only Emergency, flashlight and camera; the cell-broadcast dialog does not linkify, or its links are dead through LOCK-22.
-- **LOCK-30 MUST** Camera has no barcode feature; ZuneSetup's QR parser accepts only a pairing token; no `PROCESS_TEXT` web handler exists; Assistant renders plain text with no linkify or tap-to-open (server rules: 07).
+- **LOCK-29 MUST** Zune notifications carry no URL; the lock screen offers only Emergency, flashlight and camera, plus one exception: the Guardian-launched incoming-call screen (`app.zune.calls`, Accept and Decline only, 06 §4.7) shows over the keyguard while a call invite is live; Walkie never does (06 COM-26); the cell-broadcast dialog does not linkify, or its links are dead through LOCK-22.
+- **LOCK-30 MUST** Camera has no barcode feature; ZuneSetup's QR parser accepts only `ZUNE1:<code>` (pairing) and, only while the device has no claim blob, `ZUNE1S:<token>` (factory QA, LOCK-38); no `PROCESS_TEXT` web handler exists; Assistant renders plain text with no linkify or tap-to-open (server rules: 07).
 - **LOCK-31 MUST** Videos Tier 2 is off by default, gated by `kill` and `webview_min_version` (02 OS-29); new-window and external navigation are denied (08).
 
 **Telephony and emergency**
-- **LOCK-32 MUST** Only Guardian holds `CALL_PHONE`, `CALL_PRIVILEGED` and SMS permissions (CI allowlist); no SMS role holder or receiver exists; `DISALLOW_OUTGOING_CALLS` and `DISALLOW_SMS` are set.
+- **LOCK-32 MUST** Only Guardian holds `CALL_PHONE` and `CALL_PRIVILEGED` (CI allowlist); no package holds `READ_SMS`, `RECEIVE_SMS` or `SEND_SMS`, and no SMS role holder or receiver exists (D19: no SMS code on the device); `DISALLOW_OUTGOING_CALLS` and `DISALLOW_SMS` are set.
 - **LOCK-33 MUST** Inbound non-emergency cellular calls are rejected within 1 s with no ring or UI and a logged event; callback relaxation uses AOSP's own flags only, with a parent alert; inbound SMS show nothing.
 - **LOCK-34 MUST** Guardian ships the Emergency screen, a minimal `InCallService` and the dialer role. It owns `ACTION_DIAL_EMERGENCY` (`config_emergency_dialer_package`), is reachable from the lock screen and power menu, has one button dialling the literal `112` (no keypad or text field) and shows "cannot call 112 here" when service state forbids it.
 - **LOCK-35 MUST** Three quick power presses open SOS (screen off or locked) with a 5-second cancel countdown; at zero Guardian sends an `sos` event (queued if offline) and, if `sos.dials_112` (default 1), dials 112; minimum interval 30 s.
 - **LOCK-36 MUST** Record a 112 field test in `zune/docs/lab/112-field-test.md`: Jio, Airtel, Vi, BSNL; voice SIM, data SIM, no SIM; locked screen; Wi-Fi only.
 - **LOCK-37 MUST** Product copy says only "no browser app and no way to type a web address; the device talks only to Zune-approved services; emergency calling is not guaranteed", never "no internet", "unbypassable", "100% safe" or "no YouTube content" (Tier 2 plays YouTube inside Videos).
+- **LOCK-38 MUST** Guardian has a FACTORY state for the station (10 OPS-14, §4.5 there): entered only from a single-use `factory_qa` token (a command of type `factory_qa` signed under LOCK-10 and BE-13, TTL 30 minutes, bound to the device's `serial_hmac`) scanned as `ZUNE1S:<token>`, and only while no claim blob exists and the server shows no claimed device for the serial; it runs the in-process audits and signed report of 10 §4.5 (no adb, no shell), is left by sealing, expiry or reboot, and can never be re-entered after a claim or a wipe (10 VO-6; LT-19).
 
 ## Design and build instructions
 
 ### 4.1 Components and paths
 
 ```
-zune/apps/guardian/          Soong, platform cert, /system_ext/priv-app: provision policy enforce time pin channel emergency reset
+zune/apps/guardian/          Gradle-built, imported by Soong with the platform cert (09 Mode G), /system_ext/priv-app: provision policy enforce time pin channel emergency reset factory
 zune/libs/core/              schema/policy-v1.schema.json, schema/capabilities.json, PolicyClient, ParentGate, IZunePolicy.aidl, IZuneLink.aidl
 zune/os/vendor/zune/         ifw/zune-ifw.xml  sysconfig/privapp-permissions-zune.xml  allowlist/*.txt  sepolicy/
-zune/os/tools/bypass_suite/  lt01..lt18 (12 runs them)
+zune/os/tools/bypass_suite/  lt01..lt19 (12 runs them)
 ```
 02's `ZuneFrameworkOverlay` sets `config_systemSupervision`, `config_allowedSupervisionRolePackages`, `config_defaultSupervisionProfileOwnerComponent`, `config_persistentDataPackageName`, `config_emergency_dialer_package` and the dialer-role holder to `app.zune.guardian`; `config_defaultSms` stays empty. Guardian owns the single TLS WebSocket (wire protocol: 05), handles `policy.update`, `command`, `approval.grant`, `time.sync` and `heartbeat` itself, and exposes `IZuneLink` to Messenger, Calls and Walkie (signature permission).
 
@@ -128,6 +129,18 @@ fun accept(raw: ByteArray, now: Instant) {
   store.commitAtomic(raw); enforcer.apply(p)
 }
 ```
+Policy keys requested by other sections (all optional, absent means off or default; 05 generates server types, `capabilities.json` is seeded from this list):
+
+| Key | Requested by | Content |
+|---|---|---|
+| `child{name,av}`, `home{v,tiles[]}`, `caps{diag,camera,photos,journal,notebook,clock,calculator,recorder,share,reader,weather,assistant,walkie}` | 09 §4.2 | Home layout and per-app capabilities |
+| `assistant{on,mode,images,thumbnails,voice,cloud_voice,turns_day,session_min}`, `kill.features` += `assistant`, `assistant_images`, `assistant_voice` | 07 §4.2 | AI controls |
+| `content{allow,deny,mobileOk}`, `kill.features` += `videos_tier2`, caps `weather`, `reader` | 08 §4.10 | Content and Tier 2 |
+| `vis{notice_v}`, `places`, `cohort` (`lab|staff|external`), per-channel schedules in `contacts.entries` (`win`) | 05 §4.5, 06 §4.2 | Notice version, places, OTA cohort, schedules |
+| `min.webview`, `grace`, `sos`, `kill`, `net`, `device` | this section | as in the example |
+| `device.data_warn_mb`, `device.airplane_lock`, `emergency.card{child_name,guardians}` | 02 §6 | Values ZuneSettings shows: data warning, airplane lock, the Emergency info card |
+| Name map | 06, 09 | contact-channel ids `msg`, `voice`, `video`, `ptt` (06) correspond to capabilities `messenger`, `voice`, `video`, `walkie` (09); a channel needs both the edge grant and the capability |
+
 Fail-closed profile (no valid bundle): suspend every app except ZuneLauncher (allowed entries only), Emergency, ZuneSettings (Wi-Fi and mobile-data pages), Parent area and ZuneSetup; restrictions stay.
 
 ### 4.5 Trusted time
@@ -171,6 +184,7 @@ Guardian declares the dialer-role components: an `ACTION_DIAL` activity that ope
 | E5 Clock rollback | 11 | LT-11 |
 | E6 Guardian crash, kill, stale policy | 04, 08, 09 | LT-10 |
 | E7 PIN guessing, shoulder-surf | 14, 15 | LT-12 |
+| E8 Re-entering the factory-QA state after claim or wipe | 38 | LT-19 |
 
 ## Acceptance criteria and tests
 
@@ -184,7 +198,7 @@ Tests are `LT-nn` (02 owns `AT-nn`). On `user` builds adb is off: read the LOCK-
 - **LT-06** `lsusb -v` shows no MTP, PTP, ACM, DIAG or ADB interface; Bluetooth OPP send is refused; no NFC feature.
 - **LT-07** Tether, VPN, user creation, install and uninstall attempts fail; no `VpnService` package.
 - **LT-08** With USB and Bluetooth keyboards, Meta+B/E/P/S/C/L/M/U and Alt+Space open nothing outside Zune; `ACTION_SEND` resolves only to the allowlist.
-- **LT-09** A URL in a Messenger text is untappable; a cell-broadcast test URL is dead; the lock screen shows only Emergency, flashlight, camera; Assistant prompts "open example.com" and "give me a link" yield no tappable link.
+- **LT-09** A URL in a Messenger text is untappable; a cell-broadcast test URL is dead; the lock screen shows only Emergency, flashlight, camera and, during a live call invite, the Accept and Decline call screen (LOCK-29); Assistant prompts "open example.com" and "give me a link" yield no tappable link.
 - **LT-10** Bad signature, wrong device, old `rev`, expired signer and future `iat` are rejected and the last good policy stays; no bundle gives the fail-closed profile; `grace.offline_days`, `not_after` (userdebug time hook) or `kill.level=2` start MINIMAL mode and a fresh bundle ends it; a killed Guardian restarts per LOCK-04 while apps deny.
 - **LT-11** Setting the wall clock back or forward does not move bedtime or budgets; a drift event is reported.
 - **LT-12** Five wrong PINs lock out across reboot; the reset-code flow works and a child cannot start it; PIN screens are black in screenshots.
@@ -194,6 +208,7 @@ Tests are `LT-nn` (02 owns `AT-nn`). On `user` builds adb is off: read the LOCK-
 - **LT-16** Triple power press from screen-off and locked states opens SOS; Cancel stops it; the countdown delivers a guardian alert within 10 s on Wi-Fi; a second trigger within 30 s is ignored.
 - **LT-17** A posture report arrives after boot with the expected hash; flipping a restriction on a dev build raises drift.
 - **LT-18** Videos Tier 2 is off by default; `kill` or a `min.webview` above the installed version disables it within 10 s; new windows are denied.
+- **LT-19** The FACTORY state accepts a valid single-use token only on an unclaimed, never-claimed device: a replayed, expired, wrong-serial or post-claim token, a post-wipe token on a claimed serial, and an intent, boot reason or USB route to FACTORY all fail; sealing consumes the token (10 AT-O04, VO-6).
 
 ## Verify first
 
@@ -213,7 +228,7 @@ Tests are `LT-nn` (02 owns `AT-nn`). On `user` builds adb is off: read the LOCK-
 
 ## Risks, open gates and out of scope
 
-- **Single point of control.** A Guardian bug defeats every control; an `EnforcementBackend` interface isolates DPM calls from the flagged supervision APIs; CI runs LT-01..18 on each rebase.
+- **Single point of control.** A Guardian bug defeats every control; an `EnforcementBackend` interface isolates DPM calls from the flagged supervision APIs; CI runs LT-01..19 on each rebase.
 - **What we cannot stop (disclose).** Recovery wipe (yields an inert device), parent-assisted unlock, a SIM moved to another phone, a friend bridging a stranger into a call, other devices in the home, web-derived AI answers and the Videos embed (R04 residual: medium).
 - **Private DNS dependency:** if the resolver or port 853 is unreachable the device looks offline (VG-8).
 - **[GATE: before build]** VG-1 and VG-2 results recorded; if both fail, the founder re-decides D24.
