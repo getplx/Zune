@@ -139,7 +139,7 @@ Base: copy GrapheneOS `SetupWizard2` (MIT, keep notices, `overrides: ["Provision
 |---|---|
 | 1 | Welcome, adult voice, Emergency |
 | 2 | Gesture tutorial (02 OS-23): Back via `OnBackInvokedCallback`; Home via `onNewIntent(HOME)` from a practice task; Recents confirmed by a grown-up tap (VP-3) |
-| 3 | Wi-Fi via `android.settings.SETUP_INTERNET` [R16 F11]; note "Wi-Fi with a sign-in page does not work. Use a phone hotspot" (D30); skip only with mobile data |
+| 3 | Wi-Fi via `android.settings.SETUP_INTERNET` [R16 F11]; a Wi-Fi sign-in page opens automatically in ZunePortalViewer (D33); skip only with mobile data |
 | 4 | Pair: CameraX frames to ZXing core (VP-11), or keypad; Guardian runs `enroll/begin` (05 §4.3) |
 | 5 | Confirm "This phone is for <name>" from the verified bundle |
 | 6 | PROVISION: Device Owner and roles (03 §4.2, VG-1) |

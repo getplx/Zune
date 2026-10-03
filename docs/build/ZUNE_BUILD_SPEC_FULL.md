@@ -48,9 +48,10 @@ hardware investment.**
 | D27 | **Parent visibility and retention:** parents can read their child's messages and AI chats; the child is told; content retained in a restricted vault for 12 months (final period subject to counsel's reading of DPDP Rule 8(3)). | 2026-10-03 |
 | D28 | **Emergency calling: 112 only.** No dialer; the platform emergency path stays; no other cellular calling. (Resolves A9; the "remove emergency calling" override is not used.) | 2026-10-03 |
 | D29 | **AI vendor: OpenAI is the default; Anthropic is the fallback.** Supersedes report 07's Anthropic-first design. OpenAI's terms for products used by children, India data residency, zero retention and moderation endpoints must be verified before build. | 2026-10-03 |
-| D30 | **Wi-Fi sign-in (captive portal) pages are unsupported in version 1;** parent-hotspot workaround documented. | 2026-10-03 |
+| D30 | **SUPERSEDED by D33.** (was: Wi-Fi sign-in (captive portal) pages are unsupported in version 1; parent-hotspot workaround documented.) | 2026-10-03 |
 | D31 | **Device defaults:** Bluetooth on; NFC off; USB file transfer off; **gesture ("iOS-style") navigation with no on-screen buttons** (needs a Quickstep-compatible launcher; flagged as a risk in report 03); English only; Stage-1 location from parent-set places only. | 2026-10-03 |
 | D32 | **Per-child research feed for Tier 2 (founder idea, adopted with changes).** Videos is a native list of tiles chosen per child from the age band and the topics the child researched (Assistant, topic requests); tapping a tile opens only that video in the isolated player; no search box, address bar or URL entry. Enforcement is in the app (single-video navigation lock) with a host-level DNS allowlist as defence in depth, because DNS cannot filter by video or URL path. **Not adopted in v1:** signing the device in to a YouTube/Google account (child's or parent's) and recommending YouTube Premium; kept as experiments VN-12 to VN-14, default off, never in release builds. Amends D3 and D25; D1 and D2 stand. | 2026-10-03 |
+| D33 | **Restricted web viewer for Wi-Fi sign-in pages (founder, refines D1, supersedes D30).** There is no browser app and no way to type a URL, search or bookmark. A Wi-Fi sign-in (captive portal) page opens automatically in **ZunePortalViewer**, a single-purpose viewer with no address bar, menu, launcher icon or exported entry points; it starts only from Android's sign-in event, closes itself when the network validates (or after 10 min), and denies YouTube and other denied hosts (D2). No `ACTION_VIEW` http(s) handler exists anywhere. Whether other in-app links may ever open in a viewer is not decided (D33 covers sign-in pages only). | 2026-10-03 |
 
 Assumptions still open are listed at the bottom of `docs/REQUIREMENTS.md` (A-numbers). **D4-D6 are superseded by D19.**
 
@@ -371,7 +372,7 @@ Package namespace (provisional, name clearance): `app.zune.<module>` for every a
 | D20, D18 | English only: `en_IN`, fallback `en_US`. Indic fonts kept so Indian cell-broadcast alerts render. |
 | D24 | ZuneGuardian is Device Owner and supervision-role holder: stock Supervision page hidden; sole setter of `DISALLOW_FACTORY_RESET`. |
 | D26 | Vanadium only (stock `external/chromium-webview` not shipped); only Reader and Videos may create a WebView (resolves R03 Q2, R01 Decision 7). |
-| D30 | CaptivePortalLogin removed; Settings buttons patched out; explainer screen. |
+| D30, D33 | D30 is superseded by D33: Wi-Fi sign-in pages open automatically in ZunePortalViewer, a restricted viewer with no URL entry (OS-20); the explainer-only path is dropped. The stock browser and HTMLViewer stay removed. |
 | D17, D21 | Pixel 10a (`stallion`), 9a (`tegu`) plus Cuttlefish CI; device layers: `04`. Codenames unverified (01 Verify 14). |
 | 09 Mode G (adopted; resolves 02 V12) | Tier A apps are built by Gradle and imported by Soong as `android_app_import` prebuilts with the platform key; the in-tree `packages/apps/Zune*` build is a fallback by ADR. |
 
@@ -411,7 +412,7 @@ Package namespace (provisional, name clearance): `app.zune.<module>` for every a
 - **OS-17 MUST** ZuneSettings catches every `android.settings.*` action sent by SystemUI, framework or Zune apps that no allowlisted activity serves; no `ActivityNotFoundException` in the crawl (AT-04).
 - **OS-18 MUST** Own plain-text licence viewer; stock licence and manual activities disabled (HTMLViewer hard-coded [R16 F8]).
 - **OS-19 MUST** Reset only via Parent area -> `ParentGate.confirm()` -> Guardian wipe; Guardian is the only setter of `DISALLOW_FACTORY_RESET` (no `MANAGE_USERS` fallback) [R16 F9]; spike on Cuttlefish in week 1. After a wipe the device boots to ZuneSetup and needs a new pairing code; a recovery-mode wipe cannot be blocked (inert until re-paired, 03).
-- **OS-20 MUST** Captive portal: explainer activity handles the sign-in action; P-SET-2 applied (D30).
+- **OS-20 MUST** Captive portal (D33): the Tier A system app ZunePortalViewer handles Android's sign-in action and opens automatically when a captive portal is reported. One WebView; no address bar, URL field, menu, bookmarks, search, share, "open in browser", downloads, new windows, file or content access; no launcher icon; no exported component other than the platform sign-in action; it binds to the captive network and closes when the network validates or after 10 minutes. `portal-deny.txt` (YouTube, `googlevideo.com`, `ytimg.com`, `youtube-nocookie.com`, and hosts added by staff) is refused by `shouldOverrideUrlLoading` and request interception. Its user agent is the WebView default; it is listed in `webview_callers.xml` and `internet-holders.txt`. No `ACTION_VIEW` http(s) handler exists on the image (AT-02).
 - **OS-21 SHOULD** Wi-Fi password share QR hidden (P-SET-3).
 - **OS-22 MUST** SystemUI: six tiles, three-item power menu, lock-screen shortcuts flashlight and camera.
 
@@ -489,7 +490,7 @@ PRODUCT_RELEASE_CONFIG_MAPS += $(wildcard vendor/zune/release/release_config_map
 | `Telecom`, `TeleService`, `TelephonyProvider`, `CarrierConfig`, `ContactsProvider`, `BlockedNumberProvider`, `CellBroadcastReceiver` | KEEP | 112, APNs, alerts (MCC 404/405 [R20]). |
 | In-call UI (`Dialer` or successor) | KEEP InCallService and emergency activities only | Launcher and dial-pad activities disabled (V7). |
 | `Messaging`, `Contacts`, `Stk`, `ONS`, `ImsServiceEntitlement`, `EmergencyInfo` | REMOVE | D19/D28; Stk can request browser launches [M]; re-add ImsServiceEntitlement only if the 112 field test needs it. |
-| `Browser2`, `QuickSearchBox`, `BookmarkProvider`, `PartnerBookmarksProvider`, `HTMLViewer`, `CaptivePortalLogin`, `CarrierDefaultApp`, `CertInstaller`, `SettingsIntelligence` | REMOVE | Browser and WebView surfaces [R04 F1]; CertInstaller only after P-SET-1; SettingsIntelligence removal ends Settings search. |
+| `Browser2`, `QuickSearchBox`, `BookmarkProvider`, `PartnerBookmarksProvider`, `HTMLViewer`, `CaptivePortalLogin`, `CarrierDefaultApp`, `CertInstaller`, `SettingsIntelligence` | REMOVE | Browser and WebView surfaces [R04 F1]; CertInstaller only after P-SET-1; SettingsIntelligence removal ends Settings search. `CaptivePortalLogin` is replaced by ZunePortalViewer (OS-20, D33). |
 | `OsuLogin` (in `com.android.wifi`) | KEEP, inert | Not removable by makefile; WebView gate blocks it; P-WIFI-1 if V4 allows. |
 | `PrintSpooler`, `BuiltInPrintService`, `PrintRecommendationService`, `Traceur`, `EasterEgg`, `DeviceAsWebcam`, `MusicFX`, `BluetoothMidiService`, `SharedStorageBackup`, `PrivateSpace`, `AvatarPicker`, `PhotoTable`, `BasicDreams`, `LiveWallpapersPicker`, `ThemePicker`, `ThemesStub`, `WallpaperCropper`, `CredentialManager`, `Tag`, `MtpService`, `DownloadProviderUi`, `CalendarProvider`, `AccessibilityMenu`, `DynamicSystemInstallationService`, `Camera2`, `Gallery2`, `Music`, `Calendar`, `DeskClock` | REMOVE | Mask print and credentials features [R03 F7]. Re-add only what breaks boot or a kept screen. |
 | `KeyChain`, `FusedLocation`, `InputDevices`, `WallpaperBackup`, `PacProcessor`, `ProxyHandler`, `VpnDialogs`, `DocumentsUI`, `ExternalStorageProvider`, `DownloadProvider`, `UserDictionaryProvider`, `LatinIME`, `CompanionDeviceManager`, `cameraserver`, `CameraExtensionsProxy`, `PackageInstaller`, `PermissionController` | KEEP | Plumbing; launcher entries disabled; PackageInstaller neutered by restrictions (03). |
@@ -506,7 +507,7 @@ PRODUCT_RELEASE_CONFIG_MAPS += $(wildcard vendor/zune/release/release_config_map
 | `ZuneSettingsOverlay` (`com.android.settings`) | Every `config_show_*` knob in [R16 F2, §5] false; `help_url_*` empty (CI check). |
 | `ZuneProviderOverlay` (`com.android.providers.settings`) | `def_device_provisioned=false`, `def_user_setup_complete=false`, Bluetooth on, NFC off (V13). |
 | `ZuneLauncher3Overlay` (`com.android.launcher3`) | Overview actions, search, widgets, wallpaper entry points off. |
-| `ZuneNetworkStackOverlay` | Captive-portal probe URLs to `connectivity.<zone>` (05 BE-42). Detection stays on so a sign-in network is recognised and the explainer shows (OS-20); the only sign-in UI is the explainer. |
+| `ZuneNetworkStackOverlay` | Captive-portal probe URLs to `connectivity.<zone>` (05 BE-42). Detection stays on so a sign-in network is recognised and ZunePortalViewer opens (OS-20, D33); that viewer is the only sign-in UI. |
 
 ### 5. Telephony residue (D28)
 
@@ -531,7 +532,7 @@ Engine room: `settings_gen.py` reads the built Settings manifest (`aapt2 dump xm
   <component class="com.android.settings.homepage.SettingsHomepageActivity" enabled="false"/> <!-- + all others -->
 </component-override></config>
 ```
-Settings re-enables some components at runtime [R16 F2]; Guardian re-asserts (03). Wi-Fi advanced fields (proxy, static IP/DNS) stay visible in Stage 1 [R16 row 3]. Captive portal: ZuneSettings handles `android.net.conn.CAPTIVE_PORTAL` (V14) and shows "This Wi-Fi needs a sign-in page. Ask a parent to use a phone hotspot."
+Settings re-enables some components at runtime [R16 F2]; Guardian re-asserts (03). Wi-Fi advanced fields (proxy, static IP/DNS) stay visible in Stage 1 [R16 row 3]. Captive portal: ZunePortalViewer handles Android's sign-in action (OS-20, V14, V16).
 
 ### 7. Gesture navigation (D31)
 
@@ -624,7 +625,8 @@ Do V1 to V3 before anything else.
 | V11 | `repo init -m <subdir>` and directory `<linkfile>` work with Soong, Kati, `AndroidProducts.mk` discovery | Unverified | Z1: link stub `device/zune`, run `lunch` | Separate repos split by CI. |
 | V12 | Mode G works: Gradle-built Tier A APKs imported as `android_app_import` with the platform key are re-signed at release and run as privileged system apps (09 VP-1); in-tree Compose under Soong is only the fallback | Unverified | Z1 stub APK (09 Wave 0) | In-tree Soong build by ADR, Compose under Soong unproven (`09`). |
 | V13 | NFC mask, restriction constants, Bluetooth profile properties, provider default keys, USB default work on the Pixel vendor image | Inferred [R03 F7, R16 row 13] | AT-08 on both Pixels | Guardian assertions. |
-| V14 | `android.net.conn.CAPTIVE_PORTAL` is the sign-in action; no crash loop without CaptivePortalLogin | Memory | Fake captive network on Cuttlefish | Set `captive_portal_mode`; keep explainer. |
+| V14 | `android.net.conn.CAPTIVE_PORTAL` is the sign-in action; no crash loop without CaptivePortalLogin | Memory | Fake captive network on Cuttlefish | Set `captive_portal_mode`; fall back to a patched CaptivePortalLogin (ADR). |
+| V16 | A non-module app (ZunePortalViewer) can replace the Connectivity module's CaptivePortalLogin: the platform resolves the sign-in intent to it, the `CaptivePortal` parcel (dismiss and ignore calls) works, and it can bind to the captive network [MEMORY] | Module internals unread | `packages/modules/Connectivity` at the tag; fake captive network on Cuttlefish and a Pixel | Patch CaptivePortalLogin in place with a patch-stack entry and ADR (strip menu, URL bar, browser hand-off) |
 | V15 | Host sizing, Ubuntu 24.04, 1.5-3 h clean build, Cuttlefish product names | Estimates [R01 F4] | Z1 baseline build | Resize; keep a 22.04 image. |
 
 ## Risks, open gates and out of scope
@@ -666,7 +668,7 @@ Evidence came from GrapheneOS and LineageOS trees, not Google's `android-17.0.0_
 | D28, R19, R20 | Ordinary Indian SIMs carry voice and SMS, so inbound calls and SMS must be rejected (LOCK-33). |
 | R19 vs R16 #7 | Triple-press SOS is on by default with a cancel countdown (R16 defaulted it off). |
 | D23, D27 | Bands 7-9, 10-12, 13-14 (R05: 6-8). Parent visibility, child notice and retention live in 05, 06, 07, 11. |
-| D30, D14 | Captive portal unsupported. Never set `DISALLOW_CONFIG_WIFI`, `_MOBILE_NETWORKS`, `_BLUETOOTH` [R16 F3, 02 OS-14]; parent "network off" is forced airplane mode. |
+| D30 (superseded by D33), D14 | Captive portals open in ZunePortalViewer (02 OS-20), with a bounded DNS window (LOCK-24). Never set `DISALLOW_CONFIG_WIFI`, `_MOBILE_NETWORKS`, `_BLUETOOTH` [R16 F3, 02 OS-14]; parent "network off" is forced airplane mode. |
 | D25, D26 | WebView only in Reader and Videos (R04 option C); Tier 2 off by default; Chromium fork is Stage 2. |
 | D31 | Bluetooth on, NFC off, USB file transfer off; location from parent-set places only (replaces R05 opt-in tracking). |
 | R05 4.8, R16 F9 | Guardian owns the socket (R13's ZuneComms dropped). Platform `PackageUsagePolicy` is flag-off in `cp2a`, so Guardian suspends apps itself. PIN is Zune-owned; no platform supervising user; Guardian is sole setter of `DISALLOW_FACTORY_RESET`. |
@@ -706,7 +708,7 @@ Evidence came from GrapheneOS and LineageOS trees, not Google's `android-17.0.0_
 - **LOCK-21 MUST** No `VIEW` + `http`/`https`/`ftp` handler, `WEB_SEARCH` handler, `CustomTabsService` or `CATEGORY_APP_BROWSER` handler exists in any partition (extends 02 OS-07).
 - **LOCK-22 MUST** P-FWK-2: IntentFirewall also reads `/system_ext/etc/ifw` and blocks activity starts with scheme http, https, ftp or action `WEB_SEARCH` from any sender, logging each; `/data/system/ifw` cannot loosen it.
 - **LOCK-23 MUST** Only Reader and Videos create a WebView (02 OS-27); Reader has no `INTERNET`; `INTERNET` holders equal `vendor/zune/allowlist/internet-holders.txt` (02 OS-05); a no-`INTERNET` app cannot reach the network by socket, `DownloadManager`, `MediaPlayer` or intent (kernel eBPF check [R04 F6]).
-- **LOCK-24 MUST** Strict Private DNS to the Zune resolver (05) through `setGlobalPrivateDnsModeSpecifiedHost` plus `DISALLOW_CONFIG_PRIVATE_DNS` (placeholder resolver allowed until Z4); captive-portal detection stays on against the Zune probe (05 BE-42) so a sign-in network is recognised, the only sign-in UI is the ZuneSettings explainer, and Guardian re-asserts `captive_portal_mode` at its default (D30; 02 OS-20).
+- **LOCK-24 MUST** Strict Private DNS to the Zune resolver (05) through `setGlobalPrivateDnsModeSpecifiedHost` plus `DISALLOW_CONFIG_PRIVATE_DNS` (placeholder resolver allowed until Z4); captive-portal detection stays on against the Zune probe (05 BE-42) so a sign-in network is recognised, the only sign-in UI is ZunePortalViewer (D33; 02 OS-20). Because strict Private DNS can make a captive network look offline (VG-8), when Android reports a captive portal Guardian may switch Private DNS to opportunistic for at most 10 minutes, restore strict mode when the network validates or the timer ends, and record both changes in `posture`; the viewer's host denylist is the control during that window. Guardian re-asserts `captive_portal_mode` at its default.
 - **LOCK-25 MUST** `user` build, `ro.adb.secure=1`, `adb_enabled=0`, `development_settings_enabled=0`, `DISALLOW_DEBUGGING_FEATURES`, `persist.adb.tradeinmode` unset, no RadioInfo or `*#*#` handler; `DISALLOW_SAFE_BOOT`, and a safe-mode boot still runs Guardian with every restriction.
 - **LOCK-26 MUST** USB file transfer, physical media, Bluetooth sharing and NFC are off; no USB gadget function except charging (no MTP, PTP, ACM, DIAG, ADB); USB host stays for USB-C audio (02).
 - **LOCK-27 MUST** Tethering, VPN, credentials, accounts, user and profile creation, install, unknown sources, uninstall and app control are restricted; `fw.max_users=1`; no `VpnService` package ships.
@@ -839,7 +841,7 @@ Tests are `LT-nn` (02 owns `AT-nn`). On `user` builds adb is off: read the LOCK-
 - **LT-01** `dumpsys device_policy`, role holders and `dumpsys user` show Guardian as sole owner, role holder and restriction source; the set equals `restrictions.json`; one user.
 - **LT-02** `am start -a android.intent.action.VIEW -d` with `https://`, `http://`, `ftp://`, `intent:` and `WEB_SEARCH` fail with an IFW log line, also with a permissive file in `/data/system/ifw`; scan and `query-activities` find no browser, Custom Tabs or `CATEGORY_APP_BROWSER` handler.
 - **LT-03** Only Reader and Videos create a WebView (02 AT-07); a no-`INTERNET` test APK (userdebug) fails socket, `DownloadManager`, `MediaPlayer`, WebView and `ACTION_VIEW`; holders equal the allowlist.
-- **LT-04** `private_dns_mode=hostname`; a non-allowlisted name does not resolve with Wi-Fi DNS set to a public server; a fake captive network shows only the explainer (02 AT-04).
+- **LT-04** `private_dns_mode=hostname`; a non-allowlisted name does not resolve with Wi-Fi DNS set to a public server; a fake captive network opens ZunePortalViewer automatically, which has no URL entry, cannot load a denied host, closes when the network validates, and strict Private DNS is back within 10 minutes (02 AT-04).
 - **LT-05** `ro.debuggable=0`, `ro.adb.secure=1`, no developer options; `fastboot flashing get_unlock_ability` returns 0 and unlock is refused; safe-mode boot keeps Guardian and every restriction.
 - **LT-06** `lsusb -v` shows no MTP, PTP, ACM, DIAG or ADB interface; Bluetooth OPP send is refused; no NFC feature.
 - **LT-07** Tether, VPN, user creation, install and uninstall attempts fail; no `VpnService` package.
@@ -867,7 +869,7 @@ Tests are `LT-nn` (02 owns `AT-nn`). On `user` builds adb is off: read the LOCK-
 | VG-5 | `OemLockManager` access, `DISALLOW_FACTORY_RESET` clearing the OEM-unlock bit, `get_unlock_ability` on 10a and 9a [R04 F7] | Pixel behaviour unmeasured | Read `OemLockService`; sacrificial Pixel | Service-unlock becomes signed recovery sideload only (04) |
 | VG-6 | IntentFirewall syntax and the 30-line `/system_ext/etc/ifw` patch cover WebView `intent:` launches; shortcut and share routes close with no handler [R04 F5] | Mirror only; shortcuts from memory | Read `IntentFirewall.java`; LT-02, LT-08 | CI "no handler" gate plus WebView gate; add IFW rules |
 | VG-7 | `DISALLOW_INSTALL_APPS` does not block ZuneUpdater or Guardian installs of signed updates [R04 risks] | Unverified in R04 | Install a signed update with restrictions set | Guardian installs as owner, or OTA only (breaks 02 OS-28 SLA) |
-| VG-8 | Strict Private DNS via DPM, `captive_portal_mode` values, port 853 blocked networks look offline [R04 F4, F6] | Secondary sources | LT-04 on a Pixel and on a 853-blocked network | Per-UID `INTERNET` stays the base control; document the limit |
+| VG-8 | Strict Private DNS via DPM, `captive_portal_mode` values, port 853 blocked networks look offline [R04 F4, F6] | Secondary sources | LT-04 on a Pixel and on a 853-blocked network | Per-UID `INTERNET` stays the base control; document the limit; if the viewer cannot open under strict DNS, widen the LOCK-24 window design |
 | VG-9 | `DISALLOW_OUTGOING_CALLS` spares 112; Guardian can reject inbound calls; telephony fixes (CVE-2026-28615, commits 21585d3, 586e92c) are in the tag [R12] | Fixes landed after the June build | Read `Telecomm`; LT-15; compare tag with commits | Patch P-TEL-1 (deny-all in `GsmCdmaPhone.dial`, `SmsController`, Telecom), re-signing `com.android.telephonycore`; 02 fork decision |
 | VG-10 | Guardian can hold the dialer role and own `ACTION_DIAL_EMERGENCY`; AOSP Dialer is unneeded [R12 §2.3] | 02 V7 open | Cuttlefish modem simulator; Pixel | Keep AOSP in-call UI with launcher activities disabled (02) |
 | VG-11 | Power-key multi-press can be re-pointed to Guardian; India's panic-button rule requires three presses; 112 connects on SIM-less, voice-SIM and data-SIM devices [R19, R20] | Rule text unread; untested | Read `PhoneWindowManager`; LOCK-36 field test; counsel | Add P-FWK-3; show "unavailable" and disclose; escalate before pilot |
@@ -2311,7 +2313,7 @@ Base: copy GrapheneOS `SetupWizard2` (MIT, keep notices, `overrides: ["Provision
 |---|---|
 | 1 | Welcome, adult voice, Emergency |
 | 2 | Gesture tutorial (02 OS-23): Back via `OnBackInvokedCallback`; Home via `onNewIntent(HOME)` from a practice task; Recents confirmed by a grown-up tap (VP-3) |
-| 3 | Wi-Fi via `android.settings.SETUP_INTERNET` [R16 F11]; note "Wi-Fi with a sign-in page does not work. Use a phone hotspot" (D30); skip only with mobile data |
+| 3 | Wi-Fi via `android.settings.SETUP_INTERNET` [R16 F11]; a Wi-Fi sign-in page opens automatically in ZunePortalViewer (D33); skip only with mobile data |
 | 4 | Pair: CameraX frames to ZXing core (VP-11), or keypad; Guardian runs `enroll/begin` (05 §4.3) |
 | 5 | Confirm "This phone is for <name>" from the verified bundle |
 | 6 | PROVISION: Device Owner and roles (03 §4.2, VG-1) |
@@ -2594,7 +2596,7 @@ L0 is normal operation. Scopes `global|cohort|family|device`. Triggers: OPS-21 e
 
 - Enrolment fails: new claim code, re-attest; serial mismatch goes to the station.
 - Forgot PIN: `pin_reset` (03 LOCK-15). Phone reset: code from the bound family (03 LOCK-18); support releases only with invoice, ID and two staff approvals.
-- Offline at home: Wi-Fi sign-in page (D30) or blocked port 853 (03 VG-8); hotspot workaround.
+- Offline at home: blocked port 853 (03 VG-8) or a sign-in page that will not complete in ZunePortalViewer (D33); hotspot workaround.
 - Lost or stolen: `lock`, then `unenroll` on request. Will not boot: §4.8.
 - Tooling: a helpdesk tool hosted in India (or the staff console's case queue) holds contact details and ticket text only, never message or AI content, PINs or serials; staff paste nothing from the vault (break-glass only, 05 BE-28); the tool is a vendor-register row (11 CMP-29). Tickets carry the `serial_hmac` short form, not the serial.
 
@@ -2910,7 +2912,7 @@ Owned here: pipelines, gate evidence, matrices, test governance, DoD. Test conte
 | D19, D28 vs R10 G5 (calls, SMS vault), R18 QA (VoLTE, SMS) | Dropped; LT-15, QT-16 and 112 test mode replace them. |
 | D18 vs R07, R13 (COPPA, NCMEC, SB 243) | CMT-nn (DPDP) and the POCSO tabletop (CT-15, CMT-12); no US or EU tests. |
 | D23, D27, D29 vs R07, R13 | Bands 7-9, 10-12, 13-14 everywhere; 12-month retention tests; eval on OpenAI, monthly Anthropic parity, judged by the other vendor (07 AI-26). |
-| D25, D26, D30, D31 vs R04, R10 | Tier 2 tested on and off; Vanadium update path (AT-07, AT-R09), no Chromium build; captive Wi-Fi tested as unsupported, not a bypass; gesture, Bluetooth, NFC, MTP tests. |
+| D25, D26, D30, D31 vs R04, R10 | Tier 2 tested on and off; Vanadium update path (AT-07, AT-R09), no Chromium build; captive Wi-Fi tested through ZunePortalViewer (D33), which must not become a bypass; gesture, Bluetooth, NFC, MTP tests. |
 | R04 (8 INTERNET holders, lockdown VPN, SMS links, BROM SoCs) | Tests cover per-UID INTERNET, Private DNS, WebView gate; inbound SMS shows nothing; Pixels only. |
 | R10 (rings; G3 "policy tests (05, 12)"), R18 (adb off on `user`; cohorts 10/25/100), R13 (3% battery, 100k kids) | 04 REL-17 rings win; "12" meant the telephony report, use LT-07..10, BT-03; userdebug twin (QA-02); cohorts 12/30/70/88 (01); battery numbers [default] until C0 data; load is 10x the pilot. |
 
@@ -3041,7 +3043,7 @@ Pilot gates. Before the staff pilot: QT-01..07, 09, 10, 12; band 7-9 panel; AI g
 - **QT-01** Cuttlefish smoke. Pass: boots in 5 min [default]; Guardian provisioned with `DEVMOCK`; HOME is `app.zune.launcher`; no browser handler; killing Guardian gives the fail-closed Home (APT-03).
 - **QT-02** Seed 10 holes (Browser2, `VIEW https` filter, extra `INTERNET`, new exported activity, `ro.debuggable=1`, AOSP test-key signature, permissive domain, 4 KB library, Firebase dependency, `DISALLOW_CONFIG_WIFI`); gates on vanilla `aosp_cf_x86_64_only_phone`; LT-02, LT-05 on seeded images. Pass: each hole fails its IG and LT; vanilla fails IG-1, 2, 3, 5, 6.
 - **QT-03** RC per model: 72 h soak, `school_day`, 8 h idle, low-storage OTA (REL-18); `batterystats`, `meminfo`, Guardian restarts. Pass: no ANR or unplanned Guardian restart; OTA refused cleanly; Q8.
-- **QT-04** `matrix.yml` cell run; captive Wi-Fi; parent hotspot. Pass: Q5-Q7; captive shows only the explainer (AT-04); hotspot connects.
+- **QT-04** `matrix.yml` cell run; captive Wi-Fi; parent hotspot. Pass: Q5-Q7; captive opens ZunePortalViewer automatically with no URL entry and no route to a denied host (LT-04, AT-04); hotspot connects.
 - **QT-05** Loopback rig and `netem` on calls and walkie; five adult listeners rate speech. Pass: Q6; MOS at least 3.5 at 3% loss [default].
 - **QT-06** RC attacks: key combinations into recovery, fastboot commands on a locked unit, recovery sideload of a test-signed zip, a Google stock OTA and a downgrade, safe mode, recovery wipe, SIM swap, PIN-locked SIM, USSD, MMI. Pass: unlock refused (`get_unlock_ability` 0); every sideload rejected; wipe gives unpaired setup; no new capability.
 - **QT-07** RC peripherals: USB keyboard and mouse, USB-C Ethernet, OTG storage, USB-C audio, Bluetooth keyboard and OPP, NFC tag. Pass: no shortcut escape (LT-08); INTERNET and Private DNS hold on Ethernet; storage, OPP refused; audio works; NFC inert.
@@ -3514,3 +3516,10 @@ All rows stay in their own section's table; this is the order across sections. C
 - Correction recorded: DNS filtering cannot restrict one video (hostnames only); the per-video lock is in the app (CNT-42).
 - Not adopted in v1: Google or YouTube sign-in and a Premium recommendation (CNT-45; experiments VN-12 to VN-14, dev builds only).
 - Founder decisions on the Tier 2 player (2026-10-03): 180 s pause timeout, tightenable later (CNT-46); whole-channel vetting (CNT-47); immersive full screen with native controls outside the player (CNT-48); per-app reach (CNT-49, SHOULD); band gate by test (CNT-50). 03 is asked to pull per-UID chains forward if cheap; VN-15, VN-16 and YQ10 added.
+
+## 2026-10-03 addendum: D33 restricted web viewer for Wi-Fi sign-in pages (founder)
+
+- D33 added (REQUIREMENTS, 00-START-HERE); D30 marked superseded; D1 is refined, not reversed: no browser app, no URL entry, no search; one single-purpose viewer for sign-in pages (ZunePortalViewer, 02 OS-20).
+- Edited: 02 (D30 row, OS-20, package table, ZuneNetworkStackOverlay row, V14, new V16), 03 (reconciliation, LOCK-24 with a 10-minute opportunistic-DNS window, LT-04, VG-8), 09 (setup step 3), 10 (offline-at-home note), 12 (reconciliation, QT-04).
+- Open technical risk: strict Private DNS can make a captive network look offline (03 VG-8); LOCK-24's bounded window is the proposed answer and needs a Pixel test. V16 asks whether a non-module app can replace CaptivePortalLogin.
+- Not decided: whether any other link (messages, Assistant, Reader) may ever open in a viewer. Today they stay blocked (06 COM-10, 08 CNT-32).

@@ -25,7 +25,7 @@ Package namespace (provisional, name clearance): `app.zune.<module>` for every a
 | D20, D18 | English only: `en_IN`, fallback `en_US`. Indic fonts kept so Indian cell-broadcast alerts render. |
 | D24 | ZuneGuardian is Device Owner and supervision-role holder: stock Supervision page hidden; sole setter of `DISALLOW_FACTORY_RESET`. |
 | D26 | Vanadium only (stock `external/chromium-webview` not shipped); only Reader and Videos may create a WebView (resolves R03 Q2, R01 Decision 7). |
-| D30 | CaptivePortalLogin removed; Settings buttons patched out; explainer screen. |
+| D30, D33 | D30 is superseded by D33: Wi-Fi sign-in pages open automatically in ZunePortalViewer, a restricted viewer with no URL entry (OS-20); the explainer-only path is dropped. The stock browser and HTMLViewer stay removed. |
 | D17, D21 | Pixel 10a (`stallion`), 9a (`tegu`) plus Cuttlefish CI; device layers: `04`. Codenames unverified (01 Verify 14). |
 | 09 Mode G (adopted; resolves 02 V12) | Tier A apps are built by Gradle and imported by Soong as `android_app_import` prebuilts with the platform key; the in-tree `packages/apps/Zune*` build is a fallback by ADR. |
 
@@ -65,7 +65,7 @@ Package namespace (provisional, name clearance): `app.zune.<module>` for every a
 - **OS-17 MUST** ZuneSettings catches every `android.settings.*` action sent by SystemUI, framework or Zune apps that no allowlisted activity serves; no `ActivityNotFoundException` in the crawl (AT-04).
 - **OS-18 MUST** Own plain-text licence viewer; stock licence and manual activities disabled (HTMLViewer hard-coded [R16 F8]).
 - **OS-19 MUST** Reset only via Parent area -> `ParentGate.confirm()` -> Guardian wipe; Guardian is the only setter of `DISALLOW_FACTORY_RESET` (no `MANAGE_USERS` fallback) [R16 F9]; spike on Cuttlefish in week 1. After a wipe the device boots to ZuneSetup and needs a new pairing code; a recovery-mode wipe cannot be blocked (inert until re-paired, 03).
-- **OS-20 MUST** Captive portal: explainer activity handles the sign-in action; P-SET-2 applied (D30).
+- **OS-20 MUST** Captive portal (D33): the Tier A system app ZunePortalViewer handles Android's sign-in action and opens automatically when a captive portal is reported. One WebView; no address bar, URL field, menu, bookmarks, search, share, "open in browser", downloads, new windows, file or content access; no launcher icon; no exported component other than the platform sign-in action; it binds to the captive network and closes when the network validates or after 10 minutes. `portal-deny.txt` (YouTube, `googlevideo.com`, `ytimg.com`, `youtube-nocookie.com`, and hosts added by staff) is refused by `shouldOverrideUrlLoading` and request interception. Its user agent is the WebView default; it is listed in `webview_callers.xml` and `internet-holders.txt`. No `ACTION_VIEW` http(s) handler exists on the image (AT-02).
 - **OS-21 SHOULD** Wi-Fi password share QR hidden (P-SET-3).
 - **OS-22 MUST** SystemUI: six tiles, three-item power menu, lock-screen shortcuts flashlight and camera.
 
@@ -143,7 +143,7 @@ PRODUCT_RELEASE_CONFIG_MAPS += $(wildcard vendor/zune/release/release_config_map
 | `Telecom`, `TeleService`, `TelephonyProvider`, `CarrierConfig`, `ContactsProvider`, `BlockedNumberProvider`, `CellBroadcastReceiver` | KEEP | 112, APNs, alerts (MCC 404/405 [R20]). |
 | In-call UI (`Dialer` or successor) | KEEP InCallService and emergency activities only | Launcher and dial-pad activities disabled (V7). |
 | `Messaging`, `Contacts`, `Stk`, `ONS`, `ImsServiceEntitlement`, `EmergencyInfo` | REMOVE | D19/D28; Stk can request browser launches [M]; re-add ImsServiceEntitlement only if the 112 field test needs it. |
-| `Browser2`, `QuickSearchBox`, `BookmarkProvider`, `PartnerBookmarksProvider`, `HTMLViewer`, `CaptivePortalLogin`, `CarrierDefaultApp`, `CertInstaller`, `SettingsIntelligence` | REMOVE | Browser and WebView surfaces [R04 F1]; CertInstaller only after P-SET-1; SettingsIntelligence removal ends Settings search. |
+| `Browser2`, `QuickSearchBox`, `BookmarkProvider`, `PartnerBookmarksProvider`, `HTMLViewer`, `CaptivePortalLogin`, `CarrierDefaultApp`, `CertInstaller`, `SettingsIntelligence` | REMOVE | Browser and WebView surfaces [R04 F1]; CertInstaller only after P-SET-1; SettingsIntelligence removal ends Settings search. `CaptivePortalLogin` is replaced by ZunePortalViewer (OS-20, D33). |
 | `OsuLogin` (in `com.android.wifi`) | KEEP, inert | Not removable by makefile; WebView gate blocks it; P-WIFI-1 if V4 allows. |
 | `PrintSpooler`, `BuiltInPrintService`, `PrintRecommendationService`, `Traceur`, `EasterEgg`, `DeviceAsWebcam`, `MusicFX`, `BluetoothMidiService`, `SharedStorageBackup`, `PrivateSpace`, `AvatarPicker`, `PhotoTable`, `BasicDreams`, `LiveWallpapersPicker`, `ThemePicker`, `ThemesStub`, `WallpaperCropper`, `CredentialManager`, `Tag`, `MtpService`, `DownloadProviderUi`, `CalendarProvider`, `AccessibilityMenu`, `DynamicSystemInstallationService`, `Camera2`, `Gallery2`, `Music`, `Calendar`, `DeskClock` | REMOVE | Mask print and credentials features [R03 F7]. Re-add only what breaks boot or a kept screen. |
 | `KeyChain`, `FusedLocation`, `InputDevices`, `WallpaperBackup`, `PacProcessor`, `ProxyHandler`, `VpnDialogs`, `DocumentsUI`, `ExternalStorageProvider`, `DownloadProvider`, `UserDictionaryProvider`, `LatinIME`, `CompanionDeviceManager`, `cameraserver`, `CameraExtensionsProxy`, `PackageInstaller`, `PermissionController` | KEEP | Plumbing; launcher entries disabled; PackageInstaller neutered by restrictions (03). |
@@ -160,7 +160,7 @@ PRODUCT_RELEASE_CONFIG_MAPS += $(wildcard vendor/zune/release/release_config_map
 | `ZuneSettingsOverlay` (`com.android.settings`) | Every `config_show_*` knob in [R16 F2, §5] false; `help_url_*` empty (CI check). |
 | `ZuneProviderOverlay` (`com.android.providers.settings`) | `def_device_provisioned=false`, `def_user_setup_complete=false`, Bluetooth on, NFC off (V13). |
 | `ZuneLauncher3Overlay` (`com.android.launcher3`) | Overview actions, search, widgets, wallpaper entry points off. |
-| `ZuneNetworkStackOverlay` | Captive-portal probe URLs to `connectivity.<zone>` (05 BE-42). Detection stays on so a sign-in network is recognised and the explainer shows (OS-20); the only sign-in UI is the explainer. |
+| `ZuneNetworkStackOverlay` | Captive-portal probe URLs to `connectivity.<zone>` (05 BE-42). Detection stays on so a sign-in network is recognised and ZunePortalViewer opens (OS-20, D33); that viewer is the only sign-in UI. |
 
 ### 5. Telephony residue (D28)
 
@@ -185,7 +185,7 @@ Engine room: `settings_gen.py` reads the built Settings manifest (`aapt2 dump xm
   <component class="com.android.settings.homepage.SettingsHomepageActivity" enabled="false"/> <!-- + all others -->
 </component-override></config>
 ```
-Settings re-enables some components at runtime [R16 F2]; Guardian re-asserts (03). Wi-Fi advanced fields (proxy, static IP/DNS) stay visible in Stage 1 [R16 row 3]. Captive portal: ZuneSettings handles `android.net.conn.CAPTIVE_PORTAL` (V14) and shows "This Wi-Fi needs a sign-in page. Ask a parent to use a phone hotspot."
+Settings re-enables some components at runtime [R16 F2]; Guardian re-asserts (03). Wi-Fi advanced fields (proxy, static IP/DNS) stay visible in Stage 1 [R16 row 3]. Captive portal: ZunePortalViewer handles Android's sign-in action (OS-20, V14, V16).
 
 ### 7. Gesture navigation (D31)
 
@@ -278,7 +278,8 @@ Do V1 to V3 before anything else.
 | V11 | `repo init -m <subdir>` and directory `<linkfile>` work with Soong, Kati, `AndroidProducts.mk` discovery | Unverified | Z1: link stub `device/zune`, run `lunch` | Separate repos split by CI. |
 | V12 | Mode G works: Gradle-built Tier A APKs imported as `android_app_import` with the platform key are re-signed at release and run as privileged system apps (09 VP-1); in-tree Compose under Soong is only the fallback | Unverified | Z1 stub APK (09 Wave 0) | In-tree Soong build by ADR, Compose under Soong unproven (`09`). |
 | V13 | NFC mask, restriction constants, Bluetooth profile properties, provider default keys, USB default work on the Pixel vendor image | Inferred [R03 F7, R16 row 13] | AT-08 on both Pixels | Guardian assertions. |
-| V14 | `android.net.conn.CAPTIVE_PORTAL` is the sign-in action; no crash loop without CaptivePortalLogin | Memory | Fake captive network on Cuttlefish | Set `captive_portal_mode`; keep explainer. |
+| V14 | `android.net.conn.CAPTIVE_PORTAL` is the sign-in action; no crash loop without CaptivePortalLogin | Memory | Fake captive network on Cuttlefish | Set `captive_portal_mode`; fall back to a patched CaptivePortalLogin (ADR). |
+| V16 | A non-module app (ZunePortalViewer) can replace the Connectivity module's CaptivePortalLogin: the platform resolves the sign-in intent to it, the `CaptivePortal` parcel (dismiss and ignore calls) works, and it can bind to the captive network [MEMORY] | Module internals unread | `packages/modules/Connectivity` at the tag; fake captive network on Cuttlefish and a Pixel | Patch CaptivePortalLogin in place with a patch-stack entry and ADR (strip menu, URL bar, browser hand-off) |
 | V15 | Host sizing, Ubuntu 24.04, 1.5-3 h clean build, Cuttlefish product names | Estimates [R01 F4] | Z1 baseline build | Resize; keep a 22.04 image. |
 
 ## Risks, open gates and out of scope

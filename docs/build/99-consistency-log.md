@@ -202,3 +202,10 @@ All rows stay in their own section's table; this is the order across sections. C
 - Correction recorded: DNS filtering cannot restrict one video (hostnames only); the per-video lock is in the app (CNT-42).
 - Not adopted in v1: Google or YouTube sign-in and a Premium recommendation (CNT-45; experiments VN-12 to VN-14, dev builds only).
 - Founder decisions on the Tier 2 player (2026-10-03): 180 s pause timeout, tightenable later (CNT-46); whole-channel vetting (CNT-47); immersive full screen with native controls outside the player (CNT-48); per-app reach (CNT-49, SHOULD); band gate by test (CNT-50). 03 is asked to pull per-UID chains forward if cheap; VN-15, VN-16 and YQ10 added.
+
+## 2026-10-03 addendum: D33 restricted web viewer for Wi-Fi sign-in pages (founder)
+
+- D33 added (REQUIREMENTS, 00-START-HERE); D30 marked superseded; D1 is refined, not reversed: no browser app, no URL entry, no search; one single-purpose viewer for sign-in pages (ZunePortalViewer, 02 OS-20).
+- Edited: 02 (D30 row, OS-20, package table, ZuneNetworkStackOverlay row, V14, new V16), 03 (reconciliation, LOCK-24 with a 10-minute opportunistic-DNS window, LT-04, VG-8), 09 (setup step 3), 10 (offline-at-home note), 12 (reconciliation, QT-04).
+- Open technical risk: strict Private DNS can make a captive network look offline (03 VG-8); LOCK-24's bounded window is the proposed answer and needs a Pixel test. V16 asks whether a non-module app can replace CaptivePortalLogin.
+- Not decided: whether any other link (messages, Assistant, Reader) may ever open in a viewer. Today they stay blocked (06 COM-10, 08 CNT-32).
