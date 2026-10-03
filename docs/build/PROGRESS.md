@@ -33,3 +33,9 @@
 - `android-17.0.0_r1` synced (partial clone, depth 1): 1,084 projects, 139 GB on disk (105 GB files + 34 GB .repo). First attempt filled the 150 GB volume; grew to 250, then replaced with a 200 GB volume (rsync copy verified identical, old volume deleted). Source volume `zune-aosp-src` is 200 GB (about USD 18/month); `aws-build-session.sh` default SRC_GB is now 200.
 - Build host for now: m6a.4xlarge (16 vCPU / 64 GB) because the vCPU quota is 16 until the 32 request (case open) is approved.
 - Verify-first rows 1 and 4 pass at source level; row 5 partial (see docs/verified-facts.md). Browser2, CaptivePortalLogin, HTMLViewer confirmed in stock product makefiles.
+
+## 2026-10-03: first baseline build attempt
+- `lunch aosp_cf_x86_64_only_phone-aosp_current-userdebug` works (Verify-first 5: target valid, BUILD_ID CP2A.260605.016).
+- Finding: with an absolute `OUT_DIR` outside the source tree (`/mnt/out`), Soong's siso bootstrap fails with `failed to load @config//main.star: open main.star: no such file or directory`. Workaround: leave `OUT_DIR` unset and symlink `/aosp/out -> /mnt/out`. Bootstrap then passes.
+- The idle watchdog terminated the host 15 min after the failed build (working as designed); the scratch disk was lost, the source volume was kept.
+- To fix in aws-build-session.sh: use the `out` symlink instead of OUT_DIR=/mnt/out in the profile script, and put CCACHE_DIR under /mnt/out (the /mnt directory is root-owned).
