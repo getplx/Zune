@@ -173,7 +173,7 @@ L0 is normal operation. Scopes `global|cohort|family|device`. Triggers: OPS-21 e
 
 - Enrolment fails: new claim code, re-attest; serial mismatch goes to the station.
 - Forgot PIN: `pin_reset` (03 LOCK-15). Phone reset: code from the bound family (03 LOCK-18); support releases only with invoice, ID and two staff approvals.
-- Offline at home: blocked port 853 (03 VG-8) or a sign-in page that will not complete in ZunePortalViewer (D33); hotspot workaround.
+- Offline at home: blocked port 853 (03 VG-8) or a sign-in page that will not complete in ZuneWebViewer (D33); hotspot workaround.
 - Lost or stolen: `lock`, then `unenroll` on request. Will not boot: §4.8.
 - Tooling: a helpdesk tool hosted in India (or the staff console's case queue) holds contact details and ticket text only, never message or AI content, PINs or serials; staff paste nothing from the vault (break-glass only, 05 BE-28); the tool is a vendor-register row (11 CMP-29). Tickets carry the `serial_hmac` short form, not the serial.
 

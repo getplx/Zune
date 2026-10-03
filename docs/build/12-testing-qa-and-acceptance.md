@@ -18,7 +18,7 @@ Owned here: pipelines, gate evidence, matrices, test governance, DoD. Test conte
 | D19, D28 vs R10 G5 (calls, SMS vault), R18 QA (VoLTE, SMS) | Dropped; LT-15, QT-16 and 112 test mode replace them. |
 | D18 vs R07, R13 (COPPA, NCMEC, SB 243) | CMT-nn (DPDP) and the POCSO tabletop (CT-15, CMT-12); no US or EU tests. |
 | D23, D27, D29 vs R07, R13 | Bands 7-9, 10-12, 13-14 everywhere; 12-month retention tests; eval on OpenAI, monthly Anthropic parity, judged by the other vendor (07 AI-26). |
-| D25, D26, D30, D31 vs R04, R10 | Tier 2 tested on and off; Vanadium update path (AT-07, AT-R09), no Chromium build; captive Wi-Fi tested through ZunePortalViewer (D33), which must not become a bypass; gesture, Bluetooth, NFC, MTP tests. |
+| D25, D26, D30, D31 vs R04, R10 | Tier 2 tested on and off; Vanadium update path (AT-07, AT-R09), no Chromium build; captive Wi-Fi tested through ZuneWebViewer (D33), which must not become a bypass; gesture, Bluetooth, NFC, MTP tests. |
 | R04 (8 INTERNET holders, lockdown VPN, SMS links, BROM SoCs) | Tests cover per-UID INTERNET, Private DNS, WebView gate; inbound SMS shows nothing; Pixels only. |
 | R10 (rings; G3 "policy tests (05, 12)"), R18 (adb off on `user`; cohorts 10/25/100), R13 (3% battery, 100k kids) | 04 REL-17 rings win; "12" meant the telephony report, use LT-07..10, BT-03; userdebug twin (QA-02); cohorts 12/30/70/88 (01); battery numbers [default] until C0 data; load is 10x the pilot. |
 
@@ -149,7 +149,7 @@ Pilot gates. Before the staff pilot: QT-01..07, 09, 10, 12; band 7-9 panel; AI g
 - **QT-01** Cuttlefish smoke. Pass: boots in 5 min [default]; Guardian provisioned with `DEVMOCK`; HOME is `app.zune.launcher`; no browser handler; killing Guardian gives the fail-closed Home (APT-03).
 - **QT-02** Seed 10 holes (Browser2, `VIEW https` filter, extra `INTERNET`, new exported activity, `ro.debuggable=1`, AOSP test-key signature, permissive domain, 4 KB library, Firebase dependency, `DISALLOW_CONFIG_WIFI`); gates on vanilla `aosp_cf_x86_64_only_phone`; LT-02, LT-05 on seeded images. Pass: each hole fails its IG and LT; vanilla fails IG-1, 2, 3, 5, 6.
 - **QT-03** RC per model: 72 h soak, `school_day`, 8 h idle, low-storage OTA (REL-18); `batterystats`, `meminfo`, Guardian restarts. Pass: no ANR or unplanned Guardian restart; OTA refused cleanly; Q8.
-- **QT-04** `matrix.yml` cell run; captive Wi-Fi; parent hotspot. Pass: Q5-Q7; captive opens ZunePortalViewer automatically with no URL entry and no route to a denied host (LT-04, AT-04); hotspot connects.
+- **QT-04** `matrix.yml` cell run; captive Wi-Fi; parent hotspot. Pass: Q5-Q7; captive opens ZuneWebViewer automatically with no URL entry and no route to a denied host (LT-04, AT-04); hotspot connects.
 - **QT-05** Loopback rig and `netem` on calls and walkie; five adult listeners rate speech. Pass: Q6; MOS at least 3.5 at 3% loss [default].
 - **QT-06** RC attacks: key combinations into recovery, fastboot commands on a locked unit, recovery sideload of a test-signed zip, a Google stock OTA and a downgrade, safe mode, recovery wipe, SIM swap, PIN-locked SIM, USSD, MMI. Pass: unlock refused (`get_unlock_ability` 0); every sideload rejected; wipe gives unpaired setup; no new capability.
 - **QT-07** RC peripherals: USB keyboard and mouse, USB-C Ethernet, OTG storage, USB-C audio, Bluetooth keyboard and OPP, NFC tag. Pass: no shortcut escape (LT-08); INTERNET and Private DNS hold on Ethernet; storage, OPP refused; audio works; NFC inert.

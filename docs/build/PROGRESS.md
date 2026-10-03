@@ -51,7 +51,15 @@
 
 ## 2026-10-03 addendum: D33 restricted web viewer for Wi-Fi sign-in pages (founder)
 
-- D33 added (REQUIREMENTS, 00-START-HERE); D30 marked superseded; D1 is refined, not reversed: no browser app, no URL entry, no search; one single-purpose viewer for sign-in pages (ZunePortalViewer, 02 OS-20).
+- D33 added (REQUIREMENTS, 00-START-HERE); D30 marked superseded; D1 is refined, not reversed: no browser app, no URL entry, no search; one single-purpose viewer for sign-in pages (ZuneWebViewer, 02 OS-20).
 - Edited: 02 (D30 row, OS-20, package table, ZuneNetworkStackOverlay row, V14, new V16), 03 (reconciliation, LOCK-24 with a 10-minute opportunistic-DNS window, LT-04, VG-8), 09 (setup step 3), 10 (offline-at-home note), 12 (reconciliation, QT-04).
 - Open technical risk: strict Private DNS can make a captive network look offline (03 VG-8); LOCK-24's bounded window is the proposed answer and needs a Pixel test. V16 asks whether a non-module app can replace CaptivePortalLogin.
 - Not decided: whether any other link (messages, Assistant, Reader) may ever open in a viewer. Today they stay blocked (06 COM-10, 08 CNT-32).
+
+## 2026-10-03: D34 link investigator
+
+## 2026-10-03 addendum: D34 link investigator (founder)
+
+- D34 added (REQUIREMENTS, 00-START-HERE); new section `13-link-investigator-and-web-viewer.md`; ZunePortalViewer renamed ZuneWebViewer (modes portal | link).
+- Needs follow-up edits elsewhere: 08 CNT-32/CNT-33/CNT-26 (links become request chips, not inert), 07 (Assistant link chips; moderation of links), 03 (`policy-v1` `links{...}`, per-UID reach for `app.zune.webviewer`), 05 (routes `/v1/device/links`, approval kind `link`, vault class `link`, `lg.<zone>` host, BE-41 note), 11 (data inventory rows, DPDP note on fetch and vendor), 12 (LNK-T01 to T08), 02 (webviewer in `internet-holders.txt` and `webview_callers.xml`).
+- Phasing decided in the spec: Stage 1 every link needs a parent; AI informs only; auto-allow after the LNK-G red-team gate.
