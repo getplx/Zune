@@ -10,3 +10,7 @@
 ## 2026-10-03: AOSP download requested
 - Founder asked to download AOSP and start building. The founder's Mac (macOS arm64, 16 GB RAM, ~13 GB free) cannot hold or build AOSP; no sync was started. Blocked on B-1: a Linux x86_64 build host (PRE-02).
 - Added `os/tools/bootstrap-build-host.sh` (pins `android-17.0.0_r1`, partial-clone sync, baseline `aosp_cf_x86_64_only_phone-aosp_current-userdebug`, writes timings to `m1-baseline.log`). Syntax-checked only; not run.
+
+## 2026-10-03: build order (founder)
+- Founder: build the phone product first (OS image, then on-device apps), then the management portal. Backend/portal skeletons are deferred behind the phone track, except what the device channel needs.
+- Toolchain installed on the founder's Mac: Go 1.27.1, Node 26.10.0, `repo` 2.65 (~/.bin). Mac has ~12 GB free, so it is for editing and Gradle app work only; AOSP sync/build waits for the Linux build host (B-1).
