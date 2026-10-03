@@ -69,7 +69,7 @@ pass)`. **Verification status is per report in the table below.**
 | 21 | Own-hardware roadmap, India (D21) | **written, skeptic-verified** |
 | 00 | Cross-topic critique | not yet written |
 
-(Generated 2026-10-03 06:14 UTC by docs/handoff/refresh-status.py)
+(Generated 2026-10-03 08:18 UTC by docs/handoff/refresh-status.py)
 <!-- STATUS-TABLE:END -->
 
 **Run failures on 2026-10-02 (~12:50 UTC):** the skeptic-verification passes for topics 03-11 and the

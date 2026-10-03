@@ -41,6 +41,7 @@ Delivery is staged:
 | D19 | **No cellular voice calls and no SMS.** All communication is internet-based and WhatsApp-style: in-product **text messages, voice calls and video calls**, 1:1 only (no groups), approved contacts only, parent-controlled. **Supersedes D4, D5 and D6.** The device needs only data connectivity (Wi-Fi and mobile data, D14). | 2026-10-02 |
 | D20 | **English only** for version 1: no Hindi or other Indian languages (Stage 2 at the earliest). | 2026-10-02 |
 | D21 | **First phase: about 200 users on Pixel phones; eventually the company builds its own hardware.** Own hardware is a later roadmap phase, not v1. The 10/25/100 cohort sizes in report 18 are replaced by a staged ~200-user first phase. | 2026-10-02 |
+| D22 | **No "skin" product.** We will not ship a launcher or Device-Owner layer on stock Android. The product is the full custom OS image. **Goal: build a solid baseline and validate it with an initial group of customers before investing in dedicated hardware.** | 2026-10-03 |
 
 ## Child-device feature list (Stage 1 scope)
 
