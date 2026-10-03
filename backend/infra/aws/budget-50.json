@@ -1,0 +1,10 @@
+{
+  "BudgetName": "zune-monthly-50usd",
+  "BudgetType": "COST",
+  "TimeUnit": "MONTHLY",
+  "BudgetLimit": { "Amount": "50", "Unit": "USD" },
+  "CostTypes": { "IncludeTax": true, "IncludeSubscription": true, "UseBlended": false,
+                 "IncludeRefund": false, "IncludeCredit": false, "IncludeUpfront": true,
+                 "IncludeRecurring": true, "IncludeOtherSubscription": true,
+                 "IncludeSupport": true, "IncludeDiscount": false, "UseAmortized": false }
+}
